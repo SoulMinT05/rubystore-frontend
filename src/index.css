@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-optical-sizing: auto;
+    background-color: #f5f0f0;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.container {
+    width: 95%;
+    margin: auto;
+}
+
+.link:hover {
+    color: #ff5252;
+}
+.icon-header:hover {
+    cursor: pointer;
+    color: #ff5252;
+}
+.MuiBadge-badge {
+    background-color: #ff5252 !important ;
+}
+nav ul button {
+    text-transform: capitalize !important;
+}
