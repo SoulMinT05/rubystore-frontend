@@ -16,6 +16,16 @@ body {
     overflow-x: hidden;
 }
 
+::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #ff5252;
+}
+::-webkit-scrollbar-track {
+    background-color: #fff;
+}
 .container {
     width: 95%;
     margin: auto;
@@ -54,4 +64,11 @@ nav ul button {
 .swiper-button-next:after {
     font-size: 22px !important;
     color: #000;
+}
+
+.MuiTabs-indicator {
+    background-color: #ff5252 !important;
+}
+.MuiTab-textColorPrimary.Mui-selected {
+    color: #ff5252 !important;
 }

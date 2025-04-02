@@ -1,12 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
 import HomeSlider from '../../components/HomeSlider/HomeSlider';
 import HomeCatSlider from '../../components/HomeCatSlider/HomeCatSlider';
 
+import { LiaShippingFastSolid } from 'react-icons/lia';
+import AdsBannerSlider from '../../components/AdsBannerSlider/AdsBannerSlider';
+
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import HomeProductsSlider from '../../components/HomeProductsSlider/HomeProductsSlider';
+
 const Home = () => {
+    const [value, setValue] = useState(0);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
     return (
         <>
             <HomeSlider />
             <HomeCatSlider />
+
+            <section className="bg-white py-8">
+                <div className="container">
+                    <div className="flex items-center justify-between">
+                        <div className="leftSec">
+                            <h2 className="text-[20px] font-[600]">Sản phẩm phổ biến</h2>
+                            <p className="text-[14px] font-[400]">Đừng bỏ lỡ giá tốt vào cuối tháng 3</p>
+                        </div>
+                        <div className="rightSec w-[60%]">
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                variant="scrollable"
+                                scrollButtons="auto"
+                                aria-label="scrollable auto tabs example"
+                            >
+                                <Tab label="Thời trang" />
+                                <Tab label="Đồ điện tử" />
+                                <Tab label="Túi" />
+                                <Tab label="Giày dép" />
+                                <Tab label="Thực phẩm" />
+                                <Tab label="Sắc đẹp" />
+                                <Tab label="Sức khoẻ" />
+                                <Tab label="Trang sức" />
+                            </Tabs>
+                        </div>
+                    </div>
+
+                    <HomeProductsSlider items={6} />
+                </div>
+            </section>
+
+            <section className="py-4  bg-white">
+                <div className="container">
+                    <div className="freeShipping w-full py-4 p-4 border-2 border-[#ff5252] flex items-center justify-between rounded-md mb-7">
+                        <div className="col1 flex items-center gap-4">
+                            <LiaShippingFastSolid className="text-[50px]" />
+                            <span className="text-[20px] font-[600] uppercase">Giao hàng miễn phí</span>
+                        </div>
+                        <div className="col2">
+                            <p className="mb-0 font-[500]">Miễn phí giao hàng cho lần đầu tiên và đơn giá trên 400k</p>
+                        </div>
+                        <p className="font-bold text-[25px]">- Chỉ 400k</p>
+                    </div>
+
+                    <AdsBannerSlider items={4} />
+                </div>
+            </section>
+
+            <section className="py-5">
+                <div className="container">
+                    <HomeProductsSlider item={6} />
+                </div>
+            </section>
 
             <br />
             <br />

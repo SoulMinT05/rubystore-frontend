@@ -181,7 +181,7 @@ const Navigation = () => {
                             </li>
                             <li className="list-none">
                                 <Link to="/" className="link transition text-[14px] font-[500]">
-                                    Hàng tạp hoá
+                                    Thực phẩm
                                 </Link>
                             </li>
                             <li className="list-none">
