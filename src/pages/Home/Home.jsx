@@ -10,6 +10,15 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import HomeProductsSlider from '../../components/HomeProductsSlider/HomeProductsSlider';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Link } from 'react-router-dom';
+import HomeBlogsItem from '../../components/HomeBlogsItem/HomeBlogsItem';
+
 const Home = () => {
     const [value, setValue] = useState(0);
     const handleChange = (event, newValue) => {
@@ -51,7 +60,7 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className="py-4  bg-white">
+            <section className="py-4 pt-2 bg-white">
                 <div className="container">
                     <div className="freeShipping w-full py-4 p-4 border-2 border-[#ff5252] flex items-center justify-between rounded-md mb-7">
                         <div className="col1 flex items-center gap-4">
@@ -68,9 +77,54 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className="py-5">
+            <section className="py-5 pt-0 bg-white">
                 <div className="container">
-                    <HomeProductsSlider item={6} />
+                    <h2 className="text-[20px] font-[600]">Sản phẩm mới nhất</h2>
+                    <HomeProductsSlider items={6} />
+                    <AdsBannerSlider items={3} />
+                </div>
+            </section>
+
+            <section className="py-5 pt-0 bg-white">
+                <div className="container">
+                    <h2 className="text-[20px] font-[600]">Sản phẩm đặc trưng</h2>
+                    <HomeProductsSlider items={6} />
+                    <AdsBannerSlider items={3} />
+                </div>
+            </section>
+
+            <section className="blogSection py-5 pb-8 pt-0 bg-white">
+                <div className="container">
+                    <h2 className="text-[20px] font-[600] mb-4">Bài viết mới nhất</h2>
+                    <Swiper
+                        slidesPerView={4}
+                        spaceBetween={30}
+                        navigation={true}
+                        modules={[Navigation]}
+                        className="blogSwiper"
+                    >
+                        <SwiperSlide>
+                            <HomeBlogsItem />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <HomeBlogsItem />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <HomeBlogsItem />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <HomeBlogsItem />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <HomeBlogsItem />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <HomeBlogsItem />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <HomeBlogsItem />
+                        </SwiperSlide>
+                    </Swiper>
                 </div>
             </section>
 
