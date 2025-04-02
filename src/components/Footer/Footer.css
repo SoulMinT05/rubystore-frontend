@@ -1,0 +1,11 @@
+footer form input::placeholder {
+    font-size: 14px;
+}
+.css-imrjgg-MuiButtonBase-root-MuiCheckbox-root.Mui-checked,
+.css-imrjgg-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
+    color: #ff5252 !important;
+}
+.MuiFormControlLabel-label {
+    font-size: 13px !important;
+    color: rgba(0, 0, 0, 0.8);
+}
