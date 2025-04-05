@@ -80,3 +80,7 @@ nav ul button {
 .MuiTab-textColorPrimary.Mui-selected {
     color: #ff5252 !important;
 }
+
+.swiper-pagination-bullet-active {
+    background-color: #ff5252 !important;
+}

@@ -18,7 +18,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Link } from 'react-router-dom';
 import HomeBlogsItem from '../../components/HomeBlogsItem/HomeBlogsItem';
+import HomeBannerSlider from '../../components/HomeBannerSlider/HomeBannerSlider';
 import Footer from '../../components/Footer/Footer';
+import HomeBannerImage from '../../components/HomeBannerImage/HomeBannerImage';
 
 const Home = () => {
     const [value, setValue] = useState(0);
@@ -28,6 +30,19 @@ const Home = () => {
     return (
         <>
             <HomeSlider />
+
+            <section className="py-6">
+                <div className="container flex gap-5">
+                    <div className="part1 w-[70%]">
+                        <HomeBannerSlider />
+                    </div>
+                    <div className="part2 w-[30%] flex gap-5 items-center justify-between flex-col">
+                        <HomeBannerImage info="left" image={'src/assets/homebannerimg1.jpg'} />
+                        <HomeBannerImage info="right" image={'src/assets/homebannerimg2.jpg'} />
+                    </div>
+                </div>
+            </section>
+
             <HomeCatSlider />
 
             <section className="bg-white py-8">
