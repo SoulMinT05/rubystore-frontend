@@ -3,7 +3,8 @@ import HomeSlider from '../../components/HomeSlider/HomeSlider';
 import HomeCatSlider from '../../components/HomeCatSlider/HomeCatSlider';
 
 import { LiaShippingFastSolid } from 'react-icons/lia';
-import AdsBannerSlider from '../../components/AdsBannerSlider/AdsBannerSlider';
+import HomeAdsBannerSlider from '../../components/HomeAdsBannerSlider/HomeAdsBannerSlider';
+import HomeAdsBannerSliderSecond from '../../components/HomeAdsBannerSliderSecond/HomeAdsBannerSliderSecond';
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -19,10 +20,9 @@ import 'swiper/css/navigation';
 import { Link } from 'react-router-dom';
 import HomeBlogsItem from '../../components/HomeBlogsItem/HomeBlogsItem';
 import HomeBannerSlider from '../../components/HomeBannerSlider/HomeBannerSlider';
-import Footer from '../../components/Footer/Footer';
 import HomeBannerImage from '../../components/HomeBannerImage/HomeBannerImage';
 
-const Home = () => {
+const HomePage = () => {
     const [value, setValue] = useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -89,7 +89,8 @@ const Home = () => {
                         <p className="font-bold text-[25px]">- Chỉ 400k</p>
                     </div>
 
-                    <AdsBannerSlider items={4} />
+                    {/* <HomeAdsBannerSlider items={4} /> */}
+                    <HomeAdsBannerSliderSecond items={4} />
                 </div>
             </section>
 
@@ -97,7 +98,7 @@ const Home = () => {
                 <div className="container">
                     <h2 className="text-[20px] font-[600]">Sản phẩm mới nhất</h2>
                     <HomeProductsSlider items={6} />
-                    <AdsBannerSlider items={3} />
+                    <HomeAdsBannerSlider items={3} />
                 </div>
             </section>
 
@@ -105,7 +106,7 @@ const Home = () => {
                 <div className="container">
                     <h2 className="text-[20px] font-[600]">Sản phẩm đặc trưng</h2>
                     <HomeProductsSlider items={6} />
-                    <AdsBannerSlider items={3} />
+                    <HomeAdsBannerSlider items={3} />
                 </div>
             </section>
 
@@ -143,14 +144,8 @@ const Home = () => {
                     </Swiper>
                 </div>
             </section>
-
-            <Footer />
-
-            <br />
-            <br />
-            <br />
         </>
     );
 };
 
-export default Home;
+export default HomePage;

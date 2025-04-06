@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const BannerBox = ({ img }) => {
+const HomeBannerBox = ({ img }) => {
     return (
         <div className="box bannerBo overflow-hidden rounded-lg group">
             <Link to="/">
@@ -15,4 +15,4 @@ const BannerBox = ({ img }) => {
     );
 };
 
-export default BannerBox;
+export default HomeBannerBox;
