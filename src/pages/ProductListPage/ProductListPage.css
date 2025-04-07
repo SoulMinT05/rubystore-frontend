@@ -1,0 +1,4 @@
+.itemViewActions button.active svg {
+    color: #ff5252 !important;
+    opacity: 1;
+}

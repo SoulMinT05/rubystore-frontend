@@ -38,6 +38,9 @@ body {
     font-size: 16px;
     padding: 7px 20px !important;
 }
+.btn-org:hover {
+    background-color: #171717 !important;
+}
 
 .link:hover {
     color: #ff5252;
@@ -83,4 +86,14 @@ nav ul button {
 
 .swiper-pagination-bullet-active {
     background-color: #ff5252 !important;
+}
+.MuiCheckbox-root {
+    padding: 6px !important;
+}
+.ReactCollapse--collapse {
+    transition: height 400ms;
+}
+.Mui-selected.MuiPaginationItem-page {
+    background-color: #ff5252 !important;
+    color: #fff !important;
 }
