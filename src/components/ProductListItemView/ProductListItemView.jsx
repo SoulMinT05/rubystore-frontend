@@ -75,7 +75,7 @@ const ProductListItemView = () => {
                 <Rating name="size-small" defaultValue={5} readOnly size="small" />
 
                 <div className="flex items-center gap-4">
-                    <span className="oldPrice line-through text-gray-500 text-[15px] font-[]500">
+                    <span className="oldPrice line-through text-gray-500 text-[15px] font-[500]">
                         {formatCurrency(200000)}
                     </span>
                     <span className="price text-primary text-[15px] font-[600]">{formatCurrency(180000)}</span>

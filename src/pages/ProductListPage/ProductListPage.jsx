@@ -6,7 +6,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 
 import { IoGridSharp } from 'react-icons/io5';
 import { LuMenu } from 'react-icons/lu';
@@ -32,10 +32,10 @@ const ProductListPage = () => {
         <section className="py-5 pb-0">
             <div className="container">
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link underline="hover" color="inherit" href="/" className="link transition">
+                    <Link underline="hover" color="inherit" to="/" className="link transition">
                         Trang chủ
                     </Link>
-                    <Link underline="hover" color="inherit" href="/" className="link transition">
+                    <Link underline="hover" color="inherit" to="/" className="link transition">
                         Thời trang
                     </Link>
                 </Breadcrumbs>
