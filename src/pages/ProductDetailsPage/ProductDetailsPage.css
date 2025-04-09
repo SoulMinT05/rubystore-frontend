@@ -4,3 +4,15 @@
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     color: rgba(0, 0, 0, 0.7);
 }
+.reviewScroll::-webkit-scrollbar {
+    width: 5px !important;
+}
+.reviewScroll::-webkit-scrollbar-thumb {
+    background-color: #ccc !important;
+}
+.css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #000 !important;
+}
+.css-xrmkj5-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #ff5252 !important;
+}

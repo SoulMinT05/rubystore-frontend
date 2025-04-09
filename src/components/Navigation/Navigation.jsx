@@ -32,7 +32,7 @@ const Navigation = () => {
                                 </Link>
                             </li>
                             <li className="list-none relative">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Thời trang
                                 </Link>
                                 <div className="submenu absolute top-[120%] left-[0%] min-w-[200px] bg-white shadow-md opacity-0 transition-all">
@@ -165,37 +165,37 @@ const Navigation = () => {
                                 </div>
                             </li>
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Đồ điện tử
                                 </Link>
                             </li>
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Túi
                                 </Link>
                             </li>
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Giày dép
                                 </Link>
                             </li>
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Thực phẩm
                                 </Link>
                             </li>
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Sắc đẹp
                                 </Link>
                             </li>
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Sức khoẻ
                                 </Link>
                             </li>
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link to="/product-list" className="link transition text-[14px] font-[500]">
                                     Trang sức
                                 </Link>
                             </li>
