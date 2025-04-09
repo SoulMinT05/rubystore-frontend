@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import Rating from '@mui/material/Rating';
@@ -11,6 +11,7 @@ import { MdZoomOutMap } from 'react-icons/md';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 
 import '../ProductListItemView/ProductListItemView.css';
+import { MyContext } from '../../App';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -19,6 +20,7 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 const ProductListItemView = () => {
+    const context = useContext(MyContext);
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)] flex items-center">
             <div className="group imgWrapper w-[25%] overflow-hidden rounded-md relative">
@@ -41,7 +43,10 @@ const ProductListItemView = () => {
                 "
                 >
                     <Tooltip title="Xem chi tiết" placement="left-start">
-                        <Button className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group">
+                        <Button
+                            className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group"
+                            onClick={() => context.setOpenProductDetailsModal(true)}
+                        >
                             <MdZoomOutMap className="text-[18px] !text-black group-hover:text-white" />
                         </Button>
                     </Tooltip>

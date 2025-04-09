@@ -113,3 +113,13 @@ nav ul button {
     background-color: #ff5252 !important;
     color: #fff !important;
 }
+
+.productContent .actions button {
+    min-width: 40px !important;
+    height: 30px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: rgba(0, 0, 0, 0.7);
+}
+.productDetailsModal .MuiDialogContent-root {
+    padding: 0px !important;
+}
