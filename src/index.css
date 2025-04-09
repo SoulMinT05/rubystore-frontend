@@ -123,3 +123,9 @@ nav ul button {
 .productDetailsModal .MuiDialogContent-root {
     padding: 0px !important;
 }
+.css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #000 !important;
+}
+.css-xrmkj5-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #ff5252 !important;
+}

@@ -5,6 +5,8 @@ import Footer from './components/Footer/Footer';
 import HomePage from './pages/HomePage/HomePage';
 import ProductListPage from './pages/ProductListPage/ProductListPage';
 import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React, { createContext, useState } from 'react';
@@ -37,6 +39,8 @@ function App() {
                     <Header />
                     <Routes>
                         <Route path={'/'} exact={true} element={<HomePage />} />
+                        <Route path={'/login'} exact={true} element={<LoginPage />} />
+                        <Route path={'/register'} exact={true} element={<RegisterPage />} />
                         <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
                         <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
                     </Routes>
