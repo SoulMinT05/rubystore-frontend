@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Search from '../Search/Search';
 import { Button } from '@mui/material';
@@ -8,8 +8,10 @@ import { MdOutlineShoppingCart } from 'react-icons/md';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { FaRegHeart } from 'react-icons/fa6';
 import Navigation from '../Navigation/Navigation';
+import { MyContext } from '../../App';
 
 const Header = () => {
+    const context = useContext(MyContext);
     return (
         <header className="bg-white">
             <div className="top-strip py-2 border-t-[1px] border-gray-250 border-b-[1px] ">
@@ -69,7 +71,12 @@ const Header = () => {
                             </li>
                             <li className="mx-2">
                                 <Tooltip title="Giỏ hàng" placement="top">
-                                    <Badge className="icon-header" badgeContent={4} color="primary">
+                                    <Badge
+                                        onClick={() => context.setOpenCartPanel(true)}
+                                        className="icon-header"
+                                        badgeContent={4}
+                                        color="primary"
+                                    >
                                         <MdOutlineShoppingCart className="text-2xl" />
                                     </Badge>
                                 </Tooltip>

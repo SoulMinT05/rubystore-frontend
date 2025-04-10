@@ -8,29 +8,39 @@ import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import React, { createContext, useState } from 'react';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+
 import ProductZoom from './components/ProductZoom/ProductZoom';
 import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
 
 import { IoCloseSharp } from 'react-icons/io5';
+
 const MyContext = createContext();
 
 function App() {
     const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
     // const [fullWidth, setFullWidth] = useState(true);
     // const [maxWidth, setMaxWidth] = useState('lg');
+    const [openCartPanel, setOpenCartPanel] = useState(false);
 
     const handleCloseProductDetailsModal = () => {
         setOpenProductDetailsModal(false);
     };
 
+    const toggleCartPanel = (newOpen) => {
+        setOpenCartPanel(newOpen);
+    };
+
     const values = {
         setOpenProductDetailsModal,
+        setOpenCartPanel,
+        toggleCartPanel,
+        openCartPanel,
     };
     return (
         <>

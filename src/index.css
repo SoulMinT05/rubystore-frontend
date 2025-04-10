@@ -129,3 +129,8 @@ nav ul button {
 .css-xrmkj5-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #ff5252 !important;
 }
+
+.cartPanel .MuiPaper-root {
+    width: 400px;
+    overflow: hidden;
+}
