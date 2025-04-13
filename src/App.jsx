@@ -7,6 +7,7 @@ import ProductListPage from './pages/ProductListPage/ProductListPage';
 import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
+import CartPage from './pages/CartPage/CartPage';
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import React, { createContext, useState } from 'react';
@@ -51,6 +52,7 @@ function App() {
                         <Route path={'/'} exact={true} element={<HomePage />} />
                         <Route path={'/login'} exact={true} element={<LoginPage />} />
                         <Route path={'/register'} exact={true} element={<RegisterPage />} />
+                        <Route path={'/cart'} exact={true} element={<CartPage />} />
                         <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
                         <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
                     </Routes>
