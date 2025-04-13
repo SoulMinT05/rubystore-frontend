@@ -8,9 +8,13 @@ import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import CartPage from './pages/CartPage/CartPage';
+import VerifyPage from './pages/VerifyPage/VerifyPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import React, { createContext, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -37,11 +41,21 @@ function App() {
         setOpenCartPanel(newOpen);
     };
 
+    const openAlertBox = (status, message) => {
+        if (status === 'success') {
+            toast.success(message);
+        }
+        if (status === 'error') {
+            toast.error(message);
+        }
+    };
+
     const values = {
         setOpenProductDetailsModal,
         setOpenCartPanel,
         toggleCartPanel,
         openCartPanel,
+        openAlertBox,
     };
     return (
         <>
@@ -53,12 +67,17 @@ function App() {
                         <Route path={'/login'} exact={true} element={<LoginPage />} />
                         <Route path={'/register'} exact={true} element={<RegisterPage />} />
                         <Route path={'/cart'} exact={true} element={<CartPage />} />
+                        <Route path={'/verify'} exact={true} element={<VerifyPage />} />
+                        <Route path={'/forgot-password'} exact={true} element={<ForgotPasswordPage />} />
+                        <Route path={'/reset-password'} exact={true} element={<ResetPasswordPage />} />
                         <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
                         <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
                     </Routes>
                     <Footer />
                 </MyContext.Provider>
             </BrowserRouter>
+            <Toaster position="top-right" reverseOrder={false} />
+
             <Dialog
                 fullWidth={true}
                 maxWidth="lg"
