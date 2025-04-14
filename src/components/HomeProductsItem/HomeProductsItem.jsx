@@ -11,6 +11,8 @@ import { FaRegHeart } from 'react-icons/fa';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { MdZoomOutMap } from 'react-icons/md';
 import { MyContext } from '../../App';
+import product1 from '../../assets/product1.webp';
+import product1Backup from '../../assets/product1-backup.webp';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -26,9 +28,9 @@ const HomeProductsItem = () => {
             <div className="group imgWrapper w-[100%] overflow-hidden rounded-md relative">
                 <Link to="/">
                     <div className="img  h-[220px] overflow-hidden">
-                        <img src="src/assets/product1.webp" alt="" className="w-full" />
+                        <img src={product1} alt="" className="w-full" />
                         <img
-                            src="src/assets/product1-backup.webp"
+                            src={product1Backup}
                             alt=""
                             className="w-full transition-all duration-300 absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-scale:105"
                         />

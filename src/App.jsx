@@ -11,6 +11,10 @@ import CartPage from './pages/CartPage/CartPage';
 import VerifyPage from './pages/VerifyPage/VerifyPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
+import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
+import MyAccountPage from './pages/MyAccountPage/MyAccountPage';
+import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage';
+import WishlistPage from './pages/WishlistPage/WishlistPage';
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import React, { createContext, useState } from 'react';
@@ -24,7 +28,6 @@ import ProductZoom from './components/ProductZoom/ProductZoom';
 import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
 
 import { IoCloseSharp } from 'react-icons/io5';
-import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
 
 const MyContext = createContext();
 
@@ -33,6 +36,7 @@ function App() {
     // const [fullWidth, setFullWidth] = useState(true);
     // const [maxWidth, setMaxWidth] = useState('lg');
     const [openCartPanel, setOpenCartPanel] = useState(false);
+    const [isLogin, setIsLogin] = useState(true);
 
     const handleCloseProductDetailsModal = () => {
         setOpenProductDetailsModal(false);
@@ -57,6 +61,8 @@ function App() {
         toggleCartPanel,
         openCartPanel,
         openAlertBox,
+        isLogin,
+        setIsLogin,
     };
     return (
         <>
@@ -72,6 +78,9 @@ function App() {
                         <Route path={'/forgot-password'} exact={true} element={<ForgotPasswordPage />} />
                         <Route path={'/reset-password'} exact={true} element={<ResetPasswordPage />} />
                         <Route path={'/checkout'} exact={true} element={<CheckoutPage />} />
+                        <Route path={'/my-account'} exact={true} element={<MyAccountPage />} />
+                        <Route path={'/order-history'} exact={true} element={<OrderHistoryPage />} />
+                        <Route path={'/wishlist'} exact={true} element={<WishlistPage />} />
                         <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
                         <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
                     </Routes>

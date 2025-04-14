@@ -220,16 +220,16 @@ const CartPanel = () => {
                 <br />
 
                 <div className="flex items-center justify-between gap-5 px-3">
-                    <Button className="btn-org btn-login w-[50%]" onClick={() => context.toggleCartPanel(false)}>
-                        <Link to="/cart" className="text-[16px]">
+                    <Link to="/cart" className="text-[16px] w-[50%]">
+                        <Button className="btn-org btn-login w-full" onClick={() => context.toggleCartPanel(false)}>
                             Xem giỏ hàng
-                        </Link>
-                    </Button>
-                    <Button className="btn-org btn-login w-[50%]" onClick={() => context.toggleCartPanel(false)}>
-                        <Link to="/checkout" className="text-[16px]">
+                        </Button>
+                    </Link>
+                    <Link to="/checkout" className="text-[16px] w-[50%]">
+                        <Button className="btn-border btn-login w-full" onClick={() => context.toggleCartPanel(false)}>
                             Thanh toán
-                        </Link>
-                    </Button>
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </>

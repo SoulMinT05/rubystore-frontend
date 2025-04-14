@@ -58,6 +58,20 @@ h6 {
     background-color: #171717 !important;
 }
 
+.btn-border {
+    background-color: none !important;
+    color: #ff5252 !important;
+    border: 1px solid #ff5252 !important;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 7px 20px !important;
+}
+.btn-border:hover {
+    background-color: #171717 !important;
+    color: #fff !important;
+    border: 1px solid #171717 !important;
+}
+
 .link:hover {
     color: #ff5252;
 }

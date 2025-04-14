@@ -38,7 +38,7 @@ const Navigation = () => {
                                 <div className="submenu absolute top-[120%] left-[0%] min-w-[200px] bg-white shadow-md opacity-0 transition-all">
                                     <ul>
                                         <li className="list-none w-full relative">
-                                            <Link to="/" className="w-full">
+                                            <div to="/" className="w-full">
                                                 <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
                                                     Nam
                                                 </Button>
@@ -128,7 +128,7 @@ const Navigation = () => {
                                                         </li>
                                                     </ul>
                                                 </div>
-                                            </Link>
+                                            </div>
                                         </li>
 
                                         <li className="list-none w-full">

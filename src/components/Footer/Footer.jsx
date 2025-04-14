@@ -23,6 +23,11 @@ import CartPanel from '../CartPanel/CartPanel';
 
 import '../Footer/Footer.css';
 import { MyContext } from '../../App';
+import bank1 from '../../assets/bank1.png';
+import bank2 from '../../assets/bank2.png';
+import bank3 from '../../assets/bank3.png';
+import bank4 from '../../assets/bank4.png';
+import bank5 from '../../assets/bank5.png';
 
 const Footer = () => {
     const context = useContext(MyContext);
@@ -226,11 +231,11 @@ const Footer = () => {
                     <p className="text-[13px] text-center mb-0">© 2025 - Shopify</p>
 
                     <div className="flex items-center">
-                        <img src="src/assets/bank1.png" alt="Image Payment 1" />
-                        <img src="src/assets/bank2.png" alt="Image Payment 2" />
-                        <img src="src/assets/bank3.png" alt="Image Payment 3" />
-                        <img src="src/assets/bank4.png" alt="Image Payment 4" />
-                        <img src="src/assets/bank5.png" alt="Image Payment 5" />
+                        <img src={bank1} alt="Image Payment 1" />
+                        <img src={bank2} alt="Image Payment 2" />
+                        <img src={bank3} alt="Image Payment 3" />
+                        <img src={bank4} alt="Image Payment 4" />
+                        <img src={bank5} alt="Image Payment 5" />
                     </div>
                 </div>
             </div>
