@@ -24,6 +24,7 @@ import ProductZoom from './components/ProductZoom/ProductZoom';
 import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
 
 import { IoCloseSharp } from 'react-icons/io5';
+import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
 
 const MyContext = createContext();
 
@@ -70,6 +71,7 @@ function App() {
                         <Route path={'/verify'} exact={true} element={<VerifyPage />} />
                         <Route path={'/forgot-password'} exact={true} element={<ForgotPasswordPage />} />
                         <Route path={'/reset-password'} exact={true} element={<ResetPasswordPage />} />
+                        <Route path={'/checkout'} exact={true} element={<CheckoutPage />} />
                         <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
                         <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
                     </Routes>

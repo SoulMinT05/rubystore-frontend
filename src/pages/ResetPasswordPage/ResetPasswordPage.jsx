@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { FcGoogle } from 'react-icons/fc';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import '../ResetPasswordPage/ResetPasswordPage.css';
 import { MyContext } from '../../App';
@@ -12,9 +12,6 @@ import { MyContext } from '../../App';
 const ResetPasswordPage = () => {
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
-
-    const context = useContext(MyContext);
-    const navigate = useNavigate();
 
     return (
         <section className="section py-10">
