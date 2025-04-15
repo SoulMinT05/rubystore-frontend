@@ -4,7 +4,8 @@ import '../CartItems/CartItems.css';
 import { Link } from 'react-router-dom';
 import { IoCloseSharp } from 'react-icons/io5';
 import { GoTriangleDown } from 'react-icons/go';
-import { Menu, MenuItem, Rating } from '@mui/material';
+import { Button, Menu, MenuItem, Rating } from '@mui/material';
+import { FaPlus, FaMinus } from 'react-icons/fa';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -18,9 +19,7 @@ const CartItems = ({ size, quantity }) => {
     const [selectedSize, setSelectedSize] = useState(size);
     const openSize = Boolean(sizeAnchorEl);
 
-    const [quantityAnchorEl, setQuantityAnchorEl] = useState(null);
     const [selectedQuantity, setSelectedQuantity] = useState(quantity);
-    const openQuantity = Boolean(quantityAnchorEl);
 
     const handleClickSize = (event) => {
         setSizeAnchorEl(event.currentTarget);
@@ -32,13 +31,12 @@ const CartItems = ({ size, quantity }) => {
         }
     };
 
-    const handleClickQuantity = (event) => {
-        setQuantityAnchorEl(event.currentTarget);
+    const handleIncreaseQuantity = () => {
+        setSelectedQuantity((prev) => prev + 1);
     };
-    const handleCloseQuantity = (value) => {
-        setQuantityAnchorEl(null);
-        if (value !== null) {
-            setSelectedQuantity(value);
+    const handleDecreaseQuantity = () => {
+        if (selectedQuantity > 1) {
+            setSelectedQuantity((prev) => prev - 1);
         }
     };
     return (
@@ -87,28 +85,22 @@ const CartItems = ({ size, quantity }) => {
                             <MenuItem onClick={() => handleCloseSize('XXL')}>XXL</MenuItem>
                         </Menu>
                     </div>
-                    <div className="relative">
+                    <div className="flex items-center gap-2">
                         <span
-                            className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-1 px-2 rounded-md cursor-pointer"
-                            onClick={handleClickQuantity}
+                            className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-2 px-3 rounded-md cursor-pointer"
+                            onClick={handleDecreaseQuantity}
                         >
-                            Số lương: {selectedQuantity} <GoTriangleDown />
+                            <FaMinus className="text-[11px]" />
                         </span>
-                        <Menu
-                            id="quantity-menu"
-                            anchorEl={quantityAnchorEl}
-                            open={openQuantity}
-                            onClose={() => handleCloseQuantity(null)}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
+                        <span className="text-[12px] font-[600] py-1 rounded-md cursor-pointer">
+                            {selectedQuantity}
+                        </span>
+                        <span
+                            className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-2 px-3 rounded-md cursor-pointer"
+                            onClick={handleIncreaseQuantity}
                         >
-                            <MenuItem onClick={() => handleCloseQuantity(1)}>1</MenuItem>
-                            <MenuItem onClick={() => handleCloseQuantity(2)}>2</MenuItem>
-                            <MenuItem onClick={() => handleCloseQuantity(3)}>3</MenuItem>
-                            <MenuItem onClick={() => handleCloseQuantity(4)}>4</MenuItem>
-                            <MenuItem onClick={() => handleCloseQuantity(5)}>5</MenuItem>
-                        </Menu>
+                            <FaPlus className="text-[11px]" />
+                        </span>
                     </div>
                 </div>
 

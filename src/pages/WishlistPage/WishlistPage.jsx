@@ -16,9 +16,9 @@ const WishlistPage = () => {
                     <AccountSidebar />
                 </div>
                 <div className="col2 w-[80%]">
-                    <div className="shadow-md rounded-md bg-white">
+                    <div className="bg-white p-5 shadow-md rounded-md">
                         <div className="py-2 px-3">
-                            <h2>Lịch sử đơn hàng</h2>
+                            <h2 className="pb-3">Sản phẩm yêu thích</h2>
                             <p className="mt-0">
                                 Tổng {'  '}
                                 <span className="font-bold text-primary">
@@ -26,6 +26,8 @@ const WishlistPage = () => {
                                 </span>
                             </p>
                         </div>
+
+                        <hr />
 
                         <WishlistItems />
                         <WishlistItems />

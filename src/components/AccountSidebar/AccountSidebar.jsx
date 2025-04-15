@@ -34,7 +34,7 @@ const AccountSidebar = () => {
             </div>
             <ul className="list-none pb-5 bg-[#f1f1f1] myAccountTabs">
                 <li className="w-full">
-                    <NavLink to="/my-account" exact={true} activeClassName="active">
+                    <NavLink to="/my-account" activeClassName="active">
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <FaRegUser className="text-[17px]" />
                             <span>Trang cá nhân</span>
@@ -42,7 +42,7 @@ const AccountSidebar = () => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink to="/order-history" exact={true} activeClassName="active">
+                    <NavLink to="/order-history" activeClassName="active">
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoBagCheckOutline className="text-[17px]" />
                             <span>Lịch sử đơn hàng</span>
@@ -50,7 +50,7 @@ const AccountSidebar = () => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink to="/wishlist" exact={true} activeClassName="active">
+                    <NavLink to="/wishlist" activeClassName="active">
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoMdHeartEmpty className="text-[17px]" />
                             <span>Danh sách yêu thích</span>
@@ -58,7 +58,7 @@ const AccountSidebar = () => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink to="/logout" exact={true} activeClassName="active">
+                    <NavLink to="/logout" activeClassName="active">
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoIosLogOut className="text-[18px] text-[#ff5252]" />
                             <span className="text-[#ff5252]">Đăng xuất</span>
