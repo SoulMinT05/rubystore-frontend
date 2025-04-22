@@ -152,3 +152,7 @@ nav ul button {
     width: 400px;
     overflow: hidden;
 }
+button .MuiCircularProgress-root {
+    width: 30px !important;
+    height: 30px !important;
+}

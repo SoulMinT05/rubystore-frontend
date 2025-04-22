@@ -1,16 +1,51 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import '../VerifyPage/VerifyPage.css';
 import OtpBox from '../../components/OtpBox/OtpBox';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
+import { MyContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
+
 const VerifyPage = () => {
     const [otp, setOtp] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const context = useContext(MyContext);
+    const navigate = useNavigate();
+
     const handleOtpChange = (value) => {
         setOtp(value);
     };
-    const verifyOtp = (e) => {
+    const verifyOtp = async (e) => {
         e.preventDefault();
-        alert(otp);
+        setIsLoading(true);
+        try {
+            const token = sessionStorage.getItem('verifyToken');
+            const res = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/verify-email', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    token,
+                    otp,
+                }),
+            });
+
+            const data = await res.json();
+            console.log('data: ', data);
+
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+                sessionStorage.removeItem('verifyToken');
+                navigate('/login');
+            }
+        } catch (err) {
+            console.log(err);
+            context.openAlertBox('error', err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -31,8 +66,8 @@ const VerifyPage = () => {
                         <OtpBox length={6} onChange={handleOtpChange} />
 
                         <div className="flex items-center justify-center mt-5 px-5">
-                            <Button type="submit" className="w-full btn-org btn-lg">
-                                Gửi OTP
+                            <Button type="submit" className="w-full btn-org btn-lg flex gap-3">
+                                {isLoading === true ? <CircularProgress color="inherit" /> : 'Gửi OTP'}
                             </Button>
                         </div>
                     </form>

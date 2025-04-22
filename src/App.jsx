@@ -18,7 +18,9 @@ import WishlistPage from './pages/WishlistPage/WishlistPage';
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import React, { createContext, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+// import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -37,6 +39,7 @@ function App() {
     // const [maxWidth, setMaxWidth] = useState('lg');
     const [openCartPanel, setOpenCartPanel] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
+    const [emailVerify, setEmailVerify] = useState('');
 
     const handleCloseProductDetailsModal = () => {
         setOpenProductDetailsModal(false);
@@ -63,6 +66,8 @@ function App() {
         openAlertBox,
         isLogin,
         setIsLogin,
+        emailVerify,
+        setEmailVerify,
     };
     return (
         <>
@@ -87,7 +92,9 @@ function App() {
                     <Footer />
                 </MyContext.Provider>
             </BrowserRouter>
-            <Toaster position="top-right" reverseOrder={false} />
+
+            {/* <Toaster position="top-right" reverseOrder={false} /> */}
+            <ToastContainer />
 
             <Dialog
                 fullWidth={true}

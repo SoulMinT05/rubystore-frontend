@@ -7,7 +7,8 @@ import BadgeOrderStatus from '../../components/BadgeOrderStatus/BadgeOrderStatus
 import { IoCloseSharp } from 'react-icons/io5';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas-pro';
+import jsPDF from 'jspdf';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -31,46 +32,46 @@ const OrderHistoryPage = () => {
         setOpenProductDetailsModal(false);
     };
 
-    const printPDF = () => {
+    const printPDF = async () => {
         const element = document.getElementById('order-details');
         if (!element) {
-            console.error('Không tìm thấy element để in');
+            console.error('Không tìm thấy element');
             return;
         }
 
+        // Đảm bảo ảnh đã load xong
         const images = element.querySelectorAll('img');
-        const loadImages = Array.from(images).map((img) => {
-            if (img.complete) return Promise.resolve();
-            return new Promise((resolve) => {
-                img.onload = resolve;
-                img.onerror = resolve;
-            });
-        });
+        await Promise.all(
+            Array.from(images).map((img) => {
+                if (img.complete) return Promise.resolve();
+                return new Promise((resolve) => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+            }),
+        );
 
-        Promise.all(loadImages).then(() => {
-            // Thêm delay nhỏ để đảm bảo ảnh đã được render
-            setTimeout(() => {
-                const opt = {
-                    margin: 0.5,
-                    filename: 'order-details.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: {
-                        scale: 2,
-                        useCORS: true,
-                        logging: true,
-                        letterRendering: true,
-                    },
-                    jsPDF: {
-                        unit: 'in',
-                        format: 'letter',
-                        orientation: 'portrait',
-                        autoPaging: true,
-                    },
-                };
+        // Delay nhỏ để chắc chắn ảnh được render hoàn chỉnh
+        setTimeout(async () => {
+            try {
+                const canvas = await html2canvas(element, {
+                    useCORS: true,
+                    scale: 2,
+                    backgroundColor: '#ffffff', // fix background nếu transparent
+                });
 
-                html2pdf().set(opt).from(element).save();
-            }, 500); // có thể chỉnh lên 500ms nếu ảnh nhiều
-        });
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                const pdf = new jsPDF('p', 'mm', 'a4');
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('order-details.pdf');
+            } catch (err) {
+                console.error('Lỗi tạo PDF:', err);
+            }
+        }, 300);
     };
 
     return (
@@ -191,10 +192,10 @@ const OrderHistoryPage = () => {
                                                         className="container bg-white p-6 rounded-lg shadow-md"
                                                         id="order-details"
                                                     >
-                                                        <h2 className="text-xl border-b pb-4 mb-4 font-[600]">
+                                                        <h2 className="text-gray-700 text-xl border-b pb-4 mb-4 font-[600]">
                                                             Chi tiết đơn hàng
                                                         </h2>
-                                                        <h3 className="text-lg font-[600] mt-6 mb-4">
+                                                        <h3 className="text-gray-700 text-lg font-[600] mt-6 mb-4">
                                                             Thông tin đơn hàng
                                                         </h3>
                                                         {/* Order Info */}
@@ -222,7 +223,7 @@ const OrderHistoryPage = () => {
                                                         </div>
 
                                                         {/* Customer Info */}
-                                                        <h3 className="text-xl pb-4 mb-1 mt-6 font-[600]">
+                                                        <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
                                                             Thông tin khách hàng
                                                         </h3>
                                                         <div className="space-y-4">
@@ -247,7 +248,7 @@ const OrderHistoryPage = () => {
                                                         </div>
 
                                                         {/* Product Info */}
-                                                        <h3 className="text-xl pb-4 mb-1 mt-6 font-[600]">
+                                                        <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
                                                             Thông tin sản phẩm
                                                         </h3>
                                                         <div className="mt-4">
@@ -323,7 +324,7 @@ const OrderHistoryPage = () => {
                                                         </div>
 
                                                         {/* Price info */}
-                                                        <h3 className="text-xl pb-4 mb-1 mt-6 font-[600]">
+                                                        <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
                                                             Tổng quan giá
                                                         </h3>
                                                         <div className="space-y-4">
@@ -342,7 +343,7 @@ const OrderHistoryPage = () => {
                                                         </div>
                                                         <div className="mb-1 mt-6">
                                                             <div className="flex items-center justify-between">
-                                                                <span className="text-xl pb-4 font-[600]">
+                                                                <span className="text-gray-700 text-xl pb-4 font-[600]">
                                                                     Tổng giá
                                                                 </span>
                                                                 <span className="font-[600]">
