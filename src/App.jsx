@@ -30,6 +30,7 @@ import ProductZoom from './components/ProductZoom/ProductZoom';
 import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
 
 import { IoCloseSharp } from 'react-icons/io5';
+import axiosClient from './apis/axiosClient';
 
 const MyContext = createContext();
 
@@ -50,13 +51,23 @@ function App() {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (token !== '' || token !== undefined || token !== null) {
-            setIsLogin(true);
-        } else {
-            setIsLogin(false);
-        }
-    }, []);
+        const checkLogin = async () => {
+            try {
+                const res = await axiosClient.get('/api/user/check-login', {
+                    withCredentials: true,
+                });
+                if (res?.data?.success) {
+                    setIsLogin(true);
+                } else {
+                    setIsLogin(false);
+                }
+            } catch (error) {
+                console.log('errorCheckLogin: ', error);
+                setIsLogin(false);
+            }
+        };
+        checkLogin();
+    }, [isLogin]);
 
     const openAlertBox = (status, message) => {
         if (status === 'success') {

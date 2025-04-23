@@ -15,12 +15,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 
 import axiosClient from '../../apis/axiosClient';
-import Cookies from 'js-cookie';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Link } from 'react-router-dom';
 import HomeBlogsItem from '../../components/HomeBlogsItem/HomeBlogsItem';
 import HomeBannerSlider from '../../components/HomeBannerSlider/HomeBannerSlider';
 import HomeBannerImage from '../../components/HomeBannerImage/HomeBannerImage';
@@ -30,12 +28,6 @@ const HomePage = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    // useEffect(() => {
-    //     const accessToken = Cookies.get('accessToken'); // Lấy token từ cookie
-    //     if (accessToken) {
-    //         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-    //     }
-    // }, []);
 
     useEffect(() => {
         axiosClient.get('/api/user/user-details');

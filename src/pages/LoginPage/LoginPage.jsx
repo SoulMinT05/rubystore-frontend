@@ -55,7 +55,6 @@ const LoginPage = () => {
                 context.openAlertBox('success', data.message);
 
                 Cookies.set('accessToken', data?.data?.accessToken);
-                Cookies.set('refreshToken', data?.data?.refreshToken);
 
                 context.setIsLogin(true);
 

@@ -15,9 +15,9 @@ axiosClient.interceptors.request.use(
         const accessToken = Cookies.get('accessToken');
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
-            // axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         }
 
+        config.withCredentials = true;
         return config;
     },
     (err) => {
@@ -35,16 +35,8 @@ axiosClient.interceptors.response.use(
         if (err.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            const refreshToken = Cookies.get('refreshToken');
-            if (!refreshToken) {
-                return Promise.reject(err);
-            }
-
             try {
-                // const { data } = await axiosClient.get('/api/user/refreshToken');
-                const { data } = await axiosClient.post('/api/user/refreshToken', {
-                    token: refreshToken,
-                });
+                const { data } = await axiosClient.get('/api/user/refreshToken');
                 console.log('dataRefreshToken: ', data);
 
                 const newAccessToken = data?.data?.accessToken;
@@ -54,9 +46,7 @@ axiosClient.interceptors.response.use(
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                     axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
 
-                    const retryRequest = await axiosClient(originalRequest);
-                    console.log('retryRequest: ', retryRequest);
-                    return retryRequest;
+                    return axiosClient(originalRequest);
                 } else {
                     throw new Error('No access token received');
                 }
