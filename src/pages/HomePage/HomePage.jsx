@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HomeSlider from '../../components/HomeSlider/HomeSlider';
 import HomeCatSlider from '../../components/HomeCatSlider/HomeCatSlider';
 
@@ -14,6 +14,9 @@ import HomeProductsSlider from '../../components/HomeProductsSlider/HomeProducts
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 
+import axiosClient from '../../apis/axiosClient';
+import Cookies from 'js-cookie';
+
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -27,6 +30,16 @@ const HomePage = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+    // useEffect(() => {
+    //     const accessToken = Cookies.get('accessToken'); // Lấy token từ cookie
+    //     if (accessToken) {
+    //         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    //     }
+    // }, []);
+
+    useEffect(() => {
+        axiosClient.get('/api/user/user-details');
+    }, []);
     return (
         <>
             <HomeSlider />

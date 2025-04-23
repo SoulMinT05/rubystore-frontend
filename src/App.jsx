@@ -17,7 +17,7 @@ import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage';
 import WishlistPage from './pages/WishlistPage/WishlistPage';
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 // import toast, { Toaster } from 'react-hot-toast';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -48,6 +48,15 @@ function App() {
     const toggleCartPanel = (newOpen) => {
         setOpenCartPanel(newOpen);
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token !== '' || token !== undefined || token !== null) {
+            setIsLogin(true);
+        } else {
+            setIsLogin(false);
+        }
+    }, []);
 
     const openAlertBox = (status, message) => {
         if (status === 'success') {
