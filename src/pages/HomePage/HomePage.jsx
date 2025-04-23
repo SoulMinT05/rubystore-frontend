@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import HomeSlider from '../../components/HomeSlider/HomeSlider';
 import HomeCatSlider from '../../components/HomeCatSlider/HomeCatSlider';
 
@@ -14,8 +14,6 @@ import HomeProductsSlider from '../../components/HomeProductsSlider/HomeProducts
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 
-import axiosClient from '../../apis/axiosClient';
-
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -29,9 +27,6 @@ const HomePage = () => {
         setValue(newValue);
     };
 
-    useEffect(() => {
-        axiosClient.get('/api/user/user-details');
-    }, []);
     return (
         <>
             <HomeSlider />

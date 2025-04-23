@@ -18,7 +18,6 @@ import WishlistPage from './pages/WishlistPage/WishlistPage';
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import React, { createContext, useEffect, useState } from 'react';
-// import toast, { Toaster } from 'react-hot-toast';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -31,16 +30,17 @@ import ProductDetailsComponent from './components/ProductDetailsComponent/Produc
 
 import { IoCloseSharp } from 'react-icons/io5';
 import axiosClient from './apis/axiosClient';
+import { StoreProvider } from './contexts/StoreProvider';
 
 const MyContext = createContext();
 
 function App() {
     const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
-    // const [fullWidth, setFullWidth] = useState(true);
-    // const [maxWidth, setMaxWidth] = useState('lg');
+
     const [openCartPanel, setOpenCartPanel] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
     const [emailVerify, setEmailVerify] = useState('');
+    const [userInfo, setUserInfo] = useState(null);
 
     const handleCloseProductDetailsModal = () => {
         setOpenProductDetailsModal(false);
@@ -50,24 +50,35 @@ function App() {
         setOpenCartPanel(newOpen);
     };
 
+    // useEffect(() => {
+    //     const checkLogin = async () => {
+    //         try {
+    //             const res = await axiosClient.get('/api/user/check-login', {
+    //                 withCredentials: true,
+    //             });
+    //             if (res?.data?.success) {
+    //                 setIsLogin(true);
+    //             } else {
+    //                 setIsLogin(false);
+    //             }
+    //         } catch (error) {
+    //             console.log('errorCheckLogin: ', error);
+    //             setIsLogin(false);
+    //         }
+    //     };
+    //     checkLogin();
+    // }, [isLogin]);
     useEffect(() => {
-        const checkLogin = async () => {
+        const getUserDetails = async () => {
             try {
-                const res = await axiosClient.get('/api/user/check-login', {
-                    withCredentials: true,
-                });
-                if (res?.data?.success) {
-                    setIsLogin(true);
-                } else {
-                    setIsLogin(false);
-                }
+                const { data } = await axiosClient.get('/api/user/user-details');
+                setUserInfo(data?.user);
             } catch (error) {
-                console.log('errorCheckLogin: ', error);
-                setIsLogin(false);
+                console.log(error);
             }
         };
-        checkLogin();
-    }, [isLogin]);
+        getUserDetails();
+    }, []);
 
     const openAlertBox = (status, message) => {
         if (status === 'success') {
@@ -88,61 +99,65 @@ function App() {
         setIsLogin,
         emailVerify,
         setEmailVerify,
+        userInfo,
+        setUserInfo,
     };
     return (
         <>
-            <BrowserRouter>
-                <MyContext.Provider value={values}>
-                    <Header />
-                    <Routes>
-                        <Route path={'/'} exact={true} element={<HomePage />} />
-                        <Route path={'/login'} exact={true} element={<LoginPage />} />
-                        <Route path={'/register'} exact={true} element={<RegisterPage />} />
-                        <Route path={'/cart'} exact={true} element={<CartPage />} />
-                        <Route path={'/verify'} exact={true} element={<VerifyPage />} />
-                        <Route path={'/forgot-password'} exact={true} element={<ForgotPasswordPage />} />
-                        <Route path={'/reset-password'} exact={true} element={<ResetPasswordPage />} />
-                        <Route path={'/checkout'} exact={true} element={<CheckoutPage />} />
-                        <Route path={'/my-account'} exact={true} element={<MyAccountPage />} />
-                        <Route path={'/order-history'} exact={true} element={<OrderHistoryPage />} />
-                        <Route path={'/wishlist'} exact={true} element={<WishlistPage />} />
-                        <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
-                        <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
-                    </Routes>
-                    <Footer />
-                </MyContext.Provider>
-            </BrowserRouter>
+            <StoreProvider>
+                <BrowserRouter>
+                    <MyContext.Provider value={values}>
+                        <Header />
+                        <Routes>
+                            <Route path={'/'} exact={true} element={<HomePage />} />
+                            <Route path={'/login'} exact={true} element={<LoginPage />} />
+                            <Route path={'/register'} exact={true} element={<RegisterPage />} />
+                            <Route path={'/cart'} exact={true} element={<CartPage />} />
+                            <Route path={'/verify'} exact={true} element={<VerifyPage />} />
+                            <Route path={'/forgot-password'} exact={true} element={<ForgotPasswordPage />} />
+                            <Route path={'/reset-password'} exact={true} element={<ResetPasswordPage />} />
+                            <Route path={'/checkout'} exact={true} element={<CheckoutPage />} />
+                            <Route path={'/my-account'} exact={true} element={<MyAccountPage />} />
+                            <Route path={'/order-history'} exact={true} element={<OrderHistoryPage />} />
+                            <Route path={'/wishlist'} exact={true} element={<WishlistPage />} />
+                            <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
+                            <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
+                        </Routes>
+                        <Footer />
+                    </MyContext.Provider>
+                </BrowserRouter>
 
-            {/* <Toaster position="top-right" reverseOrder={false} /> */}
-            <ToastContainer />
+                {/* <Toaster position="top-right" reverseOrder={false} /> */}
+                <ToastContainer />
 
-            <Dialog
-                fullWidth={true}
-                maxWidth="lg"
-                open={openProductDetailsModal}
-                onClose={handleCloseProductDetailsModal}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                className="productDetailsModal"
-            >
-                <DialogContent>
-                    <div className="flex items-center w-full productDetailsModalContainer relative">
-                        <Button
-                            className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[15px] right-[15px] !bg-[#f1f1f1]"
-                            onClick={handleCloseProductDetailsModal}
-                        >
-                            <IoCloseSharp className="text-[20px]" />
-                        </Button>
-                        <div className="col1 w-[40%] px-3">
-                            <ProductZoom />
+                <Dialog
+                    fullWidth={true}
+                    maxWidth="lg"
+                    open={openProductDetailsModal}
+                    onClose={handleCloseProductDetailsModal}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    className="productDetailsModal"
+                >
+                    <DialogContent>
+                        <div className="flex items-center w-full productDetailsModalContainer relative">
+                            <Button
+                                className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[15px] right-[15px] !bg-[#f1f1f1]"
+                                onClick={handleCloseProductDetailsModal}
+                            >
+                                <IoCloseSharp className="text-[20px]" />
+                            </Button>
+                            <div className="col1 w-[40%] px-3">
+                                <ProductZoom />
+                            </div>
+
+                            <div className="col2 w-[60%] py-8 px-8 pr-16 productContent">
+                                <ProductDetailsComponent />
+                            </div>
                         </div>
-
-                        <div className="col2 w-[60%] py-8 px-8 pr-16 productContent">
-                            <ProductDetailsComponent />
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
+                    </DialogContent>
+                </Dialog>
+            </StoreProvider>
         </>
     );
 }

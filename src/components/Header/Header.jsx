@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Search from '../Search/Search';
 import { Button } from '@mui/material';
 import { Badge } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { MdOutlineShoppingCart } from 'react-icons/md';
 import { IoGitCompareOutline } from 'react-icons/io5';
@@ -15,6 +15,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { IoBagCheckOutline } from 'react-icons/io5';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
+import Cookies from 'js-cookie';
 
 import Navigation from '../Navigation/Navigation';
 import { MyContext } from '../../App';
@@ -22,8 +23,14 @@ import logo from '../../assets/logo.jpg';
 
 import './Header.css';
 
+import axiosToken from '../../apis/axiosToken';
+
 const Header = () => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
+
     const open = Boolean(anchorEl);
     const context = useContext(MyContext);
 
@@ -32,6 +39,36 @@ const Header = () => {
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleLogout = async () => {
+        setAnchorEl(null);
+        setIsLoading(true);
+        try {
+            const { data } = await axiosToken.post('/api/user/logout', {
+                withCredentials: true,
+            });
+
+            console.log('dataLogout: ', data);
+
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+
+                Cookies.remove('accessToken');
+
+                context.setIsLogin(false);
+
+                context.openAlertBox('success', data.message);
+                navigate('/login');
+            } else {
+                context.openAlertBox('error', data.message);
+            }
+        } catch (err) {
+            console.log(err);
+            context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -89,10 +126,10 @@ const Header = () => {
                                         </Button>
                                         <div className="info flex flex-col gap-1">
                                             <h4 className="leading-3 text-[14px] text-[rgba(0,0,0,0.7)] mb-0 font-[500] capitalize text-left justify-start">
-                                                Tam Nguyen
+                                                {context.userInfo?.name}
                                             </h4>
                                             <span className="text-[13px] text-[rgba(0,0,0,0.7)] font-[400] text-left justify-start">
-                                                tamnguyenforwork@gmail.com
+                                                {context.userInfo?.email}
                                             </span>
                                         </div>
                                     </Button>
@@ -154,8 +191,19 @@ const Header = () => {
                                         </Link>
                                         <Link to="/logout" className="w-full block">
                                             <MenuItem onClick={handleClose} className="flex gap-2 !py-2">
-                                                <IoIosLogOut className="text-[18px] text-[#ff5252]" />
-                                                <span className="text-[14px] text-[#ff5252]">Đăng xuất</span>
+                                                {isLoading === true ? (
+                                                    <CircularProgress color="inherit" />
+                                                ) : (
+                                                    <>
+                                                        <IoIosLogOut className="text-[18px] text-[#ff5252]" />
+                                                        <span
+                                                            className="text-[14px] text-[#ff5252]"
+                                                            onClick={handleLogout}
+                                                        >
+                                                            Đăng xuất
+                                                        </span>
+                                                    </>
+                                                )}
                                             </MenuItem>
                                         </Link>
                                     </Menu>

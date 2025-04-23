@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+// Dùng cho api cần Bearer token và để duy trì phiên user như user-details, ...
+
 const axiosClient = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
     timeout: 10000,
