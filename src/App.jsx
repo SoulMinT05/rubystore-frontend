@@ -2,22 +2,7 @@ import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
-import HomePage from './pages/HomePage/HomePage';
-import ProductListPage from './pages/ProductListPage/ProductListPage';
-import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage';
-import LoginPage from './pages/LoginPage/LoginPage';
-import RegisterPage from './pages/RegisterPage/RegisterPage';
-import CartPage from './pages/CartPage/CartPage';
-import VerifyPage from './pages/VerifyPage/VerifyPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
-import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
-import MyAccountPage from './pages/MyAccountPage/MyAccountPage';
-import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage';
-import WishlistPage from './pages/WishlistPage/WishlistPage';
-import VerifyPasswordPage from './pages/VerifyPasswordPage/VerifyPasswordPage';
-
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import React, { createContext, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,6 +17,7 @@ import ProductDetailsComponent from './components/ProductDetailsComponent/Produc
 import { IoCloseSharp } from 'react-icons/io5';
 import axiosClient from './apis/axiosClient';
 import { StoreProvider } from './contexts/StoreProvider';
+import AppRoutes from './routes';
 
 const MyContext = createContext();
 
@@ -62,7 +48,6 @@ function App() {
             }
         };
         getUserDetails();
-        console.log('isLogin: ', isLogin);
     }, []);
 
     const openAlertBox = (status, message) => {
@@ -95,29 +80,11 @@ function App() {
                 <BrowserRouter>
                     <MyContext.Provider value={values}>
                         <Header />
-                        <Routes>
-                            <Route path={'/'} exact={true} element={<HomePage />} />
-                            <Route path={'/login'} exact={true} element={<LoginPage />} />
-                            <Route path={'/register'} exact={true} element={<RegisterPage />} />
-                            <Route path={'/cart'} exact={true} element={<CartPage />} />
-                            <Route path={'/verify'} exact={true} element={<VerifyPage />} />
-
-                            <Route path={'/verify-password'} exact={true} element={<VerifyPasswordPage />} />
-                            <Route path={'/forgot-password'} exact={true} element={<ForgotPasswordPage />} />
-                            <Route path={'/reset-password'} exact={true} element={<ResetPasswordPage />} />
-
-                            <Route path={'/checkout'} exact={true} element={<CheckoutPage />} />
-                            <Route path={'/my-account'} exact={true} element={<MyAccountPage />} />
-                            <Route path={'/order-history'} exact={true} element={<OrderHistoryPage />} />
-                            <Route path={'/wishlist'} exact={true} element={<WishlistPage />} />
-                            <Route path={'/product-list'} exact={true} element={<ProductListPage />} />
-                            <Route path={'/product/:id'} exact={true} element={<ProductDetailsPage />} />
-                        </Routes>
+                        <AppRoutes />
                         <Footer />
                     </MyContext.Provider>
                 </BrowserRouter>
 
-                {/* <Toaster position="top-right" reverseOrder={false} /> */}
                 <ToastContainer />
 
                 <Dialog
