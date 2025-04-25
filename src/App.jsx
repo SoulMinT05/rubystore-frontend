@@ -52,24 +52,6 @@ function App() {
         setOpenCartPanel(newOpen);
     };
 
-    // useEffect(() => {
-    //     const checkLogin = async () => {
-    //         try {
-    //             const res = await axiosClient.get('/api/user/check-login', {
-    //                 withCredentials: true,
-    //             });
-    //             if (res?.data?.success) {
-    //                 setIsLogin(true);
-    //             } else {
-    //                 setIsLogin(false);
-    //             }
-    //         } catch (error) {
-    //             console.log('errorCheckLogin: ', error);
-    //             setIsLogin(false);
-    //         }
-    //     };
-    //     checkLogin();
-    // }, [isLogin]);
     useEffect(() => {
         const getUserDetails = async () => {
             try {

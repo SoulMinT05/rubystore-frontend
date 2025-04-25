@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Search from '../Search/Search';
 import { Button } from '@mui/material';
@@ -24,6 +24,7 @@ import logo from '../../assets/logo.jpg';
 import './Header.css';
 
 import axiosToken from '../../apis/axiosToken';
+import axiosClient from '../../apis/axiosClient';
 
 const Header = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -41,6 +42,25 @@ const Header = () => {
         setAnchorEl(null);
     };
 
+    useEffect(() => {
+        const checkLogin = async () => {
+            try {
+                const res = await axiosClient.get('/api/user/check-login', {
+                    withCredentials: true,
+                });
+                if (res?.data?.success) {
+                    context.setIsLogin(true);
+                } else {
+                    context.setIsLogin(false);
+                }
+            } catch (error) {
+                console.log('errorCheckLogin: ', error);
+                context.setIsLogin(false);
+            }
+        };
+        checkLogin();
+    }, [context.isLogin]);
+
     const handleLogout = async () => {
         setAnchorEl(null);
         setIsLoading(true);
@@ -52,12 +72,8 @@ const Header = () => {
             console.log('dataLogout: ', data);
 
             if (data.success) {
-                context.openAlertBox('success', data.message);
-
                 Cookies.remove('accessToken');
-
                 context.setIsLogin(false);
-
                 context.openAlertBox('success', data.message);
                 navigate('/login');
             } else {
@@ -194,15 +210,15 @@ const Header = () => {
                                                 {isLoading === true ? (
                                                     <CircularProgress color="inherit" />
                                                 ) : (
-                                                    <>
+                                                    <div className="flex gap-2" onClick={handleLogout}>
                                                         <IoIosLogOut className="text-[18px] text-[#ff5252]" />
                                                         <span
                                                             className="text-[14px] text-[#ff5252]"
-                                                            onClick={handleLogout}
+                                                            // onClick={handleLogout}
                                                         >
                                                             Đăng xuất
                                                         </span>
-                                                    </>
+                                                    </div>
                                                 )}
                                             </MenuItem>
                                         </Link>
