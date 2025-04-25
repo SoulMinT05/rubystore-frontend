@@ -14,6 +14,7 @@ import WishlistPage from '../pages/WishlistPage/WishlistPage';
 import ProductListPage from '../pages/ProductListPage/ProductListPage';
 import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage';
 import PrivateRoute from './PrivateRoute';
+import ChangePasswordPage from '../components/ChangePasswordPage/ChangePasswordPage';
 
 const AppRoutes = () => (
     <Routes>
@@ -61,6 +62,15 @@ const AppRoutes = () => (
             element={
                 <PrivateRoute>
                     <WishlistPage />
+                </PrivateRoute>
+            }
+        />
+        <Route
+            path="/change-password"
+            exact
+            element={
+                <PrivateRoute>
+                    <ChangePasswordPage />
                 </PrivateRoute>
             }
         />

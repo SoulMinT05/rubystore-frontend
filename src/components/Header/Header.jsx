@@ -15,6 +15,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { IoBagCheckOutline } from 'react-icons/io5';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
+import { IoKeyOutline } from 'react-icons/io5';
 import Cookies from 'js-cookie';
 
 import Navigation from '../Navigation/Navigation';
@@ -59,7 +60,7 @@ const Header = () => {
             }
         };
         checkLogin();
-    }, [context.isLogin]);
+    }, [context?.isLogin]);
 
     const handleLogout = async () => {
         setAnchorEl(null);
@@ -203,6 +204,12 @@ const Header = () => {
                                             <MenuItem onClick={handleClose} className="flex gap-2 !py-2">
                                                 <IoMdHeartEmpty className="text-[18px]" />
                                                 <span className="text-[14px]">Danh sách yêu thích</span>
+                                            </MenuItem>
+                                        </Link>
+                                        <Link to="/change-password" className="w-full block">
+                                            <MenuItem onClick={handleClose} className="flex gap-2 !py-2">
+                                                <IoKeyOutline className="text-[18px]" />
+                                                <span className="text-[14px]">Đổi mật khẩu</span>
                                             </MenuItem>
                                         </Link>
                                         <Link className="w-full block">

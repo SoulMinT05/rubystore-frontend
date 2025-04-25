@@ -8,6 +8,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { IoBagCheckOutline } from 'react-icons/io5';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
+import { IoKeyOutline } from 'react-icons/io5';
 
 import './AccountSidebar.css';
 import axiosClient from '../../apis/axiosClient';
@@ -20,9 +21,9 @@ const AccountSidebar = ({ context }) => {
         const fetchAvatar = async () => {
             try {
                 const { data } = await axiosClient.get('/api/user/user-details');
-                if (data.success && data?.user?.avatar) {
-                    setPreview(data.user.avatar); // Set avatar từ backend
-                    context.setUserInfo(data.user);
+                if (data?.success && data?.user?.avatar) {
+                    setPreview(data?.user?.avatar); // Set avatar từ backend
+                    context.setUserInfo(data?.user);
                 }
             } catch (error) {
                 console.error('Không thể lấy avatar', error);
@@ -30,7 +31,7 @@ const AccountSidebar = ({ context }) => {
         };
 
         fetchAvatar();
-    }, [context.userInfo]);
+    }, [context?.userInfo]);
 
     const handleChangeFile = async (e) => {
         const file = e.target.files[0];
@@ -118,7 +119,16 @@ const AccountSidebar = ({ context }) => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink activeClassName="active">
+                    <NavLink to="/change-password" activeClassName="active">
+                        <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
+                            <IoKeyOutline className="text-[17px]" />
+                            <span>Đổi mật khẩu</span>
+                        </Button>
+                    </NavLink>
+                </li>
+
+                <li className="w-full">
+                    <NavLink to="/" activeClassName="active">
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoIosLogOut className="text-[18px] text-[#ff5252]" />
                             <span className="text-[#ff5252]">Đăng xuất</span>
