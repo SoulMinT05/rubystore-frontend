@@ -1,25 +1,46 @@
 import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 
-import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
-import { FcGoogle } from 'react-icons/fc';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import '../ForgotPasswordPage/ForgotPasswordPage.css';
 import { MyContext } from '../../App';
+import axiosAuth from '../../apis/axiosAuth';
 
 const ForgotPasswordPage = () => {
-    const [formFields, setFormFields] = useState({
-        email: '',
-        password: '',
-    });
+    const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
     const context = useContext(MyContext);
     const navigate = useNavigate();
 
-    const forgotPassword = () => {
-        context.openAlertBox('success', 'Đã gửi mã xác nhận đến email của bạn!');
-        navigate('/verify');
+    const forgotPassword = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            if (!email) {
+                context.openAlertBox('error', 'Vui lòng điền email!');
+                return;
+            }
+
+            const { data } = await axiosAuth.post('/api/user/forgot-password', { email });
+
+            console.log('dataForgotPassword: ', data);
+
+            if (data.success) {
+                context.openAlertBox('success', 'Đã gửi mã xác nhận đến email của bạn!');
+                sessionStorage.setItem('emailVerifyForgotPassword', email);
+                navigate('/verify-password');
+            } else {
+                context.openAlertBox('error', data.message);
+            }
+        } catch (err) {
+            console.log(err);
+            context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -30,18 +51,21 @@ const ForgotPasswordPage = () => {
                     <form className="w-full mt-5">
                         <div className="form-group w-full mb-5">
                             <TextField
-                                name="name"
+                                name="email"
+                                value={email}
+                                disabled={isLoading === true ? true : false}
                                 type="email"
                                 id="email"
                                 label="Email"
                                 variant="outlined"
                                 className="w-full"
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                        <p class="italic text-center">Nhập email để cấp lại mật khẩu.</p>
+                        <p className="italic text-center">Nhập email để cấp lại mật khẩu.</p>
                         <div className="flex items-center w-full mt-3 mb-3">
                             <Button onClick={forgotPassword} className="btn-org btn-login w-full">
-                                Thực hiện
+                                {isLoading === true ? <CircularProgress color="inherit" /> : 'Thực hiện'}
                             </Button>
                         </div>
                     </form>

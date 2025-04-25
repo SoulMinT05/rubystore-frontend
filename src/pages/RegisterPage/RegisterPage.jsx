@@ -59,16 +59,14 @@ const RegisterPage = () => {
             });
             if (data.success) {
                 context.openAlertBox('success', data.message);
+                context.setEmailVerify(formFields?.email);
                 sessionStorage.setItem('verifyToken', data.token);
                 navigate('/verify');
             } else {
                 context.openAlertBox('error', data.message);
             }
-            // localStorage.setItem('email', formFields.email);
-            // context.setEmailVerify(formFields.email);
         } catch (err) {
             console.log(err);
-            // context.openAlertBox('error', err);
         } finally {
             setIsLoading(false);
         }

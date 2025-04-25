@@ -189,7 +189,7 @@ const Header = () => {
                                                 <span className="text-[14px]">Danh sách yêu thích</span>
                                             </MenuItem>
                                         </Link>
-                                        <Link to="/logout" className="w-full block">
+                                        <Link className="w-full block">
                                             <MenuItem onClick={handleClose} className="flex gap-2 !py-2">
                                                 {isLoading === true ? (
                                                     <CircularProgress color="inherit" />

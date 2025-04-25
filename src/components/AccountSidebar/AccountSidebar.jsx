@@ -58,7 +58,7 @@ const AccountSidebar = () => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink to="/logout" activeClassName="active">
+                    <NavLink activeClassName="active">
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoIosLogOut className="text-[18px] text-[#ff5252]" />
                             <span className="text-[#ff5252]">Đăng xuất</span>

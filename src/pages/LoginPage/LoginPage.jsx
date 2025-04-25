@@ -47,10 +47,6 @@ const LoginPage = () => {
             const { data } = await axiosAuth.post('/api/user/login', formFields);
 
             console.log('dataLogin: ', data);
-            setFormFields({
-                email: '',
-                password: '',
-            });
             if (data.success) {
                 context.openAlertBox('success', data.message);
 

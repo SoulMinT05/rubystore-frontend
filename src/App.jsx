@@ -15,6 +15,7 @@ import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
 import MyAccountPage from './pages/MyAccountPage/MyAccountPage';
 import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage';
 import WishlistPage from './pages/WishlistPage/WishlistPage';
+import VerifyPasswordPage from './pages/VerifyPasswordPage/VerifyPasswordPage';
 
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import React, { createContext, useEffect, useState } from 'react';
@@ -40,6 +41,7 @@ function App() {
     const [openCartPanel, setOpenCartPanel] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
     const [emailVerify, setEmailVerify] = useState('');
+    const [emailVerifyForgotPassword, setEmailVerifyForgotPassword] = useState('');
     const [userInfo, setUserInfo] = useState(null);
 
     const handleCloseProductDetailsModal = () => {
@@ -78,6 +80,7 @@ function App() {
             }
         };
         getUserDetails();
+        console.log('isLogin: ', isLogin);
     }, []);
 
     const openAlertBox = (status, message) => {
@@ -99,6 +102,8 @@ function App() {
         setIsLogin,
         emailVerify,
         setEmailVerify,
+        emailVerifyForgotPassword,
+        setEmailVerifyForgotPassword,
         userInfo,
         setUserInfo,
     };
@@ -114,8 +119,11 @@ function App() {
                             <Route path={'/register'} exact={true} element={<RegisterPage />} />
                             <Route path={'/cart'} exact={true} element={<CartPage />} />
                             <Route path={'/verify'} exact={true} element={<VerifyPage />} />
+
+                            <Route path={'/verify-password'} exact={true} element={<VerifyPasswordPage />} />
                             <Route path={'/forgot-password'} exact={true} element={<ForgotPasswordPage />} />
                             <Route path={'/reset-password'} exact={true} element={<ResetPasswordPage />} />
+
                             <Route path={'/checkout'} exact={true} element={<CheckoutPage />} />
                             <Route path={'/my-account'} exact={true} element={<MyAccountPage />} />
                             <Route path={'/order-history'} exact={true} element={<OrderHistoryPage />} />
