@@ -16,7 +16,6 @@ const ResetPasswordPage = () => {
 
     const context = useContext(MyContext);
     const [formFields, setFormFields] = useState({
-        // email: context?.emailVerifyForgotPassword,
         email: sessionStorage.getItem('emailVerifyForgotPassword'),
         password: '',
         confirmPassword: '',
@@ -80,7 +79,7 @@ const ResetPasswordPage = () => {
                                 disabled={isLoading === true ? true : false}
                                 type={isShowPassword === false ? 'password' : 'text'}
                                 id="password"
-                                label="Mật khẩu"
+                                label="Mật khẩu mới"
                                 variant="outlined"
                                 className="w-full"
                                 onChange={handleChange}

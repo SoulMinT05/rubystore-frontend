@@ -23,7 +23,6 @@ const VerifyPage = () => {
             const res = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/verify-email', {
                 method: 'POST',
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                     'Content-type': 'application/json',
                 },
                 body: JSON.stringify({

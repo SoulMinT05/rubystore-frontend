@@ -44,6 +44,21 @@ const Header = () => {
     };
 
     useEffect(() => {
+        const fetchAvatar = async () => {
+            try {
+                const { data } = await axiosClient.get('/api/user/user-details');
+                if (data?.success && data?.user?.avatar) {
+                    context.setUserInfo(data?.user);
+                }
+            } catch (error) {
+                console.error('Không thể lấy avatar', error);
+            }
+        };
+
+        fetchAvatar();
+    }, [context?.userInfo?.avatar]);
+
+    useEffect(() => {
         const checkLogin = async () => {
             try {
                 const res = await axiosClient.get('/api/user/check-login', {
@@ -219,12 +234,7 @@ const Header = () => {
                                                 ) : (
                                                     <div className="flex gap-2" onClick={handleLogout}>
                                                         <IoIosLogOut className="text-[18px] text-[#ff5252]" />
-                                                        <span
-                                                            className="text-[14px] text-[#ff5252]"
-                                                            // onClick={handleLogout}
-                                                        >
-                                                            Đăng xuất
-                                                        </span>
+                                                        <span className="text-[14px] text-[#ff5252]">Đăng xuất</span>
                                                     </div>
                                                 )}
                                             </MenuItem>

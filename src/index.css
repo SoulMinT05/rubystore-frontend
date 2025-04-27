@@ -156,3 +156,12 @@ button .MuiCircularProgress-root {
     width: 30px !important;
     height: 30px !important;
 }
+
+.btn-red {
+    background-color: #ff5252 !important;
+    color: #fff !important;
+    padding: 8px 20px !important;
+}
+.MuiAppBar-colorPrimary {
+    background-color: #e6e6e6 !important;
+}

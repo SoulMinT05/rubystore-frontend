@@ -39,8 +39,6 @@ axiosClient.interceptors.response.use(
 
             try {
                 const { data } = await axiosClient.get('/api/user/refreshToken');
-                console.log('dataRefreshToken: ', data);
-
                 const newAccessToken = data?.data?.accessToken;
 
                 if (newAccessToken) {
