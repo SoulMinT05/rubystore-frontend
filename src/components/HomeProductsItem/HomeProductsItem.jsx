@@ -12,6 +12,7 @@ import { IoGitCompareOutline } from 'react-icons/io5';
 import { MdZoomOutMap } from 'react-icons/md';
 import { MyContext } from '../../App';
 
+import { MdOutlineShoppingCart } from 'react-icons/md';
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -62,7 +63,7 @@ const HomeProductsItem = ({ product }) => {
                     </Tooltip>
                 </div>
             </div>
-            <div className="info p-3 py-5">
+            <div className="info p-3 py-5 relative pb-[50px] h-[220px] ">
                 <h6 className="text-[13px] line-clamp-1 !font-[400]">
                     <span className="link transition-all">{product?.brand}</span>
                 </h6>
@@ -71,13 +72,22 @@ const HomeProductsItem = ({ product }) => {
                         {product?.name}
                     </Link>
                 </h3>
-                <Rating name="size-small" defaultValue={5} readOnly size="small" />
+                <Rating name="size-small" defaultValue={product?.rating} readOnly size="small" />
 
                 <div className="flex items-center gap-4">
                     <span className="oldPrice line-through text-gray-500 text-[15px] font-[]500">
                         {formatCurrency(product?.oldPrice)}
                     </span>
                     <span className="price text-primary text-[15px] font-[600]">{formatCurrency(product?.price)}</span>
+                </div>
+                <div className="!absolute bottom-[15px] left-0 pl-3 pr-3 w-full">
+                    <Button
+                        className="btn-border flex w-full btn-sm gap-1 !px-1 overflow-hidden text-ellipsis whitespace-nowrap"
+                        size="small"
+                    >
+                        <MdOutlineShoppingCart className="text-[18px]" />
+                        <span className="text-[13px] !normal-case">Thêm vào giỏ hàng</span>
+                    </Button>
                 </div>
             </div>
         </div>

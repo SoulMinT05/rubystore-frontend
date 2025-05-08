@@ -19,23 +19,23 @@ const formatCurrency = (amount) => {
         currency: 'VND',
     }).format(amount);
 };
-const ProductListItemView = () => {
+const ProductListItemView = ({ product }) => {
     const context = useContext(MyContext);
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)] flex items-center">
             <div className="group imgWrapper w-[25%] overflow-hidden rounded-md relative">
-                <Link to="/">
-                    <div className="img  h-[220px] overflow-hidden">
-                        <img src="src/assets/product1.webp" alt="" className="w-full" />
+                <Link to={`/product/${product?._id}`}>
+                    <div className="img overflow-hidden">
+                        <img src={product?.images[0]} alt="" className="w-full" />
                         <img
-                            src="src/assets/product1-backup.webp"
+                            src={product?.images[1]}
                             alt=""
                             className="w-full transition-all duration-300 absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-scale:105"
                         />
                     </div>
                 </Link>
                 <span className="discount flex items-center absolute top-[10px] left-[10px] z-50 bg-primary text-white rounded-lg p-1 text-[12px] font-[500]">
-                    12%
+                    {product?.discount}%
                 </span>
                 <div
                     className="actions absolute top-[-200px] right-[5px] flex items-center gap-2 flex-col w-[50px] transition-all duration-300 group-hover:top-[15px]
@@ -65,25 +65,22 @@ const ProductListItemView = () => {
             <div className="info p-3 py-5 px-8 w-[75%]">
                 <h6 className="text-[15px] !font-[400]">
                     <Link to="/" className="link transition-all">
-                        Áo sơ mi công sở
+                        {product?.brand}
                     </Link>
                 </h6>
                 <h3 className="text-[18px] title mt-3 font-[500] mb-3 text-[#000]">
                     <Link to="/" className="link transition-all">
-                        Áo sơ mi công sở với thiết kế quý phái, sang trọng
+                        {product?.name}
                     </Link>
                 </h3>
-                <p className="text-[14px] mb-3">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur aperiam in sequi tenetur magni
-                    enim eveniet perferendis exercitationem?
-                </p>
-                <Rating name="size-small" defaultValue={5} readOnly size="small" />
+                <p className="text-[14px] mb-3 line-clamp-3">{product?.description}</p>
+                <Rating name="size-small" defaultValue={product?.rating} readOnly size="small" />
 
                 <div className="flex items-center gap-4">
                     <span className="oldPrice line-through text-gray-500 text-[15px] font-[500]">
-                        {formatCurrency(200000)}
+                        {formatCurrency(product?.oldPrice)}
                     </span>
-                    <span className="price text-primary text-[15px] font-[600]">{formatCurrency(180000)}</span>
+                    <span className="price text-primary text-[15px] font-[600]">{formatCurrency(product?.price)}</span>
                 </div>
 
                 <div className="mt-3">

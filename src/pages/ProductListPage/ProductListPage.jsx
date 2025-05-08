@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { Button } from '@mui/material';
@@ -17,6 +17,7 @@ import ProductListItemView from '../../components/ProductListItemView/ProductLis
 
 import '../ProductListPage/ProductListPage.css';
 import ProductLoading from '../../components/ProductLoading/ProductLoading';
+import axiosAuth from '../../apis/axiosAuth';
 
 const ProductListPage = () => {
     const [itemView, setItemView] = useState('grid');
@@ -27,14 +28,38 @@ const ProductListPage = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const [selectedSortValue, setSelectedSortValue] = useState();
+    const [selectedSortValue, setSelectedSortValue] = useState('Thứ tự A đến Z');
 
+    useEffect(() => {
+        if (productsList?.length > 0) {
+            handleSortBy('name', 'asc', productsList, 'Thứ tự A đến Z');
+        }
+    }, []);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+    const handleSortBy = async (name, order, products, value) => {
+        console.log('Products list trước khi gửi:', products);
+
+        if (!Array.isArray(products) || products.length === 0) {
+            console.error('Products không phải là mảng hoặc rỗng.');
+            return;
+        }
+
+        setSelectedSortValue(value);
+        const { data } = await axiosAuth.post('/api/product/sort', {
+            products,
+            sortBy: name,
+            order,
+        });
+        if (data.success) {
+            setProductsList(data?.products);
+            setAnchorEl(null);
+        }
     };
     return (
         <section className="py-5 pb-0">
@@ -51,7 +76,7 @@ const ProductListPage = () => {
 
             <div className="bg-white p-2 mt-4">
                 <div className="container flex gap-4">
-                    <div className="sidebarWrapper w-[20%] h-full bg-white">
+                    <div className="sidebarWrapper w-[20%] bg-white">
                         <ProductListSidebar
                             productsList={productsList}
                             setProductsList={setProductsList}
@@ -63,7 +88,10 @@ const ProductListPage = () => {
                         />
                     </div>
                     <div className="rightContent w-[80%] py-3">
-                        <div className="bg-[#f1f1f1] p-2 w-full mb-4 rounded-md flex items-center justify-between">
+                        <div
+                            className="bg-[#f1f1f1] p-2 w-full mb-4 rounded-md flex items-center justify-between
+                            sticky top-[130px] z-[99]"
+                        >
                             <div className="col1 flex items-center itemViewActions">
                                 <Button
                                     className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000]
@@ -80,7 +108,7 @@ const ProductListPage = () => {
                                     <IoGridSharp className="text-[rgba(0,0,0,0.7)]" />
                                 </Button>
                                 <span className="text-[14px] font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
-                                    Có {productsList?.length !== 0 ? productsList?.length : 0} sản phẩm
+                                    Tổng {productsList?.length !== 0 ? productsList?.length : 0} sản phẩm
                                 </span>
                             </div>
 
@@ -95,7 +123,7 @@ const ProductListPage = () => {
                                     onClick={handleClick}
                                     className="!bg-white !text-[12px] !text-[#000] !capitalize !border-2 !border-[#000]"
                                 >
-                                    Giảm giá: Cao đến thấp nhất
+                                    {selectedSortValue}
                                 </Button>
                                 <Menu
                                     id="basic-menu"
@@ -106,22 +134,34 @@ const ProductListPage = () => {
                                         'aria-labelledby': 'basic-button',
                                     }}
                                 >
-                                    <MenuItem onClick={handleClose} className="!text-[13px] !text-[#000] !capitalize">
+                                    {/* <MenuItem className="!text-[13px] !text-[#000] !capitalize">
                                         Giảm giá: Cao đến thấp nhất
                                     </MenuItem>
                                     <MenuItem onClick={handleClose} className="!text-[13px] !text-[#000] !capitalize">
                                         Phổ biến
-                                    </MenuItem>
-                                    <MenuItem onClick={handleClose} className="!text-[13px] !text-[#000] !capitalize">
+                                    </MenuItem> */}
+                                    <MenuItem
+                                        onClick={() => handleSortBy('name', 'asc', productsList, 'Thứ tự A đến Z')}
+                                        className="!text-[14px] !text-[#000] !capitalize"
+                                    >
                                         Thứ tự A đến Z
                                     </MenuItem>
-                                    <MenuItem onClick={handleClose} className="!text-[13px] !text-[#000] !capitalize">
+                                    <MenuItem
+                                        onClick={() => handleSortBy('name', 'desc', productsList, 'Thứ tự Z đến A')}
+                                        className="!text-[14px] !text-[#000] !capitalize"
+                                    >
                                         Thứ tự Z về A
                                     </MenuItem>
-                                    <MenuItem onClick={handleClose} className="!text-[13px] !text-[#000] !capitalize">
+                                    <MenuItem
+                                        onClick={() => handleSortBy('price', 'asc', productsList, 'Giá: thấp đến cao')}
+                                        className="!text-[14px] !text-[#000] !capitalize"
+                                    >
                                         Giá: thấp đến cao
                                     </MenuItem>
-                                    <MenuItem onClick={handleClose} className="!text-[13px] !text-[#000] !capitalize">
+                                    <MenuItem
+                                        onClick={() => handleSortBy('price', 'desc', productsList, 'Giá: cao đến thấp')}
+                                        className="!text-[14px] !text-[#000] !capitalize"
+                                    >
                                         Giá: cao đến thấp
                                     </MenuItem>
                                 </Menu>
@@ -129,7 +169,7 @@ const ProductListPage = () => {
                         </div>
                         <div
                             className={`grid ${
-                                itemView === 'grid' ? 'grid-cols-5 md:grid-cols-5' : 'grid-cols-1 md:grid-cols-1'
+                                itemView === 'grid' ? 'grid-cols-4 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-1'
                             } gap-4`}
                         >
                             {itemView === 'grid' ? (
@@ -149,7 +189,7 @@ const ProductListPage = () => {
                                         <ProductLoading view={itemView} />
                                     ) : (
                                         productsList?.products?.length !== 0 &&
-                                        productsList?.products?.map((product, index) => {
+                                        productsList?.map((product, index) => {
                                             return <ProductListItemView key={index} product={product} />;
                                         })
                                     )}

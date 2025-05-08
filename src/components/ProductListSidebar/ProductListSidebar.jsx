@@ -26,15 +26,7 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 
-const ProductListSidebar = ({
-    productsList,
-    setProductsList,
-    isLoading,
-    setIsLoading,
-    page,
-    setPage,
-    setTotalPages,
-}) => {
+const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalPages }) => {
     const context = useContext(MyContext);
     const [isFilterApplied, setIsFilterApplied] = useState(false);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
@@ -49,7 +41,7 @@ const ProductListSidebar = ({
         maxPrice: '',
         rating: '',
         page: 1,
-        limit: 10,
+        limit: 12,
     });
     const [price, setPrice] = useState([10000, 10000000]);
     const location = useLocation(); // Là Object có pathname là /product
@@ -177,7 +169,7 @@ const ProductListSidebar = ({
     }, [isFilterApplied]);
 
     return (
-        <aside className="sidebar py-5">
+        <aside className="sidebar py-5 sticky top-[130px] z-[50]">
             <div className="box">
                 <h3 className="w-full mb-3 text-[16px] font-[600] flex items-center pr-5">
                     Phân loại sản phẩm
