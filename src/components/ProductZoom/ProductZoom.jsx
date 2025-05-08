@@ -11,7 +11,7 @@ import 'swiper/css/navigation';
 
 import '../ProductZoom/ProductZoom.css';
 
-const ProductZoom = () => {
+const ProductZoom = ({ images }) => {
     const [slideIndex, setSlideIndex] = useState(0);
     const zoomSliderBig = useRef();
     const zoomSliderSml = useRef();
@@ -32,155 +32,39 @@ const ProductZoom = () => {
                         spaceBetween={0}
                         navigation={true}
                         modules={[Navigation]}
-                        className="zoomProductSliderThumbs h-[500px] overflow-hidden"
+                        className={`zoomProductSliderThumbs h-[500px] overflow-hidden ${images?.length > 5 && 'space'}`}
                     >
-                        <SwiperSlide>
-                            <div
-                                className={`item rounded-md overflow-hidden cursor-pointer group 
-                                    ${slideIndex === 0 ? 'opacity-1' : 'opacity-30'}`}
-                                onClick={() => goto(0)}
-                            >
-                                <img
-                                    src="https://serviceapi.spicezgold.com/download/1742462552739_siril-georgette-pink-color-saree-with-blouse-piece-product-images-rvrk9p11sk-0-202308161432.webp"
-                                    alt=""
-                                    className="w-full transition-all group-hover:scale-105"
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div
-                                className={`item rounded-md overflow-hidden cursor-pointer group 
-                                    ${slideIndex === 1 ? 'opacity-1' : 'opacity-30'}`}
-                                onClick={() => goto(1)}
-                            >
-                                <img
-                                    src="https://serviceapi.spicezgold.com/download/1742439887417_miss-ayse-women-s-multicolor-crepe-printed-top-product-images-rvvlrud6qm-1-202410111253.webp"
-                                    alt=""
-                                    className="w-full transition-all group-hover:scale-105"
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div
-                                className={`item rounded-md overflow-hidden cursor-pointer group 
-                                    ${slideIndex === 2 ? 'opacity-1' : 'opacity-30'}`}
-                                onClick={() => goto(2)}
-                            >
-                                <img
-                                    src="https://serviceapi.spicezgold.com/download/1742462552741_siril-georgette-pink-color-saree-with-blouse-piece-product-images-rvrk9p11sk-3-202308161432.webp"
-                                    alt=""
-                                    className="w-full transition-all group-hover:scale-105"
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div
-                                className={`item rounded-md overflow-hidden cursor-pointer group 
-                                    ${slideIndex === 3 ? 'opacity-1' : 'opacity-30'}`}
-                                onClick={() => goto(3)}
-                            >
-                                <img
-                                    src="https://serviceapi.spicezgold.com/download/1742439887415_miss-ayse-women-s-multicolor-crepe-printed-top-product-images-rvvlrud6qm-0-202410111253.webp"
-                                    alt=""
-                                    className="w-full transition-all group-hover:scale-105"
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div
-                                className={`item rounded-md overflow-hidden cursor-pointer group 
-                                    ${slideIndex === 4 ? 'opacity-1' : 'opacity-30'}`}
-                                onClick={() => goto(4)}
-                            >
-                                <img
-                                    src="https://serviceapi.spicezgold.com/download/1742462552744_siril-georgette-pink-color-saree-with-blouse-piece-product-images-rvrk9p11sk-1-202308161432.webp"
-                                    alt=""
-                                    className="w-full transition-all group-hover:scale-105"
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div
-                                className={`item rounded-md overflow-hidden cursor-pointer group 
-                                    ${slideIndex === 5 ? 'opacity-1' : 'opacity-30'}`}
-                                onClick={() => goto(5)}
-                            >
-                                <img
-                                    src="https://serviceapi.spicezgold.com/download/1742462287664_siril-poly-silk-white-beige-color-saree-with-blouse-piece-product-images-rv2vcdkuly-2-202304220523.webp"
-                                    alt=""
-                                    className="w-full transition-all group-hover:scale-105"
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div
-                                className={`item rounded-md overflow-hidden cursor-pointer group 
-                                    ${slideIndex === 6 ? 'opacity-1' : 'opacity-30'}`}
-                                onClick={() => goto(6)}
-                            >
-                                <img
-                                    src="https://serviceapi.spicezgold.com/download/1742462287664_siril-poly-silk-white-beige-color-saree-with-blouse-piece-product-images-rv2vcdkuly-0-202304220523.webp"
-                                    alt=""
-                                    className="w-full transition-all group-hover:scale-105"
-                                />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide></SwiperSlide>
+                        {images?.length !== 0 &&
+                            images?.map((image, index) => {
+                                return (
+                                    <SwiperSlide key={index}>
+                                        <div
+                                            className={`item rounded-md overflow-hidden cursor-pointer group 
+                                    ${slideIndex === index ? 'opacity-1' : 'opacity-30'}`}
+                                            onClick={() => goto(index)}
+                                        >
+                                            <img
+                                                src={image}
+                                                alt=""
+                                                className="w-full transition-all h-[88px] object-cover group-hover:scale-105"
+                                            />
+                                        </div>
+                                    </SwiperSlide>
+                                );
+                            })}
                     </Swiper>
                 </div>
 
                 <div className="zoomContainer w-[85%] h-[500px] overflow-hidden rounded-lg">
                     <Swiper ref={zoomSliderBig} slidesPerView={1} spaceBetween={0} navigation={false}>
-                        <SwiperSlide>
-                            <InnerImageZoom
-                                zoomType="hover"
-                                zoomScale={1}
-                                src="https://serviceapi.spicezgold.com/download/1742462552739_siril-georgette-pink-color-saree-with-blouse-piece-product-images-rvrk9p11sk-0-202308161432.webp"
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <InnerImageZoom
-                                zoomType="hover"
-                                zoomScale={1}
-                                src="https://serviceapi.spicezgold.com/download/1742439887417_miss-ayse-women-s-multicolor-crepe-printed-top-product-images-rvvlrud6qm-1-202410111253.webp"
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <InnerImageZoom
-                                zoomType="hover"
-                                zoomScale={1}
-                                src="https://serviceapi.spicezgold.com/download/1742462552741_siril-georgette-pink-color-saree-with-blouse-piece-product-images-rvrk9p11sk-3-202308161432.webp"
-                            />
-                        </SwiperSlide>
-
-                        <SwiperSlide>
-                            <InnerImageZoom
-                                zoomType="hover"
-                                zoomScale={1}
-                                src="https://serviceapi.spicezgold.com/download/1742439887415_miss-ayse-women-s-multicolor-crepe-printed-top-product-images-rvvlrud6qm-0-202410111253.webp"
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <InnerImageZoom
-                                zoomType="hover"
-                                zoomScale={1}
-                                src="https://serviceapi.spicezgold.com/download/1742462552744_siril-georgette-pink-color-saree-with-blouse-piece-product-images-rvrk9p11sk-1-202308161432.webp"
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <InnerImageZoom
-                                zoomType="hover"
-                                zoomScale={1}
-                                src="https://serviceapi.spicezgold.com/download/1742462287664_siril-poly-silk-white-beige-color-saree-with-blouse-piece-product-images-rv2vcdkuly-2-202304220523.webp"
-                            />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <InnerImageZoom
-                                zoomType="hover"
-                                zoomScale={1}
-                                src="https://serviceapi.spicezgold.com/download/1742462287664_siril-poly-silk-white-beige-color-saree-with-blouse-piece-product-images-rv2vcdkuly-0-202304220523.webp"
-                            />
-                        </SwiperSlide>
+                        {images?.length !== 0 &&
+                            images?.map((image, index) => {
+                                return (
+                                    <SwiperSlide key={index}>
+                                        <InnerImageZoom zoomType="hover" zoomScale={1} src={image} />
+                                    </SwiperSlide>
+                                );
+                            })}
                     </Swiper>
                 </div>
             </div>

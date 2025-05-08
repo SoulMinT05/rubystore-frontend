@@ -16,11 +16,19 @@ import HomeProductItem from '../../components/HomeProductsItem/HomeProductsItem'
 import ProductListItemView from '../../components/ProductListItemView/ProductListItemView';
 
 import '../ProductListPage/ProductListPage.css';
+import ProductLoading from '../../components/ProductLoading/ProductLoading';
 
 const ProductListPage = () => {
     const [itemView, setItemView] = useState('grid');
-
     const [anchorEl, setAnchorEl] = useState(null);
+    const [productsList, setProductsList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const [selectedSortValue, setSelectedSortValue] = useState();
+
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -44,7 +52,15 @@ const ProductListPage = () => {
             <div className="bg-white p-2 mt-4">
                 <div className="container flex gap-4">
                     <div className="sidebarWrapper w-[20%] h-full bg-white">
-                        <ProductListSidebar />
+                        <ProductListSidebar
+                            productsList={productsList}
+                            setProductsList={setProductsList}
+                            isLoading={isLoading}
+                            setIsLoading={setIsLoading}
+                            page={page}
+                            setPage={setPage}
+                            setTotalPages={setTotalPages}
+                        />
                     </div>
                     <div className="rightContent w-[80%] py-3">
                         <div className="bg-[#f1f1f1] p-2 w-full mb-4 rounded-md flex items-center justify-between">
@@ -64,7 +80,7 @@ const ProductListPage = () => {
                                     <IoGridSharp className="text-[rgba(0,0,0,0.7)]" />
                                 </Button>
                                 <span className="text-[14px] font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
-                                    Có 26 sản phẩm
+                                    Có {productsList?.length !== 0 ? productsList?.length : 0} sản phẩm
                                 </span>
                             </div>
 
@@ -113,35 +129,45 @@ const ProductListPage = () => {
                         </div>
                         <div
                             className={`grid ${
-                                itemView === 'grid' ? 'grid-cols-4 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-1'
+                                itemView === 'grid' ? 'grid-cols-5 md:grid-cols-5' : 'grid-cols-1 md:grid-cols-1'
                             } gap-4`}
                         >
                             {itemView === 'grid' ? (
                                 <>
-                                    <HomeProductItem />
-                                    <HomeProductItem />
-                                    <HomeProductItem />
-                                    <HomeProductItem />
-                                    <HomeProductItem />
-                                    <HomeProductItem />
-                                    <HomeProductItem />
+                                    {isLoading === true ? (
+                                        <ProductLoading view={itemView} />
+                                    ) : (
+                                        productsList?.length !== 0 &&
+                                        productsList?.map((product, index) => {
+                                            return <HomeProductItem key={index} product={product} />;
+                                        })
+                                    )}
                                 </>
                             ) : (
                                 <>
-                                    <ProductListItemView />
-                                    <ProductListItemView />
-                                    <ProductListItemView />
-                                    <ProductListItemView />
-                                    <ProductListItemView />
-                                    <ProductListItemView />
-                                    <ProductListItemView />
+                                    {isLoading === true ? (
+                                        <ProductLoading view={itemView} />
+                                    ) : (
+                                        productsList?.products?.length !== 0 &&
+                                        productsList?.products?.map((product, index) => {
+                                            return <ProductListItemView key={index} product={product} />;
+                                        })
+                                    )}
                                 </>
                             )}
                         </div>
 
-                        <div className="flex items-center justify-center mt-10">
-                            <Pagination count={10} showFirstButton showLastButton />
-                        </div>
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-center mt-10">
+                                <Pagination
+                                    showFirstButton
+                                    showLastButton
+                                    count={totalPages}
+                                    page={page}
+                                    onChange={(e, value) => setPage(value)}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

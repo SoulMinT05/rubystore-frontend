@@ -11,8 +11,6 @@ import { FaRegHeart } from 'react-icons/fa';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { MdZoomOutMap } from 'react-icons/md';
 import { MyContext } from '../../App';
-import product1 from '../../assets/product1.webp';
-import product1Backup from '../../assets/product1-backup.webp';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -20,24 +18,24 @@ const formatCurrency = (amount) => {
         currency: 'VND',
     }).format(amount);
 };
-const HomeProductsItem = () => {
+const HomeProductsItem = ({ product }) => {
     const context = useContext(MyContext);
 
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
             <div className="group imgWrapper w-[100%] overflow-hidden rounded-md relative">
-                <Link to="/">
+                <Link to={`/product/${product?._id}`}>
                     <div className="img  h-[220px] overflow-hidden">
-                        <img src={product1} alt="" className="w-full" />
+                        <img src={product?.images[0]} alt="" className="w-full" />
                         <img
-                            src={product1Backup}
+                            src={product?.images[1]}
                             alt=""
                             className="w-full transition-all duration-300 absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-scale:105"
                         />
                     </div>
                 </Link>
                 <span className="discount flex items-center absolute top-[10px] left-[10px] z-50 bg-primary text-white rounded-lg p-1 text-[12px] font-[500]">
-                    12%
+                    {product?.discount + '%'}
                 </span>
                 <div
                     className="actions absolute top-[-200px] right-[5px] flex items-center gap-2 flex-col w-[50px] transition-all duration-300 group-hover:top-[15px]
@@ -47,7 +45,7 @@ const HomeProductsItem = () => {
                     <Tooltip title="Xem chi tiết" placement="left-start">
                         <Button
                             className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group"
-                            onClick={() => context.setOpenProductDetailsModal(true)}
+                            onClick={() => context.handleOpenProductDetailsModal(true, product)}
                         >
                             <MdZoomOutMap className="text-[18px] !text-black group-hover:text-white" />
                         </Button>
@@ -65,23 +63,21 @@ const HomeProductsItem = () => {
                 </div>
             </div>
             <div className="info p-3 py-5">
-                <h6 className="text-[13px] !font-[400]">
-                    <Link to="/" className="link transition-all">
-                        Áo sơ mi công sở
-                    </Link>
+                <h6 className="text-[13px] line-clamp-1 !font-[400]">
+                    <span className="link transition-all">{product?.brand}</span>
                 </h6>
-                <h3 className="text-[13px] title mt-1 font-[500] mb-1 text-[#000]">
-                    <Link to="/" className="link transition-all">
-                        Áo sơ mi công sở với thiết kế quý phái, sang trọng
+                <h3 className="text-[13px] min-h-[52px] line-clamp-3 title mt-1 font-[500] mb-1 text-[#000]">
+                    <Link to={`/product/${product?._id}`} className="link transition-all">
+                        {product?.name}
                     </Link>
                 </h3>
                 <Rating name="size-small" defaultValue={5} readOnly size="small" />
 
                 <div className="flex items-center gap-4">
                     <span className="oldPrice line-through text-gray-500 text-[15px] font-[]500">
-                        {formatCurrency(200000)}
+                        {formatCurrency(product?.oldPrice)}
                     </span>
-                    <span className="price text-primary text-[15px] font-[600]">{formatCurrency(180000)}</span>
+                    <span className="price text-primary text-[15px] font-[600]">{formatCurrency(product?.price)}</span>
                 </div>
             </div>
         </div>

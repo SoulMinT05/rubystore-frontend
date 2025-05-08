@@ -26,8 +26,8 @@ const AppRoutes = () => (
         <Route path="/verify-password" exact element={<VerifyPasswordPage />} />
         <Route path="/forgot-password" exact element={<ForgotPasswordPage />} />
         <Route path="/reset-password" exact element={<ResetPasswordPage />} />
-        <Route path="/product-list" exact element={<ProductListPage />} />
         <Route path="/product/:id" exact element={<ProductDetailsPage />} />
+        <Route path="/product" exact element={<ProductListPage />} />
 
         <Route
             path="/checkout"

@@ -10,7 +10,7 @@ import HomeProductsItem from '../HomeProductsItem/HomeProductsItem';
 
 import '../HomeProductsSlider/HomeProductsSlider.css';
 
-const HomeProductsSlider = ({ items }) => {
+const HomeProductsSlider = ({ items, products }) => {
     return (
         <div className="productsSlider py-3">
             <Swiper
@@ -20,36 +20,13 @@ const HomeProductsSlider = ({ items }) => {
                 modules={[Navigation]}
                 className="mySwiper"
             >
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <HomeProductsItem />
-                </SwiperSlide>
+                {products?.map((product, index) => {
+                    return (
+                        <SwiperSlide key={index}>
+                            <HomeProductsItem product={product} />
+                        </SwiperSlide>
+                    );
+                })}
             </Swiper>
         </div>
     );

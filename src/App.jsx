@@ -18,20 +18,36 @@ import { IoCloseSharp } from 'react-icons/io5';
 import axiosClient from './apis/axiosClient';
 import { StoreProvider } from './contexts/StoreProvider';
 import AppRoutes from './routes';
+import axiosAuth from './apis/axiosAuth';
 
 const MyContext = createContext();
 
 function App() {
-    const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
+    const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
+        open: false,
+        item: {},
+    });
 
     const [openCartPanel, setOpenCartPanel] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
     const [emailVerify, setEmailVerify] = useState('');
     const [emailVerifyForgotPassword, setEmailVerifyForgotPassword] = useState('');
     const [userInfo, setUserInfo] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [blogs, setBlogs] = useState([]);
+
+    const handleOpenProductDetailsModal = (open, item) => {
+        setOpenProductDetailsModal({
+            open,
+            item,
+        });
+    };
 
     const handleCloseProductDetailsModal = () => {
-        setOpenProductDetailsModal(false);
+        setOpenProductDetailsModal({
+            open: false,
+            item: {},
+        });
     };
 
     const toggleCartPanel = (newOpen) => {
@@ -58,8 +74,24 @@ function App() {
             toast.error(message);
         }
     };
-
+    const getCategories = async () => {
+        try {
+            const { data } = await axiosAuth.get('/api/category/all-categories');
+            setCategories(data?.categories);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getBlogs = async () => {
+        try {
+            const { data } = await axiosClient.get('/api/blog/all-blogs');
+            setBlogs(data?.blogs);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const values = {
+        handleOpenProductDetailsModal,
         setOpenProductDetailsModal,
         setOpenCartPanel,
         toggleCartPanel,
@@ -73,6 +105,12 @@ function App() {
         setEmailVerifyForgotPassword,
         userInfo,
         setUserInfo,
+        categories,
+        setCategories,
+        getCategories,
+        blogs,
+        setBlogs,
+        getBlogs,
     };
     return (
         <>
@@ -90,7 +128,7 @@ function App() {
                 <Dialog
                     fullWidth={true}
                     maxWidth="lg"
-                    open={openProductDetailsModal}
+                    open={openProductDetailsModal.open}
                     onClose={handleCloseProductDetailsModal}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
@@ -104,13 +142,17 @@ function App() {
                             >
                                 <IoCloseSharp className="text-[20px]" />
                             </Button>
-                            <div className="col1 w-[40%] px-3">
-                                <ProductZoom />
-                            </div>
+                            {openProductDetailsModal?.item?._id && (
+                                <>
+                                    <div className="col1 w-[40%] px-3">
+                                        <ProductZoom images={openProductDetailsModal?.item?.images} />
+                                    </div>
 
-                            <div className="col2 w-[60%] py-8 px-8 pr-16 productContent">
-                                <ProductDetailsComponent />
-                            </div>
+                                    <div className="col2 w-[60%] py-8 px-8 pr-16 productContent">
+                                        <ProductDetailsComponent product={openProductDetailsModal?.item} />
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </DialogContent>
                 </Dialog>

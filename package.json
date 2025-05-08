@@ -15,6 +15,7 @@
         "@mui/material": "^6.4.8",
         "@mui/styled-engine-sc": "^6.4.6",
         "axios": "^1.8.4",
+        "dompurify": "^3.2.5",
         "html2canvas": "^1.4.1",
         "html2canvas-pro": "^1.5.8",
         "html2pdf.js": "^0.9.0",

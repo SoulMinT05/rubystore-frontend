@@ -13,13 +13,6 @@ import { Button } from '@mui/material';
 
 import '../HomeBannerSlider/HomeBannerSlider.css';
 
-const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    }).format(amount);
-};
-
 const HomeBannerSlider = () => {
     return (
         <Swiper
@@ -39,9 +32,12 @@ const HomeBannerSlider = () => {
         >
             <SwiperSlide>
                 <div className="item w-full rounded-md overflow-hidden relative">
-                    <img src="src/assets/bannerimg1.jpg" />
+                    <img
+                        src="https://cf.shopee.vn/file/vn-11134258-7ras8-m5184szf0klz56_xxhdpi"
+                        className="h-[230px] w-full"
+                    />
 
-                    <div
+                    {/* <div
                         className="info absolute top-0 -right-[100%] opacity-0 w-[50%] h-[100%] z-50 p-8 flex items-center justify-center flex-col
                         transition-all duration-500"
                     >
@@ -58,13 +54,16 @@ const HomeBannerSlider = () => {
                         <div className="w-full relative -right-[100%] opacity-0 btnShopping">
                             <Button className="btn-org">Mua sắm ngay</Button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </SwiperSlide>
             <SwiperSlide>
                 <div className="item w-full rounded-md overflow-hidden">
-                    <img src="src/assets/bannerimg2.jpg" />
-                    <div
+                    <img
+                        className="h-[230px] w-full"
+                        src="https://cf.shopee.vn/file/sg-11134258-7rffa-m9a09twreqw9d7_xxhdpi"
+                    />
+                    {/* <div
                         className="info absolute top-0 -right-[100%] opacity-0 w-[50%] h-[100%] z-50 p-8 flex items-center justify-center flex-col
                         transition-all duration-500"
                     >
@@ -81,7 +80,7 @@ const HomeBannerSlider = () => {
                         <div className="w-full relative -right-[100%] opacity-0 btnShopping">
                             <Button className="btn-org">Mua sắm ngay</Button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </SwiperSlide>
         </Swiper>

@@ -77,6 +77,18 @@ const Header = () => {
         checkLogin();
     }, [context?.isLogin]);
 
+    useEffect(() => {
+        const getUserDetails = async () => {
+            try {
+                const { data } = await axiosClient.get('/api/user/user-details');
+                context.setUserInfo(data?.user);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getUserDetails();
+    }, []);
+
     const handleLogout = async () => {
         setAnchorEl(null);
         setIsLoading(true);
@@ -104,7 +116,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-white">
+        <header className="bg-white sticky -top-[130px] z-50">
             <div className="top-strip py-2 border-t-[1px] border-gray-250 border-b-[1px] ">
                 <div className="container">
                     <div className="flex items-center justify-between">

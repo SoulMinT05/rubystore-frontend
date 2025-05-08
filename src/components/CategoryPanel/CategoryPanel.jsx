@@ -8,7 +8,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import '../CategoryPanel/CategoryPanel.css';
 import CategoryCollapse from '../CategoryCollapse/CategoryCollapse';
 
-const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
+const CategoryPanel = ({ categories, isOpenCatPanel, setIsOpenCatPanel }) => {
     const toggleDrawer = (newOpen) => () => {
         setIsOpenCatPanel(newOpen);
     };
@@ -18,7 +18,8 @@ const CategoryPanel = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                 Danh mục sản phẩm
                 <IoCloseSharp onClick={toggleDrawer(false)} className="cursor-pointer text-[20px]" />
             </h3>
-            <CategoryCollapse />
+
+            {categories?.length !== 0 && <CategoryCollapse categories={categories} />}
         </Box>
     );
 

@@ -15,65 +15,48 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 
-const ProductDetailsComponent = () => {
+const ProductDetailsComponent = ({ product }) => {
     const [productActionIndex, setProductActionIndex] = useState(null);
     return (
         <>
-            <h1 className="text-[24px] font-[600] mb-2">Áo dài cát tân</h1>
+            <h1 className="text-[24px] font-[600] mb-2">{product?.name}</h1>
             <div className="flex items-center gap-3">
                 <span className="text-gray-400 text-[13px]">
-                    Thương hiệu : <span className="font-[500] text-black opacity-75">Louis Vuiton</span>
+                    Thương hiệu : <span className="font-[500] text-black opacity-75">{product?.brand}</span>
                 </span>
                 <Rating name="size-small" defaultValue={5} readOnly size="small" />
-                <span className="text-[13px] cursor-pointer">Đánh giá (5)</span>
+                <span className="text-[13px] cursor-pointer">Đánh giá ({product?.reviews?.length || 0})</span>
             </div>
 
             <div className="flex items-center gap-4 mt-4">
                 <span className="oldPrice line-through text-gray-500 text-[18px] font-[500]">
-                    {formatCurrency(200000)}
+                    {formatCurrency(product?.oldPrice)}
                 </span>
-                <span className="price text-primary text-[18px] font-[600]">{formatCurrency(180000)}</span>
+                <span className="price text-primary text-[18px] font-[600]">{formatCurrency(product?.price)}</span>
                 <span className="text-[14px]">
-                    Trạng thái: <span className="text-green-600 text-[14px] font-bold">Còn hàng (147 sản phẩm)</span>
+                    Trạng thái:{' '}
+                    <span className="text-green-600 text-[14px] font-bold">
+                        Còn hàng ({product?.countInStock} sản phẩm)
+                    </span>
                 </span>
             </div>
 
-            <p className="mt-3 pr-10 mb-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia praesentium corporis reiciendis quasi
-                quod architecto ea aperiam aut quia excepturi incidunt explicabo illum obcaecati, dicta optio soluta
-                fugit ad dolore laborum assumenda, quo qui aliquid. Necessitatibus accusantium nemo quo cupiditate!
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia praesentium corporis reiciendis quasi
-                quod architecto ea aperiam aut quia excepturi incidunt explicabo illum obcaecati, dicta optio soluta
-                fugit ad dolore laborum assumenda, quo qui aliquid. Necessitatibus accusantium nemo quo cupiditate!
-            </p>
+            <p className="mt-3 pr-10 mb-5">{product?.description}</p>
 
             <div className="flex items-center gap-3">
                 <span className="text-[16px]">Kích cỡ: </span>
                 <div className="flex items-center gap-2 actions">
-                    <Button
-                        className={`${productActionIndex === 0 ? '!bg-primary !text-white' : ''}`}
-                        onClick={() => setProductActionIndex(0)}
-                    >
-                        S
-                    </Button>
-                    <Button
-                        className={`${productActionIndex === 1 ? '!bg-primary !text-white' : ''}`}
-                        onClick={() => setProductActionIndex(1)}
-                    >
-                        M
-                    </Button>
-                    <Button
-                        className={`${productActionIndex === 2 ? '!bg-primary !text-white' : ''}`}
-                        onClick={() => setProductActionIndex(2)}
-                    >
-                        L
-                    </Button>
-                    <Button
-                        className={`${productActionIndex === 3 ? '!bg-primary !text-white' : ''}`}
-                        onClick={() => setProductActionIndex(3)}
-                    >
-                        XL
-                    </Button>
+                    {product?.productSize?.length !== 0 &&
+                        product?.productSize.map((item, index) => {
+                            return (
+                                <Button
+                                    className={`${productActionIndex === index ? '!bg-primary !text-white' : ''}`}
+                                    onClick={() => setProductActionIndex(index)}
+                                >
+                                    {item}
+                                </Button>
+                            );
+                        })}
                 </div>
             </div>
 
