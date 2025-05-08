@@ -87,7 +87,7 @@ const Header = () => {
             }
         };
         getUserDetails();
-    }, []);
+    }, [context?.isLogin, context?.setIsLogin]);
 
     const handleLogout = async () => {
         setAnchorEl(null);

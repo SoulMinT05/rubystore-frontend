@@ -64,7 +64,7 @@ function App() {
             }
         };
         getUserDetails();
-    }, []);
+    }, [isLogin, setIsLogin]);
 
     const openAlertBox = (status, message) => {
         if (status === 'success') {

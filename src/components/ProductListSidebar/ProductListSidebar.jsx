@@ -132,7 +132,10 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
             if (data.success) {
                 setProductsList(data?.products);
                 setTotalPages(data?.totalPages);
-                window.scrollTo(0, 0);
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                });
             }
         } catch (error) {
             console.log(error);

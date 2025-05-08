@@ -4,12 +4,19 @@ import { Button, CircularProgress } from '@mui/material';
 
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { FcGoogle } from 'react-icons/fc';
+import { BsFacebook } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 import '../LoginPage/LoginPage.css';
 import { MyContext } from '../../App';
 import axiosAuth from '../../apis/axiosAuth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { firebaseApp } from '../../services/firebase';
+
+const auth = getAuth(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 const LoginPage = () => {
     const [isShowPassword, setIsShowPassword] = useState(false);
@@ -45,8 +52,6 @@ const LoginPage = () => {
             }
 
             const { data } = await axiosAuth.post('/api/user/login', formFields);
-
-            console.log('dataLogin: ', data);
             if (data.success) {
                 context.openAlertBox('success', data.message);
 
@@ -63,6 +68,74 @@ const LoginPage = () => {
             context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleAuthWithGoogle = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+
+            // const credential = GoogleAuthProvider.credentialFromResult(result);
+            // const token = credential.accessToken;
+            const user = result.user;
+
+            const fields = {
+                name: user?.providerData[0]?.displayName,
+                email: user?.providerData[0]?.email,
+                password: null,
+                avatar: user?.providerData[0]?.photoURL,
+                phoneNumber: user?.providerData[0]?.phoneNumber,
+                role: 'user',
+            };
+
+            const { data } = await axiosAuth.post('/api/user/auth-google', fields);
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+
+                Cookies.set('accessToken', data?.data?.accessToken);
+
+                context.setIsLogin(true);
+
+                navigate('/');
+            } else {
+                context.openAlertBox('error', data.message);
+            }
+        } catch (error) {
+            console.error('Lỗi đăng nhập:', error.message);
+        }
+    };
+    const handleAuthWithFacebook = async () => {
+        try {
+            const result = await signInWithPopup(auth, facebookProvider);
+
+            const credential = FacebookAuthProvider.credentialFromResult(result);
+            const accessToken = credential.accessToken;
+            const user = result.user;
+            console.log('user: ', user);
+
+            // const fields = {
+            //     name: user?.providerData[0]?.displayName,
+            //     email: user?.providerData[0]?.email,
+            //     password: null,
+            //     avatar: user?.providerData[0]?.photoURL,
+            //     phoneNumber: user?.providerData[0]?.phoneNumber,
+            //     role: 'user',
+            // };
+
+            // const { data } = await axiosAuth.post('/api/user/auth-google', fields);
+            // if (data.success) {
+            //     context.openAlertBox('success', data.message);
+
+            //     Cookies.set('accessToken', data?.data?.accessToken);
+
+            //     context.setIsLogin(true);
+
+            //     navigate('/');
+            // } else {
+            //     context.openAlertBox('error', data.message);
+            // }
+        } catch (error) {
+            console.error('Lỗi đăng nhập:', error.message);
         }
     };
     return (
@@ -128,9 +201,19 @@ const LoginPage = () => {
                             </Link>
                         </p>
                         <p className="text-center font-[500]">Hoặc đăng nhập bằng</p>
-                        <Button className="btn-login flex gap-3 !bg-[#f1f1f1] w-full !text-black">
+                        <Button
+                            onClick={handleAuthWithGoogle}
+                            className="btn-login flex gap-3 !bg-[#f1f1f1] w-full !text-black"
+                        >
                             <FcGoogle className="text-[20px]" />
                             Đăng nhập bằng Google
+                        </Button>
+                        <Button
+                            onClick={handleAuthWithFacebook}
+                            className="btn-login !mt-4 flex gap-3 !bg-[#f1f1f1] w-full !text-black"
+                        >
+                            <BsFacebook className="text-[20px]" />
+                            Đăng nhập bằng Facebook
                         </Button>
                     </form>
                 </div>

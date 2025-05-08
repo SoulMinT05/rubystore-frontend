@@ -50,15 +50,17 @@ const ChangePasswordPage = () => {
 
                         <form className="mt-5" onSubmit={changePassword}>
                             <div className="flex items-center gap-5">
-                                <div className="w-[100%]">
-                                    <TextField
-                                        onChange={(e) => setOldPassword(e.target.value)}
-                                        label="Mật khẩu cũ"
-                                        variant="outlined"
-                                        size="small"
-                                        className="w-full"
-                                    />
-                                </div>
+                                {context?.userInfo?.signInWithGoogle === false && (
+                                    <div className="w-[100%]">
+                                        <TextField
+                                            onChange={(e) => setOldPassword(e.target.value)}
+                                            label="Mật khẩu cũ"
+                                            variant="outlined"
+                                            size="small"
+                                            className="w-full"
+                                        />
+                                    </div>
+                                )}
                             </div>
                             <div className="flex items-center gap-5 mt-4">
                                 <div className="w-[100%]">
