@@ -15,7 +15,7 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 
-const ProductDetailsComponent = ({ product }) => {
+const ProductDetailsComponent = ({ product, reviews }) => {
     const [productActionIndex, setProductActionIndex] = useState(null);
     return (
         <>
@@ -24,8 +24,10 @@ const ProductDetailsComponent = ({ product }) => {
                 <span className="text-gray-400 text-[13px]">
                     Thương hiệu : <span className="font-[500] text-black opacity-75">{product?.brand}</span>
                 </span>
-                <Rating name="size-small" defaultValue={5} readOnly size="small" />
-                <span className="text-[13px] cursor-pointer">Đánh giá ({product?.reviews?.length || 0})</span>
+                <Rating name="size-small" defaultValue={product?.averageRating} readOnly size="small" />
+                <span className="text-[13px] cursor-pointer">
+                    Đánh giá ({reviews?.length || product?.reviewCount || 0})
+                </span>
             </div>
 
             <div className="flex items-center gap-4 mt-4">
@@ -41,15 +43,14 @@ const ProductDetailsComponent = ({ product }) => {
                 </span>
             </div>
 
-            <p className="mt-3 pr-10 mb-5">{product?.description}</p>
-
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mt-4">
                 <span className="text-[16px]">Kích cỡ: </span>
                 <div className="flex items-center gap-2 actions">
                     {product?.productSize?.length !== 0 &&
                         product?.productSize.map((item, index) => {
                             return (
                                 <Button
+                                    key={index}
                                     className={`${productActionIndex === index ? '!bg-primary !text-white' : ''}`}
                                     onClick={() => setProductActionIndex(index)}
                                 >

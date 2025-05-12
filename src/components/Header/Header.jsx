@@ -90,7 +90,6 @@ const Header = () => {
     }, [context?.isLogin, context?.setIsLogin]);
 
     const handleLogout = async () => {
-        setAnchorEl(null);
         setIsLoading(true);
         try {
             const { data } = await axiosToken.post('/api/user/logout', {
@@ -112,6 +111,7 @@ const Header = () => {
             context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
         } finally {
             setIsLoading(false);
+            setAnchorEl(null);
         }
     };
 

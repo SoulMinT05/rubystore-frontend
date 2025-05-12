@@ -31,7 +31,7 @@ const AccountSidebar = ({ context }) => {
         };
 
         fetchAvatar();
-    }, [context?.userInfo]);
+    }, [preview]);
 
     const handleChangeFile = async (e) => {
         const file = e.target.files[0];

@@ -195,3 +195,7 @@ button .MuiCircularProgress-root {
 .inner-image-zoom--icon {
     display: none !important;
 }
+
+.MuiCircularProgress-root {
+    @apply !text-primary;
+}

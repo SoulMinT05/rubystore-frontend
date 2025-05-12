@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import '../CartPage/CartPage.css';
 
 import { BsFillBagCheckFill } from 'react-icons/bs';
-import { Button } from '@mui/material';
+import { Button, Checkbox } from '@mui/material';
 import CartItems from '../../components/CartItems/CartItems';
+import { useDispatch, useSelector } from 'react-redux';
+import axiosClient from '../../apis/axiosClient';
+import { getCart } from '../../redux/cartSlice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -13,6 +16,63 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 const CartPage = () => {
+    const dispatch = useDispatch();
+    const { cart } = useSelector((state) => state.cart);
+    const [isCheckedAll, setIsCheckedAll] = useState(false);
+    const [selectedCarts, setSelectedCarts] = useState([]);
+    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            const { data } = await axiosClient.get('/api/user/cart');
+            dispatch(
+                getCart({
+                    products: data?.cart?.products,
+                    totalQuantity: data?.cart?.totalQuantity,
+                    totalPrice: data?.cart?.totalPrice,
+                }),
+            );
+        };
+        fetchCart();
+    }, [dispatch]);
+
+    const handleSelectCart = (cartId) => {
+        setSelectedCarts((prevSelectedCarts) => {
+            let updatedSelectedCarts;
+
+            if (prevSelectedCarts.includes(cartId)) {
+                // Nếu đã chọn thì bỏ chọn
+                updatedSelectedCarts = prevSelectedCarts.filter((id) => id !== cartId);
+            } else {
+                // Nếu chưa chọn thì chọn
+                updatedSelectedCarts = [...prevSelectedCarts, cartId];
+            }
+
+            const allSelected = updatedSelectedCarts.length === cart?.products?.length;
+            setIsCheckedAll(allSelected);
+
+            return updatedSelectedCarts;
+        });
+    };
+
+    const handleSelectAll = () => {
+        const currentPageIds = cart.products.map((product) => product.id);
+        if (!isCheckedAll) {
+            // Thêm các sản phẩm ở trang hiện tại
+            const newSelected = Array.from(new Set([...selectedCarts, ...currentPageIds]));
+            setSelectedCarts(newSelected);
+            setIsCheckedAll(true);
+        } else {
+            // Bỏ các sản phẩm ở trang hiện tại
+            const newSelected = selectedCarts.filter((id) => !currentPageIds.includes(id));
+            setSelectedCarts(newSelected);
+            setIsCheckedAll(false);
+        }
+    };
+    useEffect(() => {
+        const allSelectedOnPage = cart.products.every((product) => selectedCarts.includes(product.id));
+        setIsCheckedAll(allSelectedOnPage);
+    }, [cart.products, selectedCarts]);
     return (
         <section className="section py-10 pb-10">
             <div className="container w-[80%] max-w-[80%] flex gap-5">
@@ -23,13 +83,47 @@ const CartPage = () => {
                             <p className="mt-0">
                                 Tổng {'  '}
                                 <span className="font-bold text-primary">
-                                    2<span> sản phẩm trong giỏ hàng</span>
+                                    {cart?.products?.length}
+                                    <span> sản phẩm trong giỏ hàng</span>
                                 </span>
                             </p>
                         </div>
 
-                        <CartItems size="S" quantity={1} />
-                        <CartItems size="S" quantity={1} />
+                        <table className="w-full text-sm text-left rtl:text-right text-gray-700">
+                            <thead className="text-xs text-gray-700 uppercase bg-white">
+                                <tr>
+                                    <th scope="col" className="px-6 pr-0 py-2 ">
+                                        <div className="w-[60px]">
+                                            <Checkbox
+                                                {...label}
+                                                checked={isCheckedAll}
+                                                onChange={handleSelectAll}
+                                                size="small"
+                                            />
+                                        </div>
+                                    </th>
+                                    <th scope="col" className="px-5 py-3 whitespace-nowrap">
+                                        Sản phẩm
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cart?.products?.length !== 0 &&
+                                    cart?.products?.map((product, index) => {
+                                        return (
+                                            <CartItems
+                                                key={index}
+                                                cart={cart}
+                                                product={product}
+                                                size={product?.id?.productSize}
+                                                quantity={product?.quantityProduct}
+                                                isSelected={selectedCarts.includes(product.id)}
+                                                handleSelect={() => handleSelectCart(product.id)}
+                                            />
+                                        );
+                                    })}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 

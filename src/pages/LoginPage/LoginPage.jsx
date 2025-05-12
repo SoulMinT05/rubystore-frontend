@@ -108,32 +108,27 @@ const LoginPage = () => {
         try {
             const result = await signInWithPopup(auth, facebookProvider);
 
-            const credential = FacebookAuthProvider.credentialFromResult(result);
-            const accessToken = credential.accessToken;
             const user = result.user;
-            console.log('user: ', user);
 
-            // const fields = {
-            //     name: user?.providerData[0]?.displayName,
-            //     email: user?.providerData[0]?.email,
-            //     password: null,
-            //     avatar: user?.providerData[0]?.photoURL,
-            //     phoneNumber: user?.providerData[0]?.phoneNumber,
-            //     role: 'user',
-            // };
+            const fields = {
+                name: user?.providerData[0]?.displayName,
+                email: user?.providerData[0]?.email,
+                password: null,
+                avatar: user?.providerData[0]?.photoURL,
+                phoneNumber: user?.providerData[0]?.phoneNumber,
+                role: 'user',
+            };
 
-            // const { data } = await axiosAuth.post('/api/user/auth-google', fields);
-            // if (data.success) {
-            //     context.openAlertBox('success', data.message);
+            const { data } = await axiosAuth.post('/api/user/auth-facebook', fields);
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+                Cookies.set('accessToken', data?.data?.accessToken);
+                context.setIsLogin(true);
 
-            //     Cookies.set('accessToken', data?.data?.accessToken);
-
-            //     context.setIsLogin(true);
-
-            //     navigate('/');
-            // } else {
-            //     context.openAlertBox('error', data.message);
-            // }
+                navigate('/');
+            } else {
+                context.openAlertBox('error', data.message);
+            }
         } catch (error) {
             console.error('Lỗi đăng nhập:', error.message);
         }
@@ -203,16 +198,16 @@ const LoginPage = () => {
                         <p className="text-center font-[500]">Hoặc đăng nhập bằng</p>
                         <Button
                             onClick={handleAuthWithGoogle}
-                            className="btn-login flex gap-3 !bg-[#f1f1f1] w-full !text-black"
+                            className=" btn-login flex gap-3 !bg-[#f1f1f1] w-full !text-black"
                         >
-                            <FcGoogle className="text-[20px]" />
+                            <FcGoogle className="icon-google text-[20px]" />
                             Đăng nhập bằng Google
                         </Button>
                         <Button
                             onClick={handleAuthWithFacebook}
                             className="btn-login !mt-4 flex gap-3 !bg-[#f1f1f1] w-full !text-black"
                         >
-                            <BsFacebook className="text-[20px]" />
+                            <BsFacebook className="icon-facebook text-[20px]" />
                             Đăng nhập bằng Facebook
                         </Button>
                     </form>

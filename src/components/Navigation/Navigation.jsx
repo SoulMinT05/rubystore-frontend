@@ -37,9 +37,9 @@ const Navigation = () => {
                 <div className="container flex items-center justify-end gap-2">
                     <div className="col_1 w-[14%]">
                         <Button className="!text-black gap-2 w-full" onClick={openCategoryPanel}>
-                            <RiMenu2Fill className="text-[18px]" />
+                            <RiMenu2Fill className="!text-[18px]" />
                             Danh mục
-                            <LiaAngleDownSolid className="text-[13px] ml-auto font-bold cursor-pointer" />
+                            <LiaAngleDownSolid className="!text-[13px] ml-auto font-bold cursor-pointer" />
                         </Button>
                     </div>
                     <div className="col_2 w-[67%]">

@@ -70,7 +70,7 @@ const Footer = () => {
                         <div className="part1 w-[25%] border-r border-[rgba(0,0,0,0.2)]">
                             <h2 className="text-[18px] font-[600] mb-4">Liên hệ chúng tôi</h2>
                             <p className="text-[13px] font-[400] pb-4">
-                                Shopify - Cửa hàng lớn <br /> Sản phẩm quốc tế ngay trên đất Việt
+                                RubyStore - Cửa hàng lớn <br /> Sản phẩm quốc tế ngay trên đất Việt
                             </p>
                             <Link className="link text-[13px]" to="mailto:tamnguyenforwork@gmail.com">
                                 tamnguyenforwork@gmail.com
@@ -228,7 +228,9 @@ const Footer = () => {
                             </Link>
                         </li>
                     </ul>
-                    <p className="text-[13px] text-center mb-0">© 2025 - Shopify</p>
+                    <p className="text-[13px] text-center mb-0">
+                        © 2025 - RubyStore - Uy tín và sự tin tưởng của khách hàng đặt lên hàng đầu
+                    </p>
 
                     <div className="flex items-center">
                         <img src={bank1} alt="Image Payment 1" />

@@ -6,7 +6,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { IoGridSharp } from 'react-icons/io5';
 import { LuMenu } from 'react-icons/lu';
@@ -24,6 +24,22 @@ const ProductListPage = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [productsList, setProductsList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [searchParams] = useSearchParams();
+    const categoryId = searchParams.get('categoryId');
+    const [categoryName, setCategoryName] = useState('');
+
+    useEffect(() => {
+        if (categoryId) {
+            axiosAuth
+                .get(`/api/product/all-products-category-id/${categoryId}`)
+                .then((res) => {
+                    setCategoryName(res?.data?.products[0]?.categoryName);
+                })
+                .catch((error) => {
+                    console.error('Lỗi khi fetch category:', error);
+                });
+        }
+    }, [categoryId]);
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -68,8 +84,13 @@ const ProductListPage = () => {
                     <Link underline="hover" color="inherit" to="/" className="link transition">
                         Trang chủ
                     </Link>
-                    <Link underline="hover" color="inherit" to="/" className="link transition">
-                        Thời trang
+                    <Link
+                        underline="hover"
+                        color="inherit"
+                        to={`/product?categoryId=${categoryId}`}
+                        className="link transition"
+                    >
+                        {categoryName}
                     </Link>
                 </Breadcrumbs>
             </div>

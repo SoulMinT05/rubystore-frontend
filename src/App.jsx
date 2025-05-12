@@ -19,6 +19,8 @@ import axiosClient from './apis/axiosClient';
 import { StoreProvider } from './contexts/StoreProvider';
 import AppRoutes from './routes';
 import axiosAuth from './apis/axiosAuth';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 const MyContext = createContext();
 
@@ -35,6 +37,7 @@ function App() {
     const [userInfo, setUserInfo] = useState(null);
     const [categories, setCategories] = useState([]);
     const [blogs, setBlogs] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
     const handleOpenProductDetailsModal = (open, item) => {
         setOpenProductDetailsModal({
@@ -111,18 +114,21 @@ function App() {
         blogs,
         setBlogs,
         getBlogs,
+        reviews,
+        setReviews,
     };
     return (
         <>
             <StoreProvider>
                 <BrowserRouter>
-                    <MyContext.Provider value={values}>
-                        <Header />
-                        <AppRoutes />
-                        <Footer />
-                    </MyContext.Provider>
+                    <Provider store={store}>
+                        <MyContext.Provider value={values}>
+                            <Header />
+                            <AppRoutes />
+                            <Footer />
+                        </MyContext.Provider>
+                    </Provider>
                 </BrowserRouter>
-
                 <ToastContainer />
 
                 <Dialog
