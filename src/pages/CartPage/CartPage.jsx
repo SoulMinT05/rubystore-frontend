@@ -8,14 +8,7 @@ import CartItems from '../../components/CartItems/CartItems';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../apis/axiosClient';
 import { getCart } from '../../redux/cartSlice';
-import { Link } from 'react-router-dom';
 
-const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    }).format(amount);
-};
 const CartPage = () => {
     const dispatch = useDispatch();
     const { cart } = useSelector((state) => state.cart);
@@ -27,7 +20,6 @@ const CartPage = () => {
     useEffect(() => {
         const fetchCart = async () => {
             const { data } = await axiosClient.get('/api/user/cart');
-            console.log('dataGetCart: ', data);
             dispatch(
                 getCart({
                     products: data?.cart?.shoppingCart || [],
@@ -50,7 +42,6 @@ const CartPage = () => {
                 // Nếu chưa chọn thì chọn
                 updatedSelectedCarts = [...prevSelectedCarts, cartId];
             }
-
             const allSelected = updatedSelectedCarts.length === cart?.products?.length;
             setIsCheckedAll(allSelected);
 
@@ -59,7 +50,7 @@ const CartPage = () => {
     };
 
     const handleSelectAll = () => {
-        const currentPageIds = cart?.products?.map((product) => product.id);
+        const currentPageIds = cart?.products?.map((product) => product._id);
         if (!isCheckedAll) {
             // Thêm các sản phẩm ở trang hiện tại
             const newSelected = Array.from(new Set([...selectedCarts, ...currentPageIds]));
@@ -73,13 +64,10 @@ const CartPage = () => {
         }
     };
     useEffect(() => {
-        const allSelectedOnPage = cart?.products?.every((product) => selectedCarts.includes(product.id));
+        const allSelectedOnPage = cart?.products?.every((product) => selectedCarts.includes(product._id));
         setIsCheckedAll(allSelectedOnPage);
     }, [cart?.products, selectedCarts]);
 
-    useEffect(() => {
-        console.log('cart?.products: ', cart?.products);
-    }, []);
     return (
         <section className="section py-10 pb-10">
             <div className="container w-[80%] max-w-[80%] flex gap-5">
@@ -218,16 +206,9 @@ const CartPage = () => {
                                 cart?.products?.map((item) => {
                                     return (
                                         <CartItems
-                                            // key={item?._id}
-                                            key={`${item?._id}-${item?.sizeProduct}`}
+                                            key={item?._id}
                                             cart={cart}
                                             cartId={item?._id}
-                                            // item={item}
-                                            // size={item?.id?.productSize}
-                                            // quantity={item?.quantityProduct}
-                                            // isSelected={selectedCarts.includes(item.id)}
-                                            // handleSelect={() => handleSelectCart(product.id)}
-
                                             product={item?.product}
                                             productId={item?.product?._id}
                                             name={item?.name}
@@ -237,8 +218,8 @@ const CartPage = () => {
                                             price={item?.price}
                                             size={item?.sizeProduct}
                                             quantity={item?.quantityProduct}
-                                            isSelected={selectedCarts.includes(item.product._id)}
-                                            handleSelect={() => handleSelectCart(item.product._id)}
+                                            isSelected={selectedCarts.includes(item._id)}
+                                            handleSelect={() => handleSelectCart(item._id)}
                                         />
                                     );
                                 })

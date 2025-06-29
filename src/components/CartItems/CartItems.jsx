@@ -9,7 +9,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
-import { addToCart, getCart, updateCartItemSize } from '../../redux/cartSlice';
+import { addToCart, decreaseQuantity, removeCart, updateCartItemSize } from '../../redux/cartSlice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -120,12 +120,16 @@ const CartItems = ({
         try {
             const { data } = await axiosClient.post('/api/user/decreaseQuantityCart', {
                 productId,
+                sizeProduct: selectedSize,
             });
+            console.log('dataDecrease: ', data);
             if (data?.success) {
                 context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
-                const response = await axiosClient.get('/api/user/cart');
-                if (response.data.success) {
-                    dispatch(getCart(response.data.cart));
+                const updatedItem = data.shoppingCart.find(
+                    (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
+                );
+                if (updatedItem) {
+                    dispatch(decreaseQuantity(updatedItem));
                 }
             } else {
                 console.error('Không thể thêm vào giỏ hàng:', data.message);
@@ -134,17 +138,15 @@ const CartItems = ({
             console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
         }
     };
-    const handleDeleteCartItem = async (productId) => {
+    const handleDeleteCartItem = async (cartId) => {
         try {
             const { data } = await axiosClient.post('/api/user/removeProductCart', {
-                productId,
+                cartId,
             });
+            console.log('dataRemoveCart: ', data);
             if (data?.success) {
                 context.openAlertBox('success', data.message);
-                const response = await axiosClient.get('/api/user/cart');
-                if (response.data.success) {
-                    dispatch(getCart(response.data.cart));
-                }
+                dispatch(removeCart(cartId));
             } else {
                 console.error('Không thể thêm vào giỏ hàng:', data.message);
             }
@@ -156,12 +158,7 @@ const CartItems = ({
         <tr key={cartId} className="odd:bg-white  even:bg-gray-50 border-b">
             <td className="px-6 pr-0 py-2">
                 <div className="w-[60px]">
-                    <Checkbox
-                        {...label}
-                        // checked={selectedProducts.includes(product._id)}
-                        // onChange={() => handleSelectProduct(product._id)}
-                        size="small"
-                    />
+                    <Checkbox {...label} checked={isSelected} onChange={handleSelect} size="small" />
                 </div>
             </td>
             <td className="px-0 py-2">
@@ -243,7 +240,12 @@ const CartItems = ({
                 <p className="w-[80px] text-[12px]">{formatCurrency(quantity * price)}</p>
             </td>
             <td className="px-6 py-2">
-                <p className="w-[80px] hover:text-primary transition-all cursor-pointer">Xóa</p>
+                <p
+                    className="w-[80px] hover:text-primary transition-all cursor-pointer"
+                    onClick={() => handleDeleteCartItem(cartId)}
+                >
+                    Xóa
+                </p>
             </td>
         </tr>
     );

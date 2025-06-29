@@ -69,15 +69,6 @@ const cartSlice = createSlice({
                 const itemProductId = extractProductId(item.product._id);
                 const isMatch = itemProductId === payloadProductId && item.sizeProduct === action.payload.sizeProduct;
 
-                // Optional: log chi tiết quá trình so sánh
-                // console.log('🧩 So sánh sản phẩm:', {
-                //     itemProductId,
-                //     payloadProductId,
-                //     itemSize: item.sizeProduct,
-                //     payloadSize: action.payload.sizeProduct,
-                //     isMatch,
-                // });
-
                 return isMatch;
             });
 
@@ -92,25 +83,45 @@ const cartSlice = createSlice({
             state.cart.totalQuantity += action.payload.quantityProduct || 1;
             state.cart.totalPrice += action.payload.price * (action.payload.quantityProduct || 1);
         },
+        decreaseQuantity: (state, action) => {
+            const { product, sizeProduct } = action.payload;
+            const payloadProductId = extractProductId(product);
 
+            const foundItem = state.cart.products.find((item) => {
+                const itemProductId = extractProductId(item.product._id);
+                return itemProductId === payloadProductId && item.sizeProduct === sizeProduct;
+            });
+            if (foundItem) {
+                if (foundItem.quantityProduct > 1) {
+                    foundItem.quantityProduct -= 1;
+                    state.cart.totalQuantity -= 1;
+                    state.cart.totalPrice -= foundItem.price;
+                } else {
+                    // Nếu quantity = 1 thì xóa khỏi cart
+                    state.cart.products = state.cart.products.filter(
+                        (item) =>
+                            !(
+                                extractProductId(item.product._id) === payloadProductId &&
+                                item.sizeProduct === sizeProduct
+                            )
+                    );
+                    state.cart.totalQuantity -= 1;
+                    state.cart.totalPrice -= foundItem.price;
+                }
+            }
+        },
         removeCart: (state, action) => {
-            const index = state.cart.products.findIndex((item) => item.id === action.payload);
+            const cartItemId = action.payload; // chính là item._id từ MongoDB
 
+            const index = state.cart.products.findIndex((item) => item._id === cartItemId);
             if (index !== -1) {
-                state.cart.totalQuantity -= state.cart.products[index].quantityProduct;
-                state.cart.totalPrice -= state.cart.products[index].price * state.cart.products[index].quantityProduct;
+                const removedItem = state.cart.products[index];
+                state.cart.totalQuantity -= removedItem.quantityProduct;
+                state.cart.totalPrice -= removedItem.price * removedItem.quantityProduct;
                 state.cart.products.splice(index, 1);
             }
         },
-        decreaseQuantity: (state, action) => {
-            const item = state.cart.products.find((item) => item.id === action.payload);
 
-            if (item && item.quantityProduct > 1) {
-                item.quantityProduct -= 1;
-                state.cart.totalQuantity -= 1;
-                state.cart.totalPrice -= item.price;
-            }
-        },
         clearCart: (state) => {
             state.cart = {
                 products: [],
