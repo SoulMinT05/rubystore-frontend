@@ -8,6 +8,7 @@ import CartItems from '../../components/CartItems/CartItems';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../apis/axiosClient';
 import { getCart } from '../../redux/cartSlice';
+import { Link } from 'react-router-dom';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -20,17 +21,19 @@ const CartPage = () => {
     const { cart } = useSelector((state) => state.cart);
     const [isCheckedAll, setIsCheckedAll] = useState(false);
     const [selectedCarts, setSelectedCarts] = useState([]);
+    const [isLoadingCarts, setIsLoadingCarts] = useState(false);
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     useEffect(() => {
         const fetchCart = async () => {
             const { data } = await axiosClient.get('/api/user/cart');
+            console.log('dataGetCart: ', data);
             dispatch(
                 getCart({
-                    products: data?.cart?.products,
-                    totalQuantity: data?.cart?.totalQuantity,
-                    totalPrice: data?.cart?.totalPrice,
-                }),
+                    products: data?.cart?.shoppingCart || [],
+                    totalQuantity: data?.cart?.totalQuantity || 0,
+                    totalPrice: data?.cart?.totalPrice || 0,
+                })
             );
         };
         fetchCart();
@@ -56,7 +59,7 @@ const CartPage = () => {
     };
 
     const handleSelectAll = () => {
-        const currentPageIds = cart.products.map((product) => product.id);
+        const currentPageIds = cart?.products?.map((product) => product.id);
         if (!isCheckedAll) {
             // Thêm các sản phẩm ở trang hiện tại
             const newSelected = Array.from(new Set([...selectedCarts, ...currentPageIds]));
@@ -70,13 +73,17 @@ const CartPage = () => {
         }
     };
     useEffect(() => {
-        const allSelectedOnPage = cart.products.every((product) => selectedCarts.includes(product.id));
+        const allSelectedOnPage = cart?.products?.every((product) => selectedCarts.includes(product.id));
         setIsCheckedAll(allSelectedOnPage);
-    }, [cart.products, selectedCarts]);
+    }, [cart?.products, selectedCarts]);
+
+    useEffect(() => {
+        console.log('cart?.products: ', cart?.products);
+    }, []);
     return (
         <section className="section py-10 pb-10">
             <div className="container w-[80%] max-w-[80%] flex gap-5">
-                <div className="leftPart w-[70%]">
+                {/* <div className="leftPart w-[70%]">
                     <div className="shadow-md rounded-md bg-white">
                         <div className="py-2 px-3">
                             <h2>Giỏ hàng</h2>
@@ -114,11 +121,23 @@ const CartPage = () => {
                                             <CartItems
                                                 key={index}
                                                 cart={cart}
-                                                product={product}
-                                                size={product?.id?.productSize}
+                                                // product={product}
+                                                // size={product?.id?.productSize}
+                                                // quantity={product?.quantityProduct}
+                                                // isSelected={selectedCarts.includes(product.id)}
+                                                // handleSelect={() => handleSelectCart(product.id)}
+
+                                                product={product?.product}
+                                                productId={product?.product?._id}
+                                                name={product?.name}
+                                                brand={product?.brand}
+                                                images={product?.images}
+                                                oldPrice={product?.oldPrice}
+                                                price={product?.price}
+                                                size={product?.sizeProduct}
                                                 quantity={product?.quantityProduct}
-                                                isSelected={selectedCarts.includes(product.id)}
-                                                handleSelect={() => handleSelectCart(product.id)}
+                                                isSelected={selectedCarts.includes(product.product._id)}
+                                                handleSelect={() => handleSelectCart(product.product._id)}
                                             />
                                         );
                                     })}
@@ -155,6 +174,85 @@ const CartPage = () => {
                             Thanh toán
                         </Button>
                     </div>
+                </div> */}
+                <div className="relative overflow-x-auto mt-1 pb-5">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-700">
+                        {!isLoadingCarts && cart?.products?.length > 0 && (
+                            <thead className="text-xs text-gray-700 uppercase bg-white">
+                                <tr>
+                                    <th scope="col" className="px-6 pr-0 py-2 ">
+                                        <div className="w-[60px]">
+                                            <Checkbox
+                                                {...label}
+                                                checked={isCheckedAll}
+                                                onChange={handleSelectAll}
+                                                size="small"
+                                            />
+                                        </div>
+                                    </th>
+                                    <th scope="col" className="px-0 py-3 whitespace-nowrap">
+                                        Sản phẩm
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Size
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Đơn giá
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Số lượng
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Số tiền
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Thao tác
+                                    </th>
+                                </tr>
+                            </thead>
+                        )}
+
+                        <tbody>
+                            {isLoadingCarts === false ? (
+                                cart?.products?.length > 0 &&
+                                cart?.products?.map((item) => {
+                                    return (
+                                        <CartItems
+                                            // key={item?._id}
+                                            key={`${item?._id}-${item?.sizeProduct}`}
+                                            cart={cart}
+                                            cartId={item?._id}
+                                            // item={item}
+                                            // size={item?.id?.productSize}
+                                            // quantity={item?.quantityProduct}
+                                            // isSelected={selectedCarts.includes(item.id)}
+                                            // handleSelect={() => handleSelectCart(product.id)}
+
+                                            product={item?.product}
+                                            productId={item?.product?._id}
+                                            name={item?.name}
+                                            brand={item?.brand}
+                                            images={item?.images}
+                                            oldPrice={item?.oldPrice}
+                                            price={item?.price}
+                                            size={item?.sizeProduct}
+                                            quantity={item?.quantityProduct}
+                                            isSelected={selectedCarts.includes(item.product._id)}
+                                            handleSelect={() => handleSelectCart(item.product._id)}
+                                        />
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan={999}>
+                                        <div className="flex items-center justify-center w-full min-h-[400px]">
+                                            <CircularProgress color="inherit" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>

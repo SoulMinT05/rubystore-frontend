@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import '../HomeProductsItem/HomeProductsItem.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
@@ -11,11 +11,8 @@ import { FaRegHeart } from 'react-icons/fa';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { MdZoomOutMap } from 'react-icons/md';
 import { MyContext } from '../../App';
-
 import { MdOutlineShoppingCart } from 'react-icons/md';
-import { useDispatch } from 'react-redux';
-import { getCart } from '../../redux/cartSlice';
-import axiosClient from '../../apis/axiosClient';
+
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -24,23 +21,7 @@ const formatCurrency = (amount) => {
 };
 const HomeProductsItem = ({ product }) => {
     const context = useContext(MyContext);
-    const dispatch = useDispatch();
-
-    const handleAddToCart = async () => {
-        try {
-            const { data } = await axiosClient.post('/api/user/addToCart', {
-                productId: product._id,
-            });
-            if (data?.success) {
-                context.openAlertBox('success', data.message);
-                dispatch(getCart(data.cart));
-            } else {
-                console.error('Không thể thêm vào giỏ hàng:', data.message);
-            }
-        } catch (error) {
-            console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
-        }
-    };
+    const navigate = useNavigate();
 
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
@@ -104,10 +85,10 @@ const HomeProductsItem = ({ product }) => {
                     <Button
                         className="btn-border flex w-full btn-sm gap-1 !px-1 overflow-hidden text-ellipsis whitespace-nowrap"
                         size="small"
-                        onClick={handleAddToCart}
+                        onClick={() => navigate(`/product/${product?._id}`)}
                     >
                         <MdOutlineShoppingCart className="text-[18px]" />
-                        <span className="text-[13px] !normal-case">Thêm vào giỏ hàng</span>
+                        <span className="text-[13px] !normal-case">Mua ngay</span>
                     </Button>
                 </div>
             </div>

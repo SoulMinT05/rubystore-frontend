@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import '../ProductDetailsComponent/ProductDetailsComponent.css';
 import QuantityBox from '../QuantityBox/QuantityBox';
@@ -7,6 +7,11 @@ import { MdOutlineShoppingCart } from 'react-icons/md';
 import { FaRegHeart } from 'react-icons/fa';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { Button, Rating } from '@mui/material';
+import { MyContext } from '../../App';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import axiosClient from '../../apis/axiosClient';
+import { getCart } from '../../redux/cartSlice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -16,7 +21,46 @@ const formatCurrency = (amount) => {
 };
 
 const ProductDetailsComponent = ({ product, reviews }) => {
+    const context = useContext(MyContext);
     const [productActionIndex, setProductActionIndex] = useState(null);
+    const [quantityProduct, setQuantityProduct] = useState(1);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log('quantityProduct: ', quantityProduct);
+    }, [quantityProduct]);
+
+    const handleAddToCart = async () => {
+        if (!context.isLogin) {
+            context.openAlertBox('warning', 'Vui lòng đăng nhập!');
+            navigate('/login');
+            return;
+        }
+
+        const sizeProduct = product?.productSize[productActionIndex];
+        if (!sizeProduct) {
+            context.openAlertBox('error', 'Vui lòng chọn kích cỡ trước khi thêm vào giỏ hàng!');
+            return;
+        }
+
+        try {
+            const { data } = await axiosClient.post('/api/user/addToCart', {
+                productId: product._id,
+                sizeProduct,
+                quantityProduct,
+            });
+            console.log('dataAddToCart: ', data);
+            if (data?.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(getCart(data.cart));
+            } else {
+                console.error('Không thể thêm vào giỏ hàng:', data.message);
+            }
+        } catch (error) {
+            console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
+        }
+    };
     return (
         <>
             <h1 className="text-[24px] font-[600] mb-2">{product?.name}</h1>
@@ -65,10 +109,10 @@ const ProductDetailsComponent = ({ product, reviews }) => {
 
             <div className="flex items-center gap-4 py-4">
                 <div className="quantityBoxWrapper w-[70px]">
-                    <QuantityBox />
+                    <QuantityBox onQuantityChange={setQuantityProduct} />
                 </div>
 
-                <Button className="btn-org flex gap-2">
+                <Button onClick={handleAddToCart} className="btn-org flex gap-2">
                     <MdOutlineShoppingCart className="text-[22px]" />
                     Thêm vào giỏ hàng{' '}
                 </Button>

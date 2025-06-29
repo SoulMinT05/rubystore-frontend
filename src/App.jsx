@@ -58,6 +58,8 @@ function App() {
     };
 
     useEffect(() => {
+        if (!isLogin) return; // Không gọi API nếu chưa login
+
         const getUserDetails = async () => {
             try {
                 const { data } = await axiosClient.get('/api/user/user-details');
@@ -66,8 +68,9 @@ function App() {
                 console.log(error);
             }
         };
+
         getUserDetails();
-    }, [isLogin, setIsLogin]);
+    }, [isLogin]);
 
     const openAlertBox = (status, message) => {
         if (status === 'success') {
@@ -75,6 +78,9 @@ function App() {
         }
         if (status === 'error') {
             toast.error(message);
+        }
+        if (status === 'warning') {
+            toast.warning(message);
         }
     };
     const getCategories = async () => {

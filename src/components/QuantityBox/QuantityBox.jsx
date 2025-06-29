@@ -5,17 +5,23 @@ import { FaAngleUp, FaAngleDown } from 'react-icons/fa6';
 
 import '../QuantityBox/QuantityBox.css';
 
-const QuantityBox = () => {
+const QuantityBox = ({ onQuantityChange }) => {
     const [qtyVal, setQtyVal] = useState(1);
     const increaseQty = () => {
-        setQtyVal(qtyVal + 1);
+        const newVal = qtyVal + 1;
+        setQtyVal(newVal);
+        onQuantityChange(newVal); // gọi về cha
     };
     const decreaseQty = () => {
-        if (qtyVal === 1) {
-            setQtyVal(1);
-        } else {
-            setQtyVal(qtyVal - 1);
-        }
+        const newVal = qtyVal > 1 ? qtyVal - 1 : 1;
+        setQtyVal(newVal);
+        onQuantityChange(newVal);
+    };
+
+    const handleInputChange = (e) => {
+        const val = parseInt(e.target.value) || 1;
+        setQtyVal(val);
+        onQuantityChange(val);
     };
     return (
         <div className="quantityBox flex items-center relative">
@@ -24,7 +30,7 @@ const QuantityBox = () => {
                 className="w-full h-[40px] p-2 pl-5 text-[15px] focus:outline-none border border-[rgba(0,0,0,0.2)]
                 rounded-md"
                 value={qtyVal}
-                onChange={(e) => setQtyVal(e.target.value)}
+                onChange={handleInputChange}
             />
             <div className="flex items-center flex-col justify-between h-[40px] absolute top-0 right-0 z-50">
                 <Button

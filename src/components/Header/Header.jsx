@@ -44,6 +44,8 @@ const Header = () => {
     };
 
     useEffect(() => {
+        if (!context?.isLogin) return;
+
         const fetchAvatar = async () => {
             try {
                 const { data } = await axiosClient.get('/api/user/user-details');
@@ -59,12 +61,15 @@ const Header = () => {
     }, [context?.userInfo?.avatar]);
 
     useEffect(() => {
+        if (!context.isLogin) return;
+
         const checkLogin = async () => {
             try {
-                const res = await axiosClient.get('/api/user/check-login', {
+                const { data } = await axiosClient.get('/api/user/check-login', {
                     withCredentials: true,
                 });
-                if (res?.data?.success) {
+                console.log('dataCheckLogin: ', data);
+                if (data?.success) {
                     context.setIsLogin(true);
                 } else {
                     context.setIsLogin(false);
@@ -78,6 +83,8 @@ const Header = () => {
     }, [context?.isLogin]);
 
     useEffect(() => {
+        if (!context?.isLogin) return;
+
         const getUserDetails = async () => {
             try {
                 const { data } = await axiosClient.get('/api/user/user-details');
@@ -87,7 +94,7 @@ const Header = () => {
             }
         };
         getUserDetails();
-    }, [context?.isLogin, context?.setIsLogin]);
+    }, [context?.isLogin]);
 
     const handleLogout = async () => {
         setIsLoading(true);
@@ -165,9 +172,14 @@ const Header = () => {
                                         className="!text-[#000] myAccountWrap flex items-center gap-3 cursor-pointer"
                                         onClick={handleClick}
                                     >
-                                        <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-[#f1f1f1]">
+                                        {/* <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-[#f1f1f1]">
                                             <FaRegUser className="text-[16px] text-[rgba(0,0,0,0.7)]" />
-                                        </Button>
+                                        </Button> */}
+                                        <img
+                                            src={context?.userInfo?.avatar}
+                                            alt=""
+                                            className="!w-[52px] !h-[52px] !min-w-[52px] rounded-full object-cover"
+                                        />
                                         <div className="info flex flex-col gap-1">
                                             <h4 className="leading-3 text-[14px] text-[rgba(0,0,0,0.7)] mb-0 font-[500] capitalize text-left justify-start">
                                                 {context.userInfo?.name}
