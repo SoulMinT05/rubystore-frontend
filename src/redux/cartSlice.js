@@ -121,15 +121,28 @@ const cartSlice = createSlice({
                 state.cart.products.splice(index, 1);
             }
         },
+        removeMultipleCartItems: (state, action) => {
+            const cartIdsToRemove = action.payload; // Mảng cartId (item._id từ MongoDB)
 
-        clearCart: (state) => {
-            state.cart = {
-                products: [],
-                totalQuantity: 0,
-                totalPrice: 0,
-            };
+            const itemsToKeep = [];
+            let removedQuantity = 0;
+            let removedPrice = 0;
+
+            for (const item of state.cart.products) {
+                if (cartIdsToRemove.includes(item._id)) {
+                    removedQuantity += item.quantityProduct;
+                    removedPrice += item.price * item.quantityProduct;
+                } else {
+                    itemsToKeep.push(item);
+                }
+            }
+
+            state.cart.products = itemsToKeep;
+            state.cart.totalQuantity -= removedQuantity;
+            state.cart.totalPrice -= removedPrice;
         },
     },
 });
-export const { getCart, updateCartItemSize, addToCart, decreaseQuantity, removeCart, clearCart } = cartSlice.actions;
+export const { getCart, updateCartItemSize, addToCart, decreaseQuantity, removeCart, removeMultipleCartItems } =
+    cartSlice.actions;
 export default cartSlice.reducer;

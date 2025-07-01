@@ -82,7 +82,7 @@ const HomePage = () => {
         if (context?.categories?.length > 0) {
             const getCategoryByProducts = async () => {
                 const { data } = await axiosAuth.get(
-                    `/api/product/all-products-category-id/${context?.categories[0]?._id}`,
+                    `/api/product/all-products-category-id/${context?.categories[0]?._id}`
                 );
                 console.log('dataCategoryByProducts: ', data);
                 if (data.success) {
@@ -187,9 +187,9 @@ const HomePage = () => {
                             <span className="text-[20px] font-[600] uppercase">Giao hàng miễn phí</span>
                         </div>
                         <div className="col2">
-                            <p className="mb-0 font-[500]">Miễn phí giao hàng cho lần đầu tiên và đơn giá trên 400k</p>
+                            <p className="mb-0 font-[500]">Miễn phí giao hàng cho lần đầu tiên và đơn giá trên 700k</p>
                         </div>
-                        <p className="font-bold text-[25px]">- Chỉ 400k</p>
+                        <p className="font-bold text-[25px]">- Chỉ 700k</p>
                     </div>
 
                     {/* <HomeAdsBannerSlider items={4} /> */}

@@ -105,7 +105,7 @@ const ProductDetailsComponent = ({ product, reviews }) => {
                 </div>
             </div>
 
-            <p className="text-[14px] mt-5 mb-2 text-[#000]">Miễn phí giao hàng cho đơn trên 400K (Giao từ 2-4 ngày)</p>
+            <p className="text-[14px] mt-5 mb-2 text-[#000]">Miễn phí giao hàng cho đơn trên 700k (Giao từ 2-4 ngày)</p>
 
             <div className="flex items-center gap-4 py-4">
                 <div className="quantityBoxWrapper w-[70px]">

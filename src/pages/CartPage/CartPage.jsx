@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import '../CartPage/CartPage.css';
 
 import { BsFillBagCheckFill } from 'react-icons/bs';
-import { Button, Checkbox } from '@mui/material';
+import { Breadcrumbs, Button, Checkbox } from '@mui/material';
 import CartItems from '../../components/CartItems/CartItems';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../apis/axiosClient';
-import { getCart } from '../../redux/cartSlice';
+import { getCart, removeMultipleCartItems } from '../../redux/cartSlice';
+import { Link } from 'react-router-dom';
+import { MyContext } from '../../App';
 
 const CartPage = () => {
+    const context = useContext(MyContext);
     const dispatch = useDispatch();
     const { cart } = useSelector((state) => state.cart);
     const [isCheckedAll, setIsCheckedAll] = useState(false);
@@ -68,9 +71,46 @@ const CartPage = () => {
         setIsCheckedAll(allSelectedOnPage);
     }, [cart?.products, selectedCarts]);
 
+    const deleteMultipleCartItems = async () => {
+        console.log('selectedCarts: ', selectedCarts);
+        try {
+            const { data } = await axiosClient.post('/api/user/deleteMultipleCartItems', {
+                cartIds: selectedCarts,
+            });
+            console.log('dataDelteMultipleCart: ', data);
+            if (data?.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(removeMultipleCartItems(selectedCarts));
+            } else {
+                console.error('Không thể thêm vào giỏ hàng:', data.message);
+            }
+        } catch (error) {
+            console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
+        }
+    };
+
     return (
         <section className="section py-10 pb-10">
-            <div className="container w-[80%] max-w-[80%] flex gap-5">
+            <div className="pb-2 pt-0  container w-[80%] max-w-[80%] flex items-center justify-between">
+                <div className="">
+                    <Breadcrumbs aria-label="breadcrumb">
+                        <Link underline="hover" color="inherit" to="/" className="link transition !text-[16px]">
+                            Trang chủ
+                        </Link>
+                        <Link underline="hover" color="inherit" to="/cart" className="link transition !text-[16px]">
+                            Giỏ hàng
+                        </Link>
+                    </Breadcrumbs>
+                </div>
+                {selectedCarts?.length > 1 && (
+                    <div className="">
+                        <Button onClick={deleteMultipleCartItems} className="btn-org btn-login w-full">
+                            Xóa tất cả
+                        </Button>
+                    </div>
+                )}
+            </div>
+            <div className="container w-[80%] max-w-[80%] mx-auto flex gap-5">
                 {/* <div className="leftPart w-[70%]">
                     <div className="shadow-md rounded-md bg-white">
                         <div className="py-2 px-3">
@@ -163,6 +203,7 @@ const CartPage = () => {
                         </Button>
                     </div>
                 </div> */}
+
                 <div className="relative overflow-x-auto mt-1 pb-5">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-700">
                         {!isLoadingCarts && cart?.products?.length > 0 && (
