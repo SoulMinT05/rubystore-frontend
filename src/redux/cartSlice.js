@@ -5,6 +5,10 @@ const initialState = {
         products: [],
         totalQuantity: 0,
         totalPrice: 0,
+        voucher: null, // thông tin voucher đang áp dụng (nếu có)
+        discountValue: 0, // số tiền giảm
+        finalPrice: 0, // = totalPrice - discountValue + shippingFee
+        shippingFee: 0,
     },
 };
 
@@ -25,12 +29,44 @@ const extractProductId = (product) => {
     return null;
 };
 
+const calculateFinalPrice = (totalPrice, voucher) => {
+    if (!voucher) return totalPrice;
+
+    let discount = 0;
+    if (voucher.discountType === 'percent') {
+        discount = (voucher.discountValue / 100) * totalPrice;
+    } else if (voucher.discountType === 'fixed') {
+        discount = voucher.discountValue;
+    }
+
+    return Math.max(totalPrice - discount, 0);
+};
+
 const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
         getCart: (state, action) => {
-            state.cart = action.payload;
+            const { products, totalQuantity, totalPrice } = action.payload;
+
+            console.log('action.payload: ', action.payload);
+
+            state.cart.products = products;
+            state.cart.totalQuantity = totalQuantity;
+            state.cart.totalPrice = totalPrice;
+
+            // Reset lại thông tin tính giá theo style Shopee
+            state.cart.voucher = null;
+            state.cart.discountValue = 0;
+            state.cart.shippingFee = 0;
+            state.cart.finalPrice = totalPrice;
+        },
+
+        applyVoucher: (state, action) => {
+            const { voucher, discountValue, finalPrice } = action.payload;
+            state.cart.voucher = voucher;
+            state.cart.discountValue = discountValue;
+            state.cart.finalPrice = finalPrice + state.cart.shippingFee;
         },
         updateCartItemSize: (state, action) => {
             const { productId, oldSize, newSize } = action.payload;
@@ -50,9 +86,9 @@ const cartSlice = createSlice({
 
             if (duplicateItem) {
                 // ✅ Gộp quantity vào duplicateItem
-                console.log('🔎 duplicateItem:', JSON.parse(JSON.stringify(duplicateItem)));
+
                 duplicateItem.quantityProduct += foundItem.quantityProduct;
-                console.log('🔎 duplicateItem after:', JSON.parse(JSON.stringify(duplicateItem)));
+
                 // ❌ Xoá foundItem khỏi danh sách
                 state.cart.products = state.cart.products.filter(
                     (item) => !(extractProductId(item.product._id) === productId && item.sizeProduct === oldSize)
@@ -67,9 +103,7 @@ const cartSlice = createSlice({
             const payloadProductId = extractProductId(action.payload.product);
             const foundItem = state.cart.products.find((item) => {
                 const itemProductId = extractProductId(item.product._id);
-                const isMatch = itemProductId === payloadProductId && item.sizeProduct === action.payload.sizeProduct;
-
-                return isMatch;
+                return itemProductId === payloadProductId && item.sizeProduct === action.payload.sizeProduct;
             });
 
             if (foundItem) {
@@ -77,38 +111,35 @@ const cartSlice = createSlice({
             } else {
                 state.cart.products.push({
                     ...action.payload,
-                    quantityProduct: action.payload.quantityProduct || 1,
+                    quantityProduct: 1,
                 });
             }
-            state.cart.totalQuantity += action.payload.quantityProduct || 1;
-            state.cart.totalPrice += action.payload.price * (action.payload.quantityProduct || 1);
+            state.cart.totalQuantity += 1;
+            state.cart.totalPrice += action.payload.price * 1;
+            state.cart.finalPrice = calculateFinalPrice(state.cart.totalPrice, state.cart.voucher);
         },
         decreaseQuantity: (state, action) => {
-            const { product, sizeProduct } = action.payload;
-            const payloadProductId = extractProductId(product);
+            const payloadProductId = extractProductId(action.payload.product);
 
-            const foundItem = state.cart.products.find((item) => {
+            const foundItemIndex = state.cart.products.findIndex((item) => {
                 const itemProductId = extractProductId(item.product._id);
-                return itemProductId === payloadProductId && item.sizeProduct === sizeProduct;
+                return itemProductId === payloadProductId && item.sizeProduct === action.payload.sizeProduct;
             });
-            if (foundItem) {
+
+            if (foundItemIndex !== -1) {
+                const foundItem = state.cart.products[foundItemIndex];
                 if (foundItem.quantityProduct > 1) {
                     foundItem.quantityProduct -= 1;
                     state.cart.totalQuantity -= 1;
                     state.cart.totalPrice -= foundItem.price;
                 } else {
-                    // Nếu quantity = 1 thì xóa khỏi cart
-                    state.cart.products = state.cart.products.filter(
-                        (item) =>
-                            !(
-                                extractProductId(item.product._id) === payloadProductId &&
-                                item.sizeProduct === sizeProduct
-                            )
-                    );
                     state.cart.totalQuantity -= 1;
                     state.cart.totalPrice -= foundItem.price;
+
+                    state.cart.products.splice(foundItemIndex, 1);
                 }
             }
+            state.cart.finalPrice = calculateFinalPrice(state.cart.totalPrice, state.cart.voucher);
         },
         removeCart: (state, action) => {
             const cartItemId = action.payload; // chính là item._id từ MongoDB
@@ -118,6 +149,7 @@ const cartSlice = createSlice({
                 const removedItem = state.cart.products[index];
                 state.cart.totalQuantity -= removedItem.quantityProduct;
                 state.cart.totalPrice -= removedItem.price * removedItem.quantityProduct;
+                state.cart.finalPrice = calculateFinalPrice(state.cart.totalPrice, state.cart.voucher);
                 state.cart.products.splice(index, 1);
             }
         },
@@ -140,9 +172,17 @@ const cartSlice = createSlice({
             state.cart.products = itemsToKeep;
             state.cart.totalQuantity -= removedQuantity;
             state.cart.totalPrice -= removedPrice;
+            state.cart.finalPrice = calculateFinalPrice(state.cart.totalPrice, state.cart.voucher);
         },
     },
 });
-export const { getCart, updateCartItemSize, addToCart, decreaseQuantity, removeCart, removeMultipleCartItems } =
-    cartSlice.actions;
+export const {
+    getCart,
+    applyVoucher,
+    updateCartItemSize,
+    addToCart,
+    decreaseQuantity,
+    removeCart,
+    removeMultipleCartItems,
+} = cartSlice.actions;
 export default cartSlice.reducer;

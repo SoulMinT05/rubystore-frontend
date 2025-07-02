@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import '../ProductDetailsComponent/ProductDetailsComponent.css';
 import QuantityBox from '../QuantityBox/QuantityBox';
@@ -11,7 +11,7 @@ import { MyContext } from '../../App';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
-import { getCart } from '../../redux/cartSlice';
+import { addToCart } from '../../redux/cartSlice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -26,10 +26,6 @@ const ProductDetailsComponent = ({ product, reviews }) => {
     const [quantityProduct, setQuantityProduct] = useState(1);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        console.log('quantityProduct: ', quantityProduct);
-    }, [quantityProduct]);
 
     const handleAddToCart = async () => {
         if (!context.isLogin) {
@@ -53,7 +49,13 @@ const ProductDetailsComponent = ({ product, reviews }) => {
             console.log('dataAddToCart: ', data);
             if (data?.success) {
                 context.openAlertBox('success', data.message);
-                dispatch(getCart(data.cart));
+
+                const updatedItem = data.shoppingCart.find(
+                    (item) => item?.product.toString() === product._id.toString() && item.sizeProduct === sizeProduct
+                );
+                if (updatedItem) {
+                    dispatch(addToCart(updatedItem));
+                }
             } else {
                 console.error('Không thể thêm vào giỏ hàng:', data.message);
             }

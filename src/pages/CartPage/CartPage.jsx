@@ -3,13 +3,26 @@ import React, { useContext, useEffect, useState } from 'react';
 import '../CartPage/CartPage.css';
 
 import { BsFillBagCheckFill } from 'react-icons/bs';
-import { Breadcrumbs, Button, Checkbox } from '@mui/material';
+import { Breadcrumbs, Button, Checkbox, CircularProgress } from '@mui/material';
 import CartItems from '../../components/CartItems/CartItems';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../apis/axiosClient';
-import { getCart, removeMultipleCartItems } from '../../redux/cartSlice';
+import { applyVoucher, getCart, removeMultipleCartItems } from '../../redux/cartSlice';
 import { Link } from 'react-router-dom';
 import { MyContext } from '../../App';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    }).format(amount);
+};
 
 const CartPage = () => {
     const context = useContext(MyContext);
@@ -18,14 +31,18 @@ const CartPage = () => {
     const [isCheckedAll, setIsCheckedAll] = useState(false);
     const [selectedCarts, setSelectedCarts] = useState([]);
     const [isLoadingCarts, setIsLoadingCarts] = useState(false);
+    const [openVoucher, setOpenVoucher] = useState(false);
+    const [codeVoucher, setCodeVoucher] = useState('');
+    const [isLoadingApplyVoucher, setIsLoadingApplyVoucher] = useState(false);
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     useEffect(() => {
         const fetchCart = async () => {
             const { data } = await axiosClient.get('/api/user/cart');
+            console.log('dataCart: ', data);
             dispatch(
                 getCart({
-                    products: data?.cart?.shoppingCart || [],
+                    products: data?.cart?.items || [],
                     totalQuantity: data?.cart?.totalQuantity || 0,
                     totalPrice: data?.cart?.totalPrice || 0,
                 })
@@ -89,6 +106,42 @@ const CartPage = () => {
         }
     };
 
+    const handleClickOpenVoucher = () => {
+        setOpenVoucher(true);
+    };
+
+    const handleCloseVoucher = () => {
+        setOpenVoucher(false);
+    };
+
+    const handleApplyVoucher = async (e) => {
+        e.preventDefault();
+        setIsLoadingApplyVoucher(true);
+        try {
+            const { data } = await axiosClient.post('/api/voucher/applyVoucher', {
+                code: codeVoucher,
+                totalPrice: cart?.totalPrice,
+            });
+            console.log('dataApplyVoucher: ', data);
+            if (data?.success) {
+                dispatch(
+                    applyVoucher({
+                        voucher: data?.voucher,
+                        discountValue: data?.discountValue,
+                        finalPrice: data?.finalPrice,
+                    })
+                );
+                context.openAlertBox('success', data.message);
+            }
+            handleCloseVoucher();
+        } catch (error) {
+            console.log(error);
+            context.openAlertBox('error', error.response.data.message);
+        } finally {
+            setIsLoadingApplyVoucher(false);
+        }
+    };
+
     return (
         <section className="section py-10 pb-10">
             <div className="pb-2 pt-0  container w-[80%] max-w-[80%] flex items-center justify-between">
@@ -111,99 +164,6 @@ const CartPage = () => {
                 )}
             </div>
             <div className="container w-[80%] max-w-[80%] mx-auto flex gap-5">
-                {/* <div className="leftPart w-[70%]">
-                    <div className="shadow-md rounded-md bg-white">
-                        <div className="py-2 px-3">
-                            <h2>Giỏ hàng</h2>
-                            <p className="mt-0">
-                                Tổng {'  '}
-                                <span className="font-bold text-primary">
-                                    {cart?.products?.length}
-                                    <span> sản phẩm trong giỏ hàng</span>
-                                </span>
-                            </p>
-                        </div>
-
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-700">
-                            <thead className="text-xs text-gray-700 uppercase bg-white">
-                                <tr>
-                                    <th scope="col" className="px-6 pr-0 py-2 ">
-                                        <div className="w-[60px]">
-                                            <Checkbox
-                                                {...label}
-                                                checked={isCheckedAll}
-                                                onChange={handleSelectAll}
-                                                size="small"
-                                            />
-                                        </div>
-                                    </th>
-                                    <th scope="col" className="px-5 py-3 whitespace-nowrap">
-                                        Sản phẩm
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cart?.products?.length !== 0 &&
-                                    cart?.products?.map((product, index) => {
-                                        return (
-                                            <CartItems
-                                                key={index}
-                                                cart={cart}
-                                                // product={product}
-                                                // size={product?.id?.productSize}
-                                                // quantity={product?.quantityProduct}
-                                                // isSelected={selectedCarts.includes(product.id)}
-                                                // handleSelect={() => handleSelectCart(product.id)}
-
-                                                product={product?.product}
-                                                productId={product?.product?._id}
-                                                name={product?.name}
-                                                brand={product?.brand}
-                                                images={product?.images}
-                                                oldPrice={product?.oldPrice}
-                                                price={product?.price}
-                                                size={product?.sizeProduct}
-                                                quantity={product?.quantityProduct}
-                                                isSelected={selectedCarts.includes(product.product._id)}
-                                                handleSelect={() => handleSelectCart(product.product._id)}
-                                            />
-                                        );
-                                    })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div className="rightPart w-[30%]">
-                    <div className="shadow-md rounded-md bg-white p-5 ">
-                        <h3 className="py-3">Chi tiết</h3>
-                        <hr />
-                        <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Giá sản phẩm</span>
-                            <span className="text-primary font-bold">{formatCurrency(200000)}</span>
-                        </p>
-                        <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Phí ship</span>
-                            <span className="text-primary font-bold">{formatCurrency(0)}</span>
-                        </p>
-                        <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Áp dụng ở</span>
-                            <span className="text-primary font-bold">Việt Nam</span>
-                        </p>
-                        <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Tổng tiền</span>
-                            <span className="text-primary font-bold">{formatCurrency(200000)} </span>
-                        </p>
-
-                        <br />
-
-                        <Button className="btn-org btn-login w-full flex gap-2">
-                            <BsFillBagCheckFill className="text-[20px]" />
-                            Thanh toán
-                        </Button>
-                    </div>
-                </div> */}
-
                 <div className="relative overflow-x-auto mt-1 pb-5">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-700">
                         {!isLoadingCarts && cart?.products?.length > 0 && (
@@ -275,6 +235,98 @@ const CartPage = () => {
                             )}
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <div className="container w-[80%] max-w-[80%] mx-auto flex gap-5">
+                <div className="leftPart w-[70%]">
+                    <Dialog open={openVoucher} onClose={handleCloseVoucher}>
+                        <DialogTitle>Nhập Mã Voucher </DialogTitle>
+                        <DialogContent sx={{ paddingBottom: 0 }}>
+                            <DialogContentText>
+                                Để áp dụng Voucher khi thanh toán, người dùng cần nhập chính xác Voucher đã được cung
+                                cấp
+                            </DialogContentText>
+                            <form onSubmit={handleApplyVoucher}>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="voucher"
+                                    name="voucher"
+                                    label="Mã voucher"
+                                    type="text"
+                                    fullWidth
+                                    variant="standard"
+                                    FormLabelProps={{ required: false }}
+                                    value={codeVoucher}
+                                    onChange={(e) => setCodeVoucher(e.target.value)}
+                                />
+                                <DialogActions>
+                                    <Button onClick={handleCloseVoucher}>Quay lại</Button>
+                                    <Button type="submit" className="!text-primary">
+                                        {isLoadingApplyVoucher === true ? (
+                                            <CircularProgress color="inherit" />
+                                        ) : (
+                                            'Áp dụng'
+                                        )}
+                                    </Button>
+                                </DialogActions>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+                    <div className="shadow-md rounded-md bg-white p-5 flex items-center justify-between ">
+                        <span className="text-[14px] font-[500]">Mã Voucher</span>
+                        <span
+                            className="text-[14px] text-primary font-[500] cursor-pointer"
+                            onClick={handleClickOpenVoucher}
+                        >
+                            Nhập mã
+                        </span>
+                    </div>
+                    <div className="shadow-md rounded-md bg-white p-5 mt-4 flex items-center justify-between ">
+                        <span className="text-[14px] font-[500]">
+                            Giảm {formatCurrency(500000)} phí vận chuyển đơn tối thiểu {formatCurrency(0)}
+                        </span>
+                        <span className="text-[14px] text-[#0055aa] font-[500] ">Tìm hiểu thêm</span>
+                    </div>
+                </div>
+                <div className="rightPart w-[30%]">
+                    <div className="shadow-md rounded-md bg-white p-5 ">
+                        <h3 className="py-3">Chi tiết</h3>
+                        <hr />
+                        <p className="flex items-center justify-between">
+                            <span className="text-[14px] font-[500]">Số lượng</span>
+                            <span className="text-primary font-bold">{cart?.totalQuantity}</span>
+                        </p>
+                        <p className="flex items-center justify-between">
+                            <span className="text-[14px] font-[500]">Giá sản phẩm</span>
+                            <span className="text-primary font-bold">{formatCurrency(cart?.totalPrice)}</span>
+                        </p>
+                        <p className="flex items-center justify-between">
+                            <span className="text-[14px] font-[500]">Phí vận chuyển</span>
+                            <span className="text-primary font-bold">{formatCurrency(0)}</span>
+                        </p>
+                        <p className="flex items-center justify-between">
+                            <span className="text-[14px] font-[500]">Voucher</span>
+                            <span className="text-primary font-bold">
+                                {cart?.voucher
+                                    ? cart?.voucher?.discountType === 'percent'
+                                        ? `${cart?.voucher?.discountValue}%`
+                                        : `${formatCurrency(cart?.voucher?.discountValue)}`
+                                    : 'Chưa áp dụng'}
+                            </span>
+                        </p>
+                        <p className="flex items-center justify-between">
+                            <span className="text-[14px] font-[500]">Tổng tiền</span>
+                            <span className="text-primary font-bold">{formatCurrency(cart?.finalPrice)}</span>
+                        </p>
+
+                        <br />
+
+                        <Button className="btn-org btn-login w-full flex gap-2">
+                            <BsFillBagCheckFill className="text-[20px]" />
+                            Thanh toán
+                        </Button>
+                    </div>
                 </div>
             </div>
         </section>

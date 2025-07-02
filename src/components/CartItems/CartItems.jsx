@@ -105,9 +105,6 @@ const CartItems = ({
         }
     };
     const handleDecreaseQuantity = async (productId) => {
-        if (selectedQuantity > 1) {
-            setSelectedQuantity((prev) => prev - 1);
-        }
         try {
             const { data } = await axiosClient.post('/api/user/decreaseQuantityCart', {
                 productId,
@@ -116,12 +113,12 @@ const CartItems = ({
             console.log('dataDecrease: ', data);
             if (data?.success) {
                 context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
-                const updatedItem = data.shoppingCart.find(
-                    (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
+                dispatch(
+                    decreaseQuantity({
+                        product: productId,
+                        sizeProduct: selectedSize,
+                    })
                 );
-                if (updatedItem) {
-                    dispatch(decreaseQuantity(updatedItem));
-                }
             } else {
                 console.error('Không thể thêm vào giỏ hàng:', data.message);
             }
