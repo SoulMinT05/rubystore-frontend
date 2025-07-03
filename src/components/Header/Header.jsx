@@ -26,10 +26,27 @@ import './Header.css';
 
 import axiosToken from '../../apis/axiosToken';
 import axiosClient from '../../apis/axiosClient';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCart } from '../../redux/cartSlice';
 
 const Header = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    const { cart } = useSelector((state) => state.cart);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            const { data } = await axiosClient.get('/api/user/cart');
+            dispatch(
+                getCart({
+                    products: data?.cart?.items || [],
+                })
+            );
+        };
+        fetchCart();
+    }, [dispatch]);
 
     const navigate = useNavigate();
 
@@ -61,7 +78,7 @@ const Header = () => {
     }, [context?.userInfo?.avatar]);
 
     useEffect(() => {
-        if (!context.isLogin) return;
+        // if (!context.isLogin) return;
 
         const checkLogin = async () => {
             try {
@@ -71,8 +88,6 @@ const Header = () => {
                 console.log('dataCheckLogin: ', data);
                 if (data?.success) {
                     context.setIsLogin(true);
-                } else {
-                    context.setIsLogin(false);
                 }
             } catch (error) {
                 console.log('errorCheckLogin: ', error);
@@ -285,7 +300,7 @@ const Header = () => {
                                     <Badge
                                         onClick={() => context.setOpenCartPanel(true)}
                                         className="icon-header"
-                                        badgeContent={4}
+                                        badgeContent={cart?.products?.length}
                                         color="primary"
                                     >
                                         <MdOutlineShoppingCart className="text-2xl" />

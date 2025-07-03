@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import '../CartItems/CartItems.css';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,12 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
-import { addToCart, decreaseQuantity, removeCart, updateCartItemSize } from '../../redux/cartSlice';
+import {
+    removeCart,
+    removeCartItemInDecrease,
+    updateCartItemQuantity,
+    updateCartItemSize,
+} from '../../redux/cartSlice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -33,12 +38,15 @@ const CartItems = ({
     handleSelect,
 }) => {
     const context = useContext(MyContext);
+    const dispatch = useDispatch();
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
     const [sizeAnchorEl, setSizeAnchorEl] = useState(null);
     const [selectedSize, setSelectedSize] = useState(size);
     const openSize = Boolean(sizeAnchorEl);
-    const dispatch = useDispatch();
+
     const [selectedQuantity, setSelectedQuantity] = useState(quantity);
+    const debounceTimeoutRef = useRef(null);
 
     useEffect(() => {
         const currentItem = cart.products.find((item) => {
@@ -80,52 +88,144 @@ const CartItems = ({
         }
     };
 
-    const handleIncreaseQuantity = async (productId) => {
-        setSelectedQuantity((prev) => prev + 1);
-        try {
-            const { data } = await axiosClient.post('/api/user/addToCart', {
-                productId,
-                sizeProduct: selectedSize,
-            });
-            console.log('dataAdd: ', data);
-            if (data?.success) {
-                context.openAlertBox('success', 'Tăng số lượng sản phẩm thành công');
+    // const handleIncreaseQuantity = async (productId) => {
+    //     setSelectedQuantity((prev) => prev + 1);
 
-                const updatedItem = data.shoppingCart.find(
-                    (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
-                );
-                if (updatedItem) {
-                    dispatch(addToCart(updatedItem));
+    //     if (debounceTimeoutRef.current) {
+    //         clearTimeout(debounceTimeoutRef.current);
+    //     }
+    //     // Tạo timeout mới
+    //     debounceTimeoutRef.current = setTimeout(async () => {
+    //         try {
+    //             const { data } = await axiosClient.post('/api/user/addToCart', {
+    //                 productId,
+    //                 sizeProduct: selectedSize,
+    //             });
+    //             console.log('dataAddCart: ', data);
+
+    //             if (data?.success) {
+    //                 context.openAlertBox('success', 'Tăng số lượng sản phẩm thành công');
+
+    //                 const updatedItem = data.shoppingCart.find(
+    //                     (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
+    //                 );
+
+    //                 if (updatedItem) {
+    //                     dispatch(addToCart(updatedItem));
+    //                 }
+    //             } else {
+    //                 console.error('Không thể thêm vào giỏ hàng:', data.message);
+    //             }
+    //         } catch (error) {
+    //             console.error('Lỗi khi thêm vào giỏ hàng:', error);
+    //         }
+    //     }, 500);
+    // };
+    const handleIncreaseQuantity = async (productId) => {
+        const newQuantity = selectedQuantity + 1; // ✅ luôn đúng giá trị mới
+        setSelectedQuantity(newQuantity); // ✅ cập nhật lên UI
+
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
+        }
+
+        debounceTimeoutRef.current = setTimeout(async () => {
+            try {
+                const { data } = await axiosClient.post('/api/user/updateQuantityItemsCart', {
+                    productId,
+                    sizeProduct: selectedSize,
+                    quantityProduct: newQuantity, // ✅ dùng biến newQuantity chứ KHÔNG phải selectedQuantity
+                });
+
+                if (data?.success) {
+                    context.openAlertBox('success', 'Tăng số lượng sản phẩm thành công');
+
+                    const updatedItem = data.shoppingCart.find(
+                        (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
+                    );
+
+                    if (updatedItem) {
+                        dispatch(updateCartItemQuantity(updatedItem)); // ✅ dùng action update tuyệt đối
+                    }
+                } else {
+                    console.error('Không thể thêm vào giỏ hàng:', data.message);
                 }
-            } else {
-                console.error('Không thể thêm vào giỏ hàng:', data.message);
+            } catch (error) {
+                console.error('Lỗi khi thêm vào giỏ hàng:', error);
             }
-        } catch (error) {
-            console.error('Lỗi khi thêm vào giỏ hàng:', error);
-        }
+        }, 500);
     };
+
+    // const handleDecreaseQuantity = async (productId) => {
+    //     if (debounceTimeoutRef.current) {
+    //         clearTimeout(debounceTimeoutRef.current);
+    //     }
+    //     debounceTimeoutRef.current = setTimeout(async () => {
+    //         try {
+    //             const { data } = await axiosClient.post('/api/user/decreaseQuantityCart', {
+    //                 productId,
+    //                 sizeProduct: selectedSize,
+    //             });
+    //             console.log('dataDecrease: ', data);
+    //             if (data?.success) {
+    //                 context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
+    //                 dispatch(
+    //                     decreaseQuantity({
+    //                         product: productId,
+    //                         sizeProduct: selectedSize,
+    //                     })
+    //                 );
+    //             } else {
+    //                 console.error('Không thể thêm vào giỏ hàng:', data.message);
+    //             }
+    //         } catch (error) {
+    //             console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
+    //         }
+    //     }, 500);
+    // };
     const handleDecreaseQuantity = async (productId) => {
-        try {
-            const { data } = await axiosClient.post('/api/user/decreaseQuantityCart', {
-                productId,
-                sizeProduct: selectedSize,
-            });
-            console.log('dataDecrease: ', data);
-            if (data?.success) {
-                context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
-                dispatch(
-                    decreaseQuantity({
-                        product: productId,
-                        sizeProduct: selectedSize,
-                    })
-                );
-            } else {
-                console.error('Không thể thêm vào giỏ hàng:', data.message);
-            }
-        } catch (error) {
-            console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
+        const newQuantity = selectedQuantity - 1;
+
+        // Không cho giảm về dưới 1 (tuỳ rule bạn muốn giữ hay cho xóa)
+        // if (newQuantity < 1) return;
+
+        setSelectedQuantity(newQuantity);
+
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
         }
+
+        debounceTimeoutRef.current = setTimeout(async () => {
+            try {
+                const { data } = await axiosClient.post('/api/user/updateQuantityItemsCart', {
+                    productId,
+                    sizeProduct: selectedSize,
+                    quantityProduct: newQuantity,
+                });
+                console.log('dataDecrease: ', data);
+
+                if (data?.success) {
+                    context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
+
+                    const updatedItem = data.shoppingCart.find(
+                        (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
+                    );
+
+                    if (updatedItem) {
+                        dispatch(updateCartItemQuantity(updatedItem));
+                    } else {
+                        // Nếu không tìm thấy item trong giỏ => bị xoá do về 0
+                        dispatch(removeCartItemInDecrease({ product: productId, sizeProduct: selectedSize }));
+                    }
+                } else {
+                    console.error('Không thể giảm số lượng:', data.message);
+                }
+            } catch (error) {
+                console.error('Lỗi khi giảm sản phẩm:', error.message);
+            }
+        }, 500);
     };
+
     const handleDeleteCartItem = async (cartId) => {
         try {
             const { data } = await axiosClient.post('/api/user/removeProductCart', {

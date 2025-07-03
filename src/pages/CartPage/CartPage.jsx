@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import '../CartPage/CartPage.css';
 
@@ -28,28 +28,47 @@ const CartPage = () => {
     const context = useContext(MyContext);
     const dispatch = useDispatch();
     const { cart } = useSelector((state) => state.cart);
-    const [isCheckedAll, setIsCheckedAll] = useState(false);
+
     const [selectedCarts, setSelectedCarts] = useState([]);
+    const [isCheckedAll, setIsCheckedAll] = useState(false);
     const [isLoadingCarts, setIsLoadingCarts] = useState(false);
     const [openVoucher, setOpenVoucher] = useState(false);
     const [codeVoucher, setCodeVoucher] = useState('');
     const [isLoadingApplyVoucher, setIsLoadingApplyVoucher] = useState(false);
+
+    const sectionRef = useRef(null);
+    const [sectionWidth, setSectionWidth] = useState(0);
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+    const selectedCartItems = cart?.products?.filter((item) => selectedCarts.includes(item._id));
+    const totalQuantity = selectedCartItems.reduce((sum, item) => sum + item.quantityProduct, 0);
+    const totalPrice = selectedCartItems.reduce((sum, item) => sum + item.quantityProduct * item.price, 0);
+    const finalPrice = Math.max(totalPrice - cart.discountValue, 0) + (cart.shippingFee || 0);
 
     useEffect(() => {
         const fetchCart = async () => {
+            setIsLoadingCarts(true);
             const { data } = await axiosClient.get('/api/user/cart');
-            console.log('dataCart: ', data);
-            dispatch(
-                getCart({
-                    products: data?.cart?.items || [],
-                    totalQuantity: data?.cart?.totalQuantity || 0,
-                    totalPrice: data?.cart?.totalPrice || 0,
-                })
-            );
+            if (data?.success) {
+                console.log('dataCart: ', data);
+                dispatch(
+                    getCart({
+                        products: data?.cart?.items || [],
+                        // totalQuantity: data?.cart?.totalQuantity || 0,
+                        // totalPrice: data?.cart?.totalPrice || 0,
+                    })
+                );
+            }
+            setIsLoadingCarts(false);
         };
         fetchCart();
     }, [dispatch]);
+
+    useEffect(() => {
+        if (sectionRef.current) {
+            setSectionWidth(sectionRef.current.offsetWidth);
+        }
+    }, []);
 
     const handleSelectCart = (cartId) => {
         setSelectedCarts((prevSelectedCarts) => {
@@ -120,7 +139,7 @@ const CartPage = () => {
         try {
             const { data } = await axiosClient.post('/api/voucher/applyVoucher', {
                 code: codeVoucher,
-                totalPrice: cart?.totalPrice,
+                totalPrice,
             });
             console.log('dataApplyVoucher: ', data);
             if (data?.success) {
@@ -143,7 +162,7 @@ const CartPage = () => {
     };
 
     return (
-        <section className="section py-10 pb-10">
+        <section ref={sectionRef} className="section py-10 pb-10">
             <div className="pb-2 pt-0  container w-[80%] max-w-[80%] flex items-center justify-between">
                 <div className="">
                     <Breadcrumbs aria-label="breadcrumb">
@@ -227,7 +246,10 @@ const CartPage = () => {
                             ) : (
                                 <tr>
                                     <td colSpan={999}>
-                                        <div className="flex items-center justify-center w-full min-h-[400px]">
+                                        <div
+                                            style={{ width: sectionWidth / 2 }}
+                                            className="flex items-center justify-center mx-auto min-h-[400px]"
+                                        >
                                             <CircularProgress color="inherit" />
                                         </div>
                                     </td>
@@ -295,11 +317,11 @@ const CartPage = () => {
                         <hr />
                         <p className="flex items-center justify-between">
                             <span className="text-[14px] font-[500]">Số lượng</span>
-                            <span className="text-primary font-bold">{cart?.totalQuantity}</span>
+                            <span className="text-primary font-bold">{totalQuantity}</span>
                         </p>
                         <p className="flex items-center justify-between">
                             <span className="text-[14px] font-[500]">Giá sản phẩm</span>
-                            <span className="text-primary font-bold">{formatCurrency(cart?.totalPrice)}</span>
+                            <span className="text-primary font-bold">{formatCurrency(totalPrice)}</span>
                         </p>
                         <p className="flex items-center justify-between">
                             <span className="text-[14px] font-[500]">Phí vận chuyển</span>
@@ -317,7 +339,7 @@ const CartPage = () => {
                         </p>
                         <p className="flex items-center justify-between">
                             <span className="text-[14px] font-[500]">Tổng tiền</span>
-                            <span className="text-primary font-bold">{formatCurrency(cart?.finalPrice)}</span>
+                            <span className="text-primary font-bold">{formatCurrency(finalPrice)}</span>
                         </p>
 
                         <br />

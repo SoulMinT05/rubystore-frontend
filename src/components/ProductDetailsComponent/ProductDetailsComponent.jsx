@@ -39,10 +39,9 @@ const ProductDetailsComponent = ({ product, reviews }) => {
             context.openAlertBox('error', 'Vui lòng chọn kích cỡ trước khi thêm vào giỏ hàng!');
             return;
         }
-
         try {
             const { data } = await axiosClient.post('/api/user/addToCart', {
-                productId: product._id,
+                productId: product?._id,
                 sizeProduct,
                 quantityProduct,
             });

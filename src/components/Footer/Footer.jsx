@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { LiaShippingFastSolid } from 'react-icons/lia';
 import { PiKeyReturnLight } from 'react-icons/pi';
 import { BsWallet2 } from 'react-icons/bs';
@@ -28,9 +28,26 @@ import bank2 from '../../assets/bank2.png';
 import bank3 from '../../assets/bank3.png';
 import bank4 from '../../assets/bank4.png';
 import bank5 from '../../assets/bank5.png';
+import { useDispatch, useSelector } from 'react-redux';
+import axiosClient from '../../apis/axiosClient';
+import { getCart } from '../../redux/cartSlice';
 
 const Footer = () => {
     const context = useContext(MyContext);
+    const { cart } = useSelector((state) => state.cart);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            const { data } = await axiosClient.get('/api/user/cart');
+            dispatch(
+                getCart({
+                    products: data?.cart?.items || [],
+                })
+            );
+        };
+        fetchCart();
+    }, [dispatch]);
     return (
         <>
             <footer className="py-6 bg-[#fafafa]">
@@ -250,14 +267,14 @@ const Footer = () => {
                 anchor={'right'}
             >
                 <div className="flex items-center justify-between py-3 px-4 gap-3 border-b border-[rgba(0,0,0,0.1)] overflow-hidden">
-                    <h4>Giỏ hàng (1) </h4>
+                    <h4>Giỏ hàng ({cart?.products?.length}) </h4>
                     <IoCloseSharp
                         className="text-[20px] cursor-pointer"
                         onClick={() => context.toggleCartPanel(false)}
                     />
                 </div>
 
-                <CartPanel />
+                <CartPanel cart={cart} />
             </Drawer>
         </>
     );
