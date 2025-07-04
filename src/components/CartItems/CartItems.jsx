@@ -88,39 +88,6 @@ const CartItems = ({
         }
     };
 
-    // const handleIncreaseQuantity = async (productId) => {
-    //     setSelectedQuantity((prev) => prev + 1);
-
-    //     if (debounceTimeoutRef.current) {
-    //         clearTimeout(debounceTimeoutRef.current);
-    //     }
-    //     // Tạo timeout mới
-    //     debounceTimeoutRef.current = setTimeout(async () => {
-    //         try {
-    //             const { data } = await axiosClient.post('/api/user/addToCart', {
-    //                 productId,
-    //                 sizeProduct: selectedSize,
-    //             });
-    //             console.log('dataAddCart: ', data);
-
-    //             if (data?.success) {
-    //                 context.openAlertBox('success', 'Tăng số lượng sản phẩm thành công');
-
-    //                 const updatedItem = data.shoppingCart.find(
-    //                     (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
-    //                 );
-
-    //                 if (updatedItem) {
-    //                     dispatch(addToCart(updatedItem));
-    //                 }
-    //             } else {
-    //                 console.error('Không thể thêm vào giỏ hàng:', data.message);
-    //             }
-    //         } catch (error) {
-    //             console.error('Lỗi khi thêm vào giỏ hàng:', error);
-    //         }
-    //     }, 500);
-    // };
     const handleIncreaseQuantity = async (productId) => {
         const newQuantity = selectedQuantity + 1; // ✅ luôn đúng giá trị mới
         setSelectedQuantity(newQuantity); // ✅ cập nhật lên UI
@@ -152,37 +119,11 @@ const CartItems = ({
                 }
             } catch (error) {
                 console.error('Lỗi khi thêm vào giỏ hàng:', error);
+                context.openAlertBox('error', error.response.data.message);
             }
         }, 500);
     };
 
-    // const handleDecreaseQuantity = async (productId) => {
-    //     if (debounceTimeoutRef.current) {
-    //         clearTimeout(debounceTimeoutRef.current);
-    //     }
-    //     debounceTimeoutRef.current = setTimeout(async () => {
-    //         try {
-    //             const { data } = await axiosClient.post('/api/user/decreaseQuantityCart', {
-    //                 productId,
-    //                 sizeProduct: selectedSize,
-    //             });
-    //             console.log('dataDecrease: ', data);
-    //             if (data?.success) {
-    //                 context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
-    //                 dispatch(
-    //                     decreaseQuantity({
-    //                         product: productId,
-    //                         sizeProduct: selectedSize,
-    //                     })
-    //                 );
-    //             } else {
-    //                 console.error('Không thể thêm vào giỏ hàng:', data.message);
-    //             }
-    //         } catch (error) {
-    //             console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
-    //         }
-    //     }, 500);
-    // };
     const handleDecreaseQuantity = async (productId) => {
         const newQuantity = selectedQuantity - 1;
 

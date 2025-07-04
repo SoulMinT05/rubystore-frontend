@@ -318,7 +318,7 @@ const CartPage = () => {
                                     type="text"
                                     fullWidth
                                     variant="standard"
-                                    FormLabelProps={{ required: false }}
+                                    formlabelprops={{ required: false }}
                                     value={codeVoucher}
                                     onChange={(e) => setCodeVoucher(e.target.value)}
                                 />

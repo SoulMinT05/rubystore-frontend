@@ -204,3 +204,13 @@ button .MuiCircularProgress-root {
 .MuiCircularProgress-root {
     @apply !text-primary;
 }
+.MuiSelect-select {
+    background-color: #fff !important;
+}
+.MuiDialog-paper {
+    background-color: #f9fafb !important;
+}
+
+.Mui-focused fieldset legend {
+    display: none !important;
+}

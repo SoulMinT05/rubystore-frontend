@@ -60,6 +60,7 @@ const ProductDetailsComponent = ({ product, reviews }) => {
             }
         } catch (error) {
             console.error('Lỗi khi thêm vào giỏ hàng:', error.message);
+            context.openAlertBox('error', error.response.data.message);
         }
     };
     return (

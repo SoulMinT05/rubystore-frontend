@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
@@ -21,6 +21,7 @@ const formatCurrency = (amount) => {
 };
 const ProductListItemView = ({ product }) => {
     const context = useContext(MyContext);
+    const navigate = useNavigate();
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)] flex items-center">
             <div className="group imgWrapper w-[25%] overflow-hidden rounded-md relative">
@@ -84,7 +85,7 @@ const ProductListItemView = ({ product }) => {
                 </div>
 
                 <div className="mt-3">
-                    <Button className="btn-org flex gap-2">
+                    <Button onClick={() => navigate(`/product/${product?._id}`)} className="btn-org flex gap-2">
                         <MdOutlineShoppingCart className="text-[20px]" />
                         Thêm vào giỏ hàng
                     </Button>

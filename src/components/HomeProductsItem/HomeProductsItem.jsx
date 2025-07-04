@@ -88,7 +88,7 @@ const HomeProductsItem = ({ product }) => {
                         onClick={() => navigate(`/product/${product?._id}`)}
                     >
                         <MdOutlineShoppingCart className="text-[18px]" />
-                        <span className="text-[13px] !normal-case">Mua ngay</span>
+                        <span className="text-[13px] !normal-case">Thêm vào giỏ hàng</span>
                     </Button>
                 </div>
             </div>

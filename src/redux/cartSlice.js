@@ -44,7 +44,10 @@ const cartSlice = createSlice({
             state.cart.shippingFee = 0;
             state.cart.finalPrice = 0;
         },
-
+        removeOrderedItems: (state, action) => {
+            const orderedIds = action.payload;
+            state.cart.products = state.cart.products.filter((item) => !orderedIds.includes(item._id.toString()));
+        },
         applyVoucher: (state, action) => {
             const { voucher, discountValue, finalPrice } = action.payload;
             state.cart.voucher = voucher;
@@ -104,7 +107,6 @@ const cartSlice = createSlice({
             const foundItem = state.cart.products.find((item) => {
                 const itemProductId = extractProductId(item?.product);
                 const match = itemProductId === productId && item?.sizeProduct === action.payload.sizeProduct;
-                // console.log('[🧪] match:', match, '| itemId:', itemProductId, '| payload:', productId);
                 return match;
             });
 
@@ -182,6 +184,7 @@ const cartSlice = createSlice({
 export const {
     getCart,
     applyVoucher,
+    removeOrderedItems,
     updateCartItemSize,
     updateCartItemQuantity,
     removeCartItemInDecrease,

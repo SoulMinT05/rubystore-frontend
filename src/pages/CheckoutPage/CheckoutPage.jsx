@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { Breadcrumbs, Button, CircularProgress, Divider, TextField } from '@mui/material';
+import { Breadcrumbs, Button, CircularProgress, Divider, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
 
 import './CheckoutPage.css';
+import { useDispatch } from 'react-redux';
+import { removeOrderedItems } from '../../redux/cartSlice';
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -19,9 +21,15 @@ const CheckoutPage = () => {
     const [searchParams] = useSearchParams();
     const tokenId = searchParams.get('state');
 
+    const context = useContext(MyContext);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [checkoutData, setCheckoutData] = useState(null);
     const [isLoadingCheckoutToken, setIsLoadingCheckoutToken] = useState(true);
-    const context = useContext(MyContext);
+    const [note, setNote] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('cod');
+    const [isLoadingCreateOrder, setIsLoadingCreateOrder] = useState(false);
 
     useEffect(() => {
         const fetchCheckoutToken = async () => {
@@ -33,12 +41,11 @@ const CheckoutPage = () => {
                 console.log('dataCheckOutId: ', data);
                 if (data?.success) {
                     setCheckoutData(data.checkoutData); // hoặc data.checkoutToken
-                } else {
-                    context.openAlertBox('error', data.message || 'Không tìm thấy token');
                 }
             } catch (error) {
                 console.error('Lỗi fetch checkout token:', error);
-                context.openAlertBox('error', 'Có lỗi xảy ra khi lấy thông tin đơn hàng');
+                context.openAlertBox('error', 'Đơn thanh toán đã hết hạn, hãy chọn lại sản phẩm');
+                navigate('/cart');
             } finally {
                 setIsLoadingCheckoutToken(false);
             }
@@ -47,9 +54,26 @@ const CheckoutPage = () => {
         fetchCheckoutToken();
     }, [tokenId]);
 
-    useEffect(() => {
-        console.log('context.userInfo--checkout: ', context?.userInfo);
-    }, [context.userInfo]);
+    const handleCreateOrder = async () => {
+        setIsLoadingCreateOrder(true);
+        try {
+            const { data } = await axiosClient.post('/api/order/createOrder', {
+                tokenId,
+                paymentMethod,
+                note,
+            });
+            console.log('dataCreateOrder: ', data);
+            if (data?.success) {
+                context.openAlertBox('success', data?.message);
+                dispatch(removeOrderedItems(data?.orderedItemIds));
+                navigate('/cart');
+            }
+        } catch (error) {
+            console.log('error: ', error);
+        } finally {
+            setIsLoadingCreateOrder(false);
+        }
+    };
 
     return (
         <section className="py-10">
@@ -193,14 +217,36 @@ const CheckoutPage = () => {
                     </table>
                 </div>
             </div>
+            <div style={{ marginTop: '16px' }} className="container w-[80%] max-w-[80%] mx-auto flex gap-5 my-4">
+                <div className="shadow-md rounded-md bg-white p-5 w-full flex items-center gap-4 ">
+                    <h1 className="text-[16px] font-[500] whitespace-nowrap">Lời nhắn:</h1>
+                    <TextField
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        label="Lưu ý cho người bán"
+                        variant="outlined"
+                        size="small"
+                        className="w-full ml-4"
+                    />
+                </div>
+            </div>
             <div style={{ marginTop: '8px' }} className="container w-[80%] max-w-[80%] mx-auto flex gap-5 my-4">
                 <div className="shadow-md rounded-md bg-white p-5 w-full  ">
                     <div className="flex items-center justify-between min-h-[90px] ">
-                        <h1 className="text-[16px] font-[500]">Phương thức thanh toán</h1>
-                        <div className="flex items-center gap-6">
-                            <span className="text-[14px] font-[400]">Thanh toán khi nhận hàng</span>
-                            <span className="text-[14px] font-[500] ml-4 text-primary cursor-pointer">Thay đổi</span>
-                        </div>
+                        <h1 className="text-[16px] font-[500] whitespace-nowrap">Phương thức thanh toán</h1>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="paymentMethods"
+                            size="small"
+                            className="w-full ml-4"
+                            label="Phương thức thanh toán"
+                            value={paymentMethod}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                        >
+                            <MenuItem value="cod">Thanh toán khi nhận hàng</MenuItem>
+                            <MenuItem value="momo">Ví Momo</MenuItem>
+                            <MenuItem value="vnpay">VNPay</MenuItem>
+                        </Select>
                     </div>
                     <Divider />
                     <div className="py-4">
@@ -239,7 +285,9 @@ const CheckoutPage = () => {
                             Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo
                             <Link className="text-[#4080ee]"> Điều khoản RubyStore</Link>
                         </h1>
-                        <Button className="btn-org btn-md !w-[210px] !h-[40px] ">Đặt hàng</Button>
+                        <Button onClick={handleCreateOrder} className="btn-org btn-md !w-[210px] !h-[40px] ">
+                            {isLoadingCreateOrder ? <CircularProgress color="inherit" /> : 'Đặt hàng'}
+                        </Button>
                     </div>
                 </div>
             </div>
