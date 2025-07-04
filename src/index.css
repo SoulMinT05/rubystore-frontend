@@ -76,6 +76,11 @@ h6 {
     padding: 5px 20px !important;
 }
 
+.btn-md {
+    font-size: 14px !important;
+    padding: 14px 12px !important;
+}
+
 .link:hover {
     color: #ff5252;
 }

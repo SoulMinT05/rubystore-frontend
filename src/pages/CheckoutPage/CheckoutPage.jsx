@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { Button, TextField } from '@mui/material';
+import { Breadcrumbs, Button, CircularProgress, Divider, TextField } from '@mui/material';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 
-import './CheckoutPage.css';
+import { Link, useSearchParams } from 'react-router-dom';
+import { MyContext } from '../../App';
+import axiosClient from '../../apis/axiosClient';
 
+import './CheckoutPage.css';
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -13,182 +16,230 @@ const formatCurrency = (amount) => {
 };
 
 const CheckoutPage = () => {
+    const [searchParams] = useSearchParams();
+    const tokenId = searchParams.get('state');
+
+    const [checkoutData, setCheckoutData] = useState(null);
+    const [isLoadingCheckoutToken, setIsLoadingCheckoutToken] = useState(true);
+    const context = useContext(MyContext);
+
+    useEffect(() => {
+        const fetchCheckoutToken = async () => {
+            if (!tokenId) return;
+
+            setIsLoadingCheckoutToken(true);
+            try {
+                const { data } = await axiosClient.get(`/api/checkoutToken/${tokenId}`);
+                console.log('dataCheckOutId: ', data);
+                if (data?.success) {
+                    setCheckoutData(data.checkoutData); // hoặc data.checkoutToken
+                } else {
+                    context.openAlertBox('error', data.message || 'Không tìm thấy token');
+                }
+            } catch (error) {
+                console.error('Lỗi fetch checkout token:', error);
+                context.openAlertBox('error', 'Có lỗi xảy ra khi lấy thông tin đơn hàng');
+            } finally {
+                setIsLoadingCheckoutToken(false);
+            }
+        };
+
+        fetchCheckoutToken();
+    }, [tokenId]);
+
+    useEffect(() => {
+        console.log('context.userInfo--checkout: ', context?.userInfo);
+    }, [context.userInfo]);
+
     return (
         <section className="py-10">
-            <div className="container flex gap-5">
-                <div className="leftCol w-[70%]">
-                    <div className="card bg-white shadow-md p-5 rounded-md w-full">
-                        <h1>Thông tin cá nhân</h1>
-                        <div className="w-full mt-5">
-                            <div className="flex items-center gap-5 pb-5">
-                                <div className="col w-[50%]">
-                                    <TextField className="w-full" label="Họ và tên" variant="outlined" size="small" />
-                                </div>
-                                <div className="col w-[50%]">
-                                    <TextField
-                                        className="w-full"
-                                        label="Số điện thoại"
-                                        variant="outlined"
-                                        size="small"
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-5 pb-5">
-                                <div className="col w-full">
-                                    <TextField
-                                        type="email"
-                                        className="w-full"
-                                        label="Email"
-                                        variant="outlined"
-                                        size="small"
-                                    />
-                                </div>
-                            </div>
-
-                            <h6 className="text-[14px] font-[500] mb-3">Địa chỉ</h6>
-
-                            <div className="flex items-center gap-5 pb-5">
-                                <div className="col w-full">
-                                    <TextField
-                                        className="w-full"
-                                        label="Số nhà, tên đường"
-                                        variant="outlined"
-                                        size="small"
-                                    />
-                                </div>
-                            </div>
-
-                            <h6 className="text-[14px] font-[500] mb-3">Thành phố</h6>
-                            <div className="flex items-center gap-5 pb-5">
-                                <div className="col w-full">
-                                    <TextField
-                                        className="w-full"
-                                        label="Thành phố, tỉnh"
-                                        variant="outlined"
-                                        size="small"
-                                    />
-                                </div>
-                            </div>
+            <div className="pb-2 pt-0  container w-[80%] max-w-[80%] flex items-center justify-between">
+                <div className="">
+                    <Breadcrumbs aria-label="breadcrumb">
+                        <Link underline="hover" color="inherit" to="/" className="link transition !text-[16px]">
+                            Trang chủ
+                        </Link>
+                        <Link underline="hover" color="inherit" className="link transition !text-[16px]">
+                            Thanh toán
+                        </Link>
+                    </Breadcrumbs>
+                </div>
+            </div>
+            <div style={{ marginTop: '16px' }} className="container w-[80%] max-w-[80%] mx-auto flex gap-5 my-4">
+                <div className="shadow-md rounded-md bg-white p-5 w-full ">
+                    <h1 className="text-[16px] text-primary font-[500]">Địa chỉ nhận hàng</h1>
+                    <div className="mt-4 flex items-center gap-6">
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-500 text-[14px] font-[600]">{context.userInfo?.name}</span>
+                            <span className="text-[14px] font-[600]">{context.userInfo?.phoneNumber}</span>
                         </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[14px] font-[400]">
+                                Đường {context.userInfo?.address?.streetLine},
+                            </span>
+                            <span className="text-[14px] font-[400]">Phường {context.userInfo?.address?.ward},</span>
+                            <span className="text-[14px] font-[400]">Quận {context.userInfo?.address?.district},</span>
+                            <span className="text-[14px] font-[400]">Thành phố {context.userInfo?.address?.city}</span>
+                        </div>
+                        <span
+                            onClick={() => {
+                                context.setIsOpenFullScreenPanel({
+                                    open: true,
+                                    model: 'Cập nhật địa chỉ',
+                                });
+                            }}
+                            className="text-[14px] font-[500] ml-4 text-primary cursor-pointer"
+                        >
+                            Thay đổi
+                        </span>
                     </div>
                 </div>
-
-                <div className="rightCol w-[30%]">
-                    <div className="card shadow-md bg-white p-5 rounded-md">
-                        <h2 className="mb-4">Đơn hàng của bạn</h2>
-                        <div className="flex items-center justify-between py-3 border-t  border-b border-[rgba(0,0,0,0.1)]">
-                            <span className="text-[14px] font-[600]">Sản phẩm</span>
-                            <span className="text-[14px] font-[600]">Subtotal</span>
+            </div>
+            <div style={{ marginTop: '16px' }} className="container w-[80%] max-w-[80%] mx-auto flex gap-5">
+                <div className="relative overflow-x-auto mt-1 pb-5">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-700">
+                        {!isLoadingCheckoutToken && checkoutData?.selectedCartItems?.length > 0 && (
+                            <thead className="text-xs text-gray-700 uppercase bg-white">
+                                <tr>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Sản phẩm
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Size
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Đơn giá
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Số lượng
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                        Thành tiền
+                                    </th>
+                                </tr>
+                            </thead>
+                        )}
+                        <tbody>
+                            {isLoadingCheckoutToken === false ? (
+                                checkoutData?.selectedCartItems?.length > 0 &&
+                                checkoutData?.selectedCartItems?.map((item) => {
+                                    return (
+                                        <tr key={item?._id} className="odd:bg-white  even:bg-gray-50 border-b">
+                                            <td className="px-6 py-3">
+                                                <div className="flex items-center gap-4 w-[470px]">
+                                                    <div className="img w-[65px] h-[65px] rounded-md overflow-hidden group">
+                                                        <Link to={`/product/${item?.product?._id}`}>
+                                                            <img
+                                                                src={item?.images[0]}
+                                                                className="w-full group-hover:scale-105 transition-all"
+                                                                alt=""
+                                                            />
+                                                        </Link>
+                                                    </div>
+                                                    <div className="info w-[75%]">
+                                                        <h3 className="text-[12px] font-[600] leading-4 hover:text-primary transition-all">
+                                                            <Link to={`/product/${item?.product?._id}`}>
+                                                                {item?.name}
+                                                            </Link>
+                                                        </h3>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-3 py-3 w-[120px]">
+                                                <div className="relative w-full">
+                                                    <button
+                                                        id="size-button"
+                                                        aria-haspopup="true"
+                                                        className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-1 px-2 rounded-md"
+                                                    >
+                                                        Size: {item?.sizeProduct}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-3">
+                                                <div className="flex gap-3 items-center w-[220px]">
+                                                    <span className="oldPrice line-through leading-3 text-gray-500 text-[12px] font-[500]">
+                                                        {formatCurrency(item?.oldPrice)}
+                                                    </span>
+                                                    <span className="price text-primary text-[12px] font-[600]">
+                                                        {formatCurrency(item?.price)}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-3">
+                                                <p className="w-[80px] text-[12px]">{item?.quantityProduct}</p>
+                                            </td>
+                                            <td className="px-6 py-3">
+                                                <p className="w-[160px] text-[12px]">
+                                                    {formatCurrency(item?.quantityProduct * item?.price)}
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan={999}>
+                                        <div
+                                            // style={{ width: sectionWidth / 2 }}
+                                            className="flex items-center justify-center mx-auto min-h-[400px]"
+                                        >
+                                            <CircularProgress color="inherit" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style={{ marginTop: '8px' }} className="container w-[80%] max-w-[80%] mx-auto flex gap-5 my-4">
+                <div className="shadow-md rounded-md bg-white p-5 w-full  ">
+                    <div className="flex items-center justify-between min-h-[90px] ">
+                        <h1 className="text-[16px] font-[500]">Phương thức thanh toán</h1>
+                        <div className="flex items-center gap-6">
+                            <span className="text-[14px] font-[400]">Thanh toán khi nhận hàng</span>
+                            <span className="text-[14px] font-[500] ml-4 text-primary cursor-pointer">Thay đổi</span>
                         </div>
-
-                        <div className="mb-5 scroll max-h-[250px] overflow-y-scroll overflow-x-hidden pr-2">
-                            <div className="flex items-center justify-between py-2">
-                                <div className="part1 flex items-center gap-3">
-                                    <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                                        <img
-                                            src="src/assets/jisoo.webp"
-                                            className="w-full transition-all group-hover:scale-105"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="info">
-                                        <div className="text-[14px]">Áo khoác con khỉ Dior..</div>
-                                        <span className="text-[13px]">Số lượng : 1</span>
-                                    </div>
-                                </div>
-
-                                <span className="text-[14px] font-[500]">{formatCurrency(240000)}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-2">
-                                <div className="part1 flex items-center gap-3">
-                                    <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                                        <img
-                                            src="src/assets/jisoo.webp"
-                                            className="w-full transition-all group-hover:scale-105"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="info">
-                                        <div className="text-[14px]">Áo khoác con khỉ Dior..</div>
-                                        <span className="text-[13px]">Số lượng : 1</span>
-                                    </div>
-                                </div>
-
-                                <span className="text-[14px] font-[500]">{formatCurrency(240000)}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-2">
-                                <div className="part1 flex items-center gap-3">
-                                    <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                                        <img
-                                            src="src/assets/jisoo.webp"
-                                            className="w-full transition-all group-hover:scale-105"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="info">
-                                        <div className="text-[14px]">Áo khoác con khỉ Dior..</div>
-                                        <span className="text-[13px]">Số lượng : 1</span>
-                                    </div>
-                                </div>
-
-                                <span className="text-[14px] font-[500]">{formatCurrency(240000)}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-2">
-                                <div className="part1 flex items-center gap-3">
-                                    <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                                        <img
-                                            src="src/assets/jisoo.webp"
-                                            className="w-full transition-all group-hover:scale-105"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="info">
-                                        <div className="text-[14px]">Áo khoác con khỉ Dior..</div>
-                                        <span className="text-[13px]">Số lượng : 1</span>
-                                    </div>
-                                </div>
-
-                                <span className="text-[14px] font-[500]">{formatCurrency(240000)}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-2">
-                                <div className="part1 flex items-center gap-3">
-                                    <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                                        <img
-                                            src="src/assets/jisoo.webp"
-                                            className="w-full transition-all group-hover:scale-105"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="info">
-                                        <div className="text-[14px]">Áo khoác con khỉ Dior..</div>
-                                        <span className="text-[13px]">Số lượng : 1</span>
-                                    </div>
-                                </div>
-
-                                <span className="text-[14px] font-[500]">{formatCurrency(240000)}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-2">
-                                <div className="part1 flex items-center gap-3">
-                                    <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                                        <img
-                                            src="src/assets/jisoo.webp"
-                                            className="w-full transition-all group-hover:scale-105"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="info">
-                                        <div className="text-[14px]">Áo khoác con khỉ Dior..</div>
-                                        <span className="text-[13px]">Số lượng : 1</span>
-                                    </div>
-                                </div>
-
-                                <span className="text-[14px] font-[500]">{formatCurrency(240000)}</span>
-                            </div>
+                    </div>
+                    <Divider />
+                    <div className="py-4">
+                        <div className="ml-auto min-h-[40px] w-fit text-right flex items-center gap-12">
+                            <span className="text-[14px] font-[400]">Tổng số lượng</span>
+                            <span className="text-[14px] font-[400] w-[202px]">{checkoutData?.totalQuantity}</span>
                         </div>
-                        <Button className="btn-org btn-login w-full flex gap-2">
-                            <BsFillBagCheckFill className="text-[20px]" />
-                            Thanh toán
-                        </Button>
+                        <div className="ml-auto min-h-[40px] w-fit text-right flex items-center gap-12">
+                            <span className="text-[14px] font-[400]">Tổng tiền hàng</span>
+                            <span className="text-[14px] font-[400] w-[202px]">
+                                {formatCurrency(checkoutData?.totalPrice)}
+                            </span>
+                        </div>
+                        <div className="ml-auto min-h-[40px] w-fit text-right flex items-center gap-12">
+                            <span className="text-[14px] font-[400]">Tổng tiền phí vận chuyển</span>
+                            <span className="text-[14px] font-[400] w-[202px]">{formatCurrency(0)}</span>
+                        </div>
+                        <div className="ml-auto min-h-[40px] w-fit text-right flex items-center gap-12">
+                            <span className="text-[14px] font-[400]">Voucher</span>
+                            <span className="text-[14px] font-[400] w-[202px]">
+                                {checkoutData?.discountType === 'percent'
+                                    ? `${checkoutData?.discountValue}%`
+                                    : `${formatCurrency(checkoutData?.discountValue)}`}
+                            </span>
+                        </div>
+                        <div className="ml-auto min-h-[40px] w-fit text-right flex items-center gap-12">
+                            <span className="text-[14px] font-[400]">Tổng thanh toán</span>
+                            <span className="text-[28px] font-[500] text-primary w-[202px]">
+                                {formatCurrency(checkoutData?.finalPrice)}
+                            </span>
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className="flex items-center justify-between min-h-[90px] ">
+                        <h1 className="text-[14px] font-[400]">
+                            Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo
+                            <Link className="text-[#4080ee]"> Điều khoản RubyStore</Link>
+                        </h1>
+                        <Button className="btn-org btn-md !w-[210px] !h-[40px] ">Đặt hàng</Button>
                     </div>
                 </div>
             </div>

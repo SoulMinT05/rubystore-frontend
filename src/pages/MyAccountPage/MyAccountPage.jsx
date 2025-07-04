@@ -25,17 +25,13 @@ const MyAccountPage = () => {
     const [name, setName] = useState(context?.userInfo?.name || '');
     const [phoneNumber, setPhoneNumber] = useState(context?.userInfo?.phoneNumber || '');
     const [isLoading, setIsLoading] = useState(false);
-    const [isOpenFullScreenPanel, setIsOpenFullScreenPanel] = useState({
-        open: false,
-        model: '',
-    });
 
     useEffect(() => {
         const fetchInfo = async () => {
             try {
                 const { data } = await axiosClient.get('/api/user/user-details');
                 if (data.success && data?.user) {
-                    context.setUserInfo(data?.user);
+                    context?.setUserInfo(data?.user);
                     setName(data?.user?.name);
                     setPhoneNumber(data?.user?.phoneNumber);
                 }
@@ -121,7 +117,7 @@ const MyAccountPage = () => {
                                 <div
                                     className="flex items-center justify-center p-3  mt-4 mb-5 border border-dashed border-[rgba(0,0,0,0.2)] bg-[#f1faff] hover:bg-[#e7f3f9] cursor-pointer"
                                     onClick={() =>
-                                        setIsOpenFullScreenPanel({
+                                        context.setIsOpenFullScreenPanel({
                                             open: true,
                                             model: 'Cập nhật địa chỉ',
                                         })
@@ -140,39 +136,6 @@ const MyAccountPage = () => {
                     </div>
                 </div>
             </section>
-
-            <Dialog
-                fullScreen
-                open={isOpenFullScreenPanel.open}
-                onClose={() =>
-                    setIsOpenFullScreenPanel({
-                        open: false,
-                    })
-                }
-                TransitionComponent={Transition}
-            >
-                <AppBar sx={{ position: 'relative' }}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={() =>
-                                setIsOpenFullScreenPanel({
-                                    open: false,
-                                })
-                            }
-                            aria-label="close"
-                        >
-                            <IoMdClose className="text-gray-800" />
-                        </IconButton>
-                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            <span className="text-gray-800">{isOpenFullScreenPanel?.model}</span>
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-
-                {isOpenFullScreenPanel?.model === 'Cập nhật địa chỉ' && <UpdateAddressComponent />}
-            </Dialog>
         </>
     );
 };

@@ -21,20 +21,19 @@ const AppRoutes = () => (
     <>
         <ScrollToTopComponent />
         <Routes>
-            <Route path="/" exact element={<HomePage />} />
-            <Route path="/login" exact element={<LoginPage />} />
-            <Route path="/register" exact element={<RegisterPage />} />
-            <Route path="/cart" exact element={<CartPage />} />
-            <Route path="/verify" exact element={<VerifyPage />} />
-            <Route path="/verify-password" exact element={<VerifyPasswordPage />} />
-            <Route path="/forgot-password" exact element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" exact element={<ResetPasswordPage />} />
-            <Route path="/product/:id" exact element={<ProductDetailsPage />} />
-            <Route path="/product" exact element={<ProductListPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/verify" element={<VerifyPage />} />
+            <Route path="/verify-password" element={<VerifyPasswordPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/product/:id" element={<ProductDetailsPage />} />
+            <Route path="/product" element={<ProductListPage />} />
 
             <Route
                 path="/checkout"
-                exact
                 element={
                     <PrivateRoute>
                         <CheckoutPage />
@@ -43,7 +42,6 @@ const AppRoutes = () => (
             />
             <Route
                 path="/my-account"
-                exact
                 element={
                     <PrivateRoute>
                         <MyAccountPage />
@@ -52,7 +50,6 @@ const AppRoutes = () => (
             />
             <Route
                 path="/order-history"
-                exact
                 element={
                     <PrivateRoute>
                         <OrderHistoryPage />
@@ -61,7 +58,6 @@ const AppRoutes = () => (
             />
             <Route
                 path="/wishlist"
-                exact
                 element={
                     <PrivateRoute>
                         <WishlistPage />
@@ -70,7 +66,6 @@ const AppRoutes = () => (
             />
             <Route
                 path="/change-password"
-                exact
                 element={
                     <PrivateRoute>
                         <ChangePasswordPage />

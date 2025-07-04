@@ -19,8 +19,8 @@ const UpdateAddressComponent = () => {
         const fetchInfo = async () => {
             try {
                 const { data } = await axiosClient.get('/api/user/user-details');
-                if (data.success && data?.user) {
-                    context.setUserInfo(data.user);
+                if (data?.success && data?.user) {
+                    context?.setUserInfo(data?.user);
 
                     setStreetLine(data?.user?.address?.streetLine || '');
                     setCity(data?.user?.address?.city || '');
@@ -45,10 +45,9 @@ const UpdateAddressComponent = () => {
                 district,
                 ward,
             });
-            if (data.success) {
-                context.openAlertBox('success', data.message);
-
-                context.setUserInfo((prev) => ({
+            if (data?.success) {
+                context?.openAlertBox('success', 'Cập nhật địa chỉ thành công');
+                context?.setUserInfo((prev) => ({
                     ...prev,
                     address: {
                         streetLine: data?.address?.streetLine,
@@ -57,12 +56,13 @@ const UpdateAddressComponent = () => {
                         ward: data?.address?.ward,
                     },
                 }));
-            } else {
-                context.openAlertBox('error', data.message);
+                context?.setIsOpenFullScreenPanel({
+                    open: false,
+                });
             }
         } catch (error) {
             console.log(error);
-            context.openAlertBox('error', error.response.data.message);
+            context?.openAlertBox('error', error.response.data.message);
         } finally {
             setIsLoading(false);
         }
@@ -82,10 +82,10 @@ const UpdateAddressComponent = () => {
                             />
                         </div>
                         <div className="col w-[100%]">
-                            <h3 className="text-[14px] font-[500] mb-1 text-black">Thành phố</h3>
+                            <h3 className="text-[14px] font-[500] mb-1 text-black">Phường</h3>
                             <input
-                                value={city || ''}
-                                onChange={(e) => setCity(e.target.value)}
+                                value={ward || ''}
+                                onChange={(e) => setWard(e.target.value)}
                                 type="text"
                                 className="w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
                             />
@@ -102,10 +102,10 @@ const UpdateAddressComponent = () => {
                             />
                         </div>
                         <div className="col w-[100%]">
-                            <h3 className="text-[14px] font-[500] mb-1 text-black">Phường</h3>
+                            <h3 className="text-[14px] font-[500] mb-1 text-black">Thành phố</h3>
                             <input
-                                value={ward || ''}
-                                onChange={(e) => setWard(e.target.value)}
+                                value={city || ''}
+                                onChange={(e) => setCity(e.target.value)}
                                 type="text"
                                 className="w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
                             />
@@ -113,7 +113,7 @@ const UpdateAddressComponent = () => {
                     </div>
 
                     <br />
-                    <Button type="submit" className="btn-red w-full !normal-case flex gap-2">
+                    <Button type="submit" className="btn-org w-full !normal-case flex gap-2">
                         {isLoading === true ? (
                             <CircularProgress color="inherit" />
                         ) : (

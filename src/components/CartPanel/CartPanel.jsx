@@ -72,46 +72,6 @@ const CartPanel = ({ cart }) => {
                     </Link>
                 </div>
             </div>
-
-            {/* <div className="bottomSec absolute bottom-[10px] left-[10px] w-full overflow-hidden pr-5">
-                <div className="bottomInfo py-3 px-4 w-full border-t border-[rgba(0,0,0,0.1)] flex items-center justify-between flex-col">
-                    <div className="flex items-center justify-between w-full">
-                        <span className="text-[14px] font-[600]">Tổng số lượng</span>
-                        <span className="text-primary font-bold">5</span>
-                    </div>
-                    <div className="flex items-center justify-between w-full">
-                        <span className="text-[14px] font-[600]">Tổng giá</span>
-                        <span className="text-primary font-bold">{formatCurrency(500000)}</span>
-                    </div>
-                </div>
-                <div className="bottomInfo py-3 px-4 w-full border-t border-[rgba(0,0,0,0.1)] flex items-center justify-between flex-col">
-                    <div className="flex items-center justify-between w-full">
-                        <span className="text-[14px] font-[600]">Phí giao hàng</span>
-                        <span className="text-primary font-bold">{formatCurrency(20000)}</span>
-                    </div>
-                </div>
-                <div className="bottomInfo py-3 px-4 w-full border-t border-[rgba(0,0,0,0.1)] flex items-center justify-between flex-col">
-                    <div className="flex items-center justify-between w-full">
-                        <span className="text-[14px] font-[600]">Tổng tiền</span>
-                        <span className="text-primary font-bold">{formatCurrency(1400000)}</span>
-                    </div>
-                </div>
-
-                <br />
-
-                <div className="flex items-center justify-between gap-5 px-3">
-                    <Link to="/cart" className="text-[16px] w-[50%]">
-                        <Button className="btn-org btn-login w-full" onClick={() => context.toggleCartPanel(false)}>
-                            Xem giỏ hàng
-                        </Button>
-                    </Link>
-                    <Link to="/checkout" className="text-[16px] w-[50%]">
-                        <Button className="btn-border btn-login w-full" onClick={() => context.toggleCartPanel(false)}>
-                            Thanh toán
-                        </Button>
-                    </Link>
-                </div>
-            </div> */}
         </>
     );
 };

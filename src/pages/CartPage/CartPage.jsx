@@ -8,7 +8,7 @@ import CartItems from '../../components/CartItems/CartItems';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../apis/axiosClient';
 import { applyVoucher, getCart, removeMultipleCartItems } from '../../redux/cartSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MyContext } from '../../App';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -35,10 +35,12 @@ const CartPage = () => {
     const [openVoucher, setOpenVoucher] = useState(false);
     const [codeVoucher, setCodeVoucher] = useState('');
     const [isLoadingApplyVoucher, setIsLoadingApplyVoucher] = useState(false);
+    const [isLoadingCheckout, setIsLoadingCheckout] = useState(false);
 
     const sectionRef = useRef(null);
     const [sectionWidth, setSectionWidth] = useState(0);
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+    const navigate = useNavigate();
 
     const selectedCartItems = cart?.products?.filter((item) => selectedCarts.includes(item._id));
     const totalQuantity = selectedCartItems.reduce((sum, item) => sum + item.quantityProduct, 0);
@@ -108,7 +110,6 @@ const CartPage = () => {
     }, [cart?.products, selectedCarts]);
 
     const deleteMultipleCartItems = async () => {
-        console.log('selectedCarts: ', selectedCarts);
         try {
             const { data } = await axiosClient.post('/api/user/deleteMultipleCartItems', {
                 cartIds: selectedCarts,
@@ -158,6 +159,45 @@ const CartPage = () => {
             context.openAlertBox('error', error.response.data.message);
         } finally {
             setIsLoadingApplyVoucher(false);
+        }
+    };
+
+    const handleCheckout = async () => {
+        if (selectedCartItems.length === 0) {
+            context.openAlertBox('error', 'Vui lòng chọn sản phẩm để thanh toán!');
+            return;
+        }
+        console.log('selectedCartItems: ', selectedCartItems);
+        console.log('totalQuantity: ', totalQuantity);
+        console.log('totalPrice: ', totalPrice);
+        console.log('finalPrice: ', finalPrice);
+        console.log('cart?.voucher?.discountType: ', cart?.voucher?.discountType);
+        console.log('cart?.voucher?.discountValue: ', cart?.voucher?.discountValue);
+        console.log('cart?.voucher: ', cart?.voucher);
+
+        setIsLoadingCheckout(true);
+
+        try {
+            const { data } = await axiosClient.post('/api/checkoutToken/createCheckoutToken', {
+                selectedCartItems,
+                totalQuantity,
+                totalPrice,
+                finalPrice,
+                discountType: cart?.voucher?.discountType || '',
+                discountValue: cart?.voucher?.discountValue || 0,
+                voucher: cart?.voucher || null,
+            });
+            console.log('dataCheckout: ', data);
+            if (data?.success) {
+                navigate(data.redirectUrl);
+            } else {
+                context.openAlertBox('error', data.message || 'Không thể tạo đơn thanh toán');
+            }
+        } catch (error) {
+            console.error('Lỗi khi tạo token thanh toán:', error);
+            context.openAlertBox('error', error?.response?.data?.message || 'Lỗi server');
+        } finally {
+            setIsLoadingCheckout(false);
         }
     };
 
@@ -344,9 +384,17 @@ const CartPage = () => {
 
                         <br />
 
-                        <Button className="btn-org btn-login w-full flex gap-2">
-                            <BsFillBagCheckFill className="text-[20px]" />
-                            Thanh toán
+                        <Button onClick={handleCheckout} className="btn-org btn-login w-full flex gap-2">
+                            {isLoadingCheckout ? (
+                                <div className="flex items-center justify-center mx-auto">
+                                    <CircularProgress color="inherit" />
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <BsFillBagCheckFill className="text-[20px]" />
+                                    Thanh toán
+                                </div>
+                            )}
                         </Button>
                     </div>
                 </div>

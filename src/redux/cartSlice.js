@@ -17,12 +17,10 @@ const extractProductId = (product) => {
 
     // Nếu là string hoặc ObjectId có toString()
     if (typeof product === 'string') {
-        // console.log('productId là string');
         return product.toString();
     }
     // Nếu là object có _id
     if (typeof product === 'object' && product._id) {
-        // console.log('productId là object');
         return product._id.toString();
     }
 
@@ -65,7 +63,6 @@ const cartSlice = createSlice({
                 const itemProductId = extractProductId(item.product._id);
                 return itemProductId === productId && item.sizeProduct === newSize;
             });
-            console.log('🔎 foundItem:', JSON.parse(JSON.stringify(foundItem)));
 
             if (!foundItem) return;
 
@@ -81,7 +78,6 @@ const cartSlice = createSlice({
             } else {
                 // ✅ Không có duplicate thì chỉ đổi size
                 foundItem.sizeProduct = newSize;
-                console.log('🔎 foundItem after:', JSON.parse(JSON.stringify(foundItem)));
             }
         },
         updateCartItemQuantity: (state, action) => {
@@ -108,7 +104,7 @@ const cartSlice = createSlice({
             const foundItem = state.cart.products.find((item) => {
                 const itemProductId = extractProductId(item?.product);
                 const match = itemProductId === productId && item?.sizeProduct === action.payload.sizeProduct;
-                console.log('[🧪] match:', match, '| itemId:', itemProductId, '| payload:', productId);
+                // console.log('[🧪] match:', match, '| itemId:', itemProductId, '| payload:', productId);
                 return match;
             });
 
