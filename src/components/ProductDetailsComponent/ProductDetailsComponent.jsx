@@ -83,9 +83,16 @@ const ProductDetailsComponent = ({ product, reviews }) => {
                 <span className="price text-primary text-[18px] font-[600]">{formatCurrency(product?.price)}</span>
                 <span className="text-[14px]">
                     Trạng thái:{' '}
-                    <span className="text-green-600 text-[14px] font-bold">
-                        Còn hàng ({product?.countInStock} sản phẩm)
-                    </span>
+                    {product?.countInStock > 0 && (
+                        <span className="text-green-600 text-[14px] font-bold">
+                            Còn hàng ({product?.countInStock} sản phẩm)
+                        </span>
+                    )}
+                    {product?.countInStock === 0 && (
+                        <span className="text-red-400 text-[14px] font-bold">
+                            Tạm thời hết hàng ({product?.countInStock} sản phẩm)
+                        </span>
+                    )}
                 </span>
             </div>
 

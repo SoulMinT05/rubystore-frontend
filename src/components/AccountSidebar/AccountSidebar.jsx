@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { Button, CircularProgress } from '@mui/material';
 import { NavLink } from 'react-router-dom';
@@ -12,8 +12,10 @@ import { IoKeyOutline } from 'react-icons/io5';
 
 import './AccountSidebar.css';
 import axiosClient from '../../apis/axiosClient';
+import { MyContext } from '../../App';
 
-const AccountSidebar = ({ context }) => {
+const AccountSidebar = () => {
+    const context = useContext(MyContext);
     const [isUploading, setIsUploading] = useState(false);
     const [preview, setPreview] = useState(null);
 

@@ -47,6 +47,10 @@ h6 {
     margin: auto;
 }
 
+.text-blue {
+    color: #3b82f6 !important;
+}
+
 .btn-org {
     background-color: #ff5252 !important;
     color: #fff !important;

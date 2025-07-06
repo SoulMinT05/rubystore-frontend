@@ -13,7 +13,7 @@ import 'react-range-slider-input/dist/style.css';
 import { FaAngleDown } from 'react-icons/fa6';
 import { FaAngleUp } from 'react-icons/fa6';
 
-import '../ProductListSidebar/ProductListSidebar.css';
+import '../SearchResultsProductListSidebar/SearchResultsProductListSidebar.css';
 import { Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { MyContext } from '../../App';
@@ -26,7 +26,7 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 
-const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalPages }) => {
+const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalPages }) => {
     const context = useContext(MyContext);
     const [isFilterApplied, setIsFilterApplied] = useState(false);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
@@ -34,6 +34,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
     const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
 
     const [filterProducts, setFilterProducts] = useState({
+        keyword: '',
         categoryId: [],
         subCategoryId: [],
         thirdSubCategoryId: [],
@@ -85,44 +86,55 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
     }, []);
 
     useEffect(() => {
-        const url = window.location.href; // http://localhost:5173/product?categoryId=681751c5db78565c8d98e823
+        // const url = window.location.href; // http://localhost:5173/product?categoryId=681751c5db78565c8d98e823
         const queryParameters = new URLSearchParams(location.search); // ?categoryId=681751c5db78565c8d98e823
-        if (url.includes('categoryId')) {
-            const queryCategoryId = queryParameters.get('categoryId');
+        const keyword = queryParameters.get('keyword');
+
+        if (keyword) {
             setFilterProducts((prev) => ({
                 ...prev,
-                categoryId: [queryCategoryId],
-                subCategoryId: [],
-                thirdSubCategoryId: [],
-                rating: [],
+                keyword: decodeURIComponent(keyword),
                 page: 1,
             }));
             setPage(1);
         }
-        if (url.includes('subCategoryId')) {
-            const querySubCategoryId = queryParameters.get('subCategoryId');
-            setFilterProducts((prev) => ({
-                ...prev,
-                categoryId: [],
-                subCategoryId: [querySubCategoryId],
-                thirdSubCategoryId: [],
-                rating: [],
-                page: 1,
-            }));
-            setPage(1);
-        }
-        if (url.includes('thirdSubCategoryId')) {
-            const queryThirdSubCategoryId = queryParameters.get('thirdSubCategoryId');
-            setFilterProducts((prev) => ({
-                ...prev,
-                categoryId: [],
-                subCategoryId: [],
-                thirdSubCategoryId: [queryThirdSubCategoryId],
-                rating: [],
-                page: 1,
-            }));
-            setPage(1);
-        }
+
+        // if (url.includes('categoryId')) {
+        //     const queryCategoryId = queryParameters.get('categoryId');
+        //     setFilterProducts((prev) => ({
+        //         ...prev,
+        //         categoryId: [queryCategoryId],
+        //         subCategoryId: [],
+        //         thirdSubCategoryId: [],
+        //         rating: [],
+        //         page: 1,
+        //     }));
+        //     setPage(1);
+        // }
+        // if (url.includes('subCategoryId')) {
+        //     const querySubCategoryId = queryParameters.get('subCategoryId');
+        //     setFilterProducts((prev) => ({
+        //         ...prev,
+        //         categoryId: [],
+        //         subCategoryId: [querySubCategoryId],
+        //         thirdSubCategoryId: [],
+        //         rating: [],
+        //         page: 1,
+        //     }));
+        //     setPage(1);
+        // }
+        // if (url.includes('thirdSubCategoryId')) {
+        //     const queryThirdSubCategoryId = queryParameters.get('thirdSubCategoryId');
+        //     setFilterProducts((prev) => ({
+        //         ...prev,
+        //         categoryId: [],
+        //         subCategoryId: [],
+        //         thirdSubCategoryId: [queryThirdSubCategoryId],
+        //         rating: [],
+        //         page: 1,
+        //     }));
+        //     setPage(1);
+        // }
         filterProducts.page = 1;
     }, [location]);
 
@@ -130,7 +142,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
         setIsLoading(true);
         try {
             const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
-            console.log('dataFetchFilter: ', data);
+            console.log('dataFetchFilter--search: ', data);
             if (data.success) {
                 setProductsList(data?.products);
                 setTotalPages(data?.totalPages);
@@ -361,4 +373,4 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
     );
 };
 
-export default ProductListSidebar;
+export default SearchResultsProductListSidebar;

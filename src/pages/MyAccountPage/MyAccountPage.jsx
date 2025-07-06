@@ -69,7 +69,7 @@ const MyAccountPage = () => {
             <section className="py-10 w-full">
                 <div className="container flex gap-5">
                     <div className="col1 w-[20%]">
-                        <AccountSidebar context={context} />
+                        <AccountSidebar />
                     </div>
                     <div className="col2 w-[80%]">
                         <div className="card bg-white p-5 shadow-md rounded-md">

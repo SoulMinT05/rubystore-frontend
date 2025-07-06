@@ -16,6 +16,7 @@ import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage';
 import PrivateRoute from './PrivateRoute';
 import ChangePasswordPage from '../components/ChangePasswordPage/ChangePasswordPage';
 import ScrollToTopComponent from '../components/ScrollToTopComponent/ScrollToTopComponent';
+import SearchResultsPage from '../pages/SearchResultsPage/SearchResultsPage';
 
 const AppRoutes = () => (
     <>
@@ -31,6 +32,7 @@ const AppRoutes = () => (
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/product" element={<ProductListPage />} />
+            <Route path="/search" element={<SearchResultsPage />} />
 
             <Route
                 path="/checkout"

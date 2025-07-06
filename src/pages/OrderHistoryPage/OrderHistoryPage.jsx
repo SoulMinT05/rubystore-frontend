@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './OrderHistoryPage.css';
 import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
-import { Button, Divider } from '@mui/material';
+import { Button, CircularProgress, Divider } from '@mui/material';
 import BadgeOrderStatus from '../../components/BadgeOrderStatus/BadgeOrderStatus';
 import { IoCloseSharp } from 'react-icons/io5';
 import { IoKeyOutline } from 'react-icons/io5';
@@ -10,6 +10,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
+import axiosClient from '../../apis/axiosClient';
+import { MyContext } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { cancelOrderStatus, fetchOrders } from '../../redux/orderSlice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -27,11 +31,33 @@ function formatDate(dateString) {
 }
 
 const OrderHistoryPage = () => {
-    const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
+    const context = useContext(MyContext);
+    const dispatch = useDispatch();
+    const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
+        open: false,
+        order: null,
+    });
+    // const [orders, setOrders] = useState([]);
+    const orders = useSelector((state) => state.order.orders);
+    const [cancelOrder, setCancelOrder] = useState(false);
 
     const handleCloseProductDetailsModal = () => {
-        setOpenProductDetailsModal(false);
+        setOpenProductDetailsModal({
+            open: false,
+            order: null,
+        });
     };
+
+    useEffect(() => {
+        const getOrders = async () => {
+            const { data } = await axiosClient.get('/api/order');
+            if (data.success) {
+                // setOrders(data?.orders);
+                dispatch(fetchOrders(data?.orders));
+            }
+        };
+        getOrders();
+    }, []);
 
     const printPDF = async () => {
         const element = document.getElementById('order-details');
@@ -49,7 +75,7 @@ const OrderHistoryPage = () => {
                     img.onload = resolve;
                     img.onerror = resolve;
                 });
-            }),
+            })
         );
 
         // Delay nhỏ để chắc chắn ảnh được render hoàn chỉnh
@@ -75,6 +101,30 @@ const OrderHistoryPage = () => {
         }, 300);
     };
 
+    const handleCancelOrder = async (orderId) => {
+        setCancelOrder(true);
+        try {
+            const { data } = await axiosClient.post('/api/order/cancelOrderFromUser', {
+                orderId,
+            });
+            console.log('dataCancel: ', data);
+            if (data?.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(
+                    cancelOrderStatus({
+                        orderId: data?.order?._id,
+                    })
+                );
+                handleCloseProductDetailsModal();
+            }
+        } catch (error) {
+            console.log('error: ', error);
+            context.openAlertBox('error', error.response.data.message);
+        } finally {
+            setCancelOrder(false);
+        }
+    };
+
     return (
         <section className="py-10 w-full">
             <div className="container flex gap-5">
@@ -89,7 +139,8 @@ const OrderHistoryPage = () => {
                             <p className="mt-0">
                                 Tổng {'  '}
                                 <span className="font-bold text-primary">
-                                    3<span> đơn hàng đã đặt</span>
+                                    {orders?.length}
+                                    <span> đơn hàng đã đặt</span>
                                 </span>
                             </p>
 
@@ -99,81 +150,83 @@ const OrderHistoryPage = () => {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-700">
                                     <thead className="text-xs text-gray-700 uppercase bg-white">
                                         <tr>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Sản phẩm
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Order ID
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Phương thức thanh toán
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Họ và tên
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Email
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Số điện thoại
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Địa chỉ
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Tổng tiền
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Trạng thái
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                                Ngày đặt hàng
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 whitespace-nowrap"></th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Mã đơn hàng</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Sản phẩm</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Phương thức thanh toán</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Thành tiền</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Trạng thái đơn hàng</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Ngày đặt</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className="bg-white border-b">
-                                            <td className="px-6 py-4">
-                                                <div className="flex gap-2 items-center rounded-md overflow-hidden group">
-                                                    <img
-                                                        src="https://image.tienphong.vn/w1000/Uploaded/2025/neg-sleclyr/2023_03_23/cd1617e3ac74acc9dac4766027234fd8-2045.jpeg"
-                                                        alt=""
-                                                        className="w-[70px] h-[70px] object-cover rounded-md group-hover:scale-105 transition-all cursor-pointer"
-                                                    />
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="text-primary">6b9283273230ase</span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="text-primary">Tiền mặt</span>
-                                            </td>
-                                            <td className="px-6 py-4">Tam Nguyen</td>
-                                            <td className="px-6 py-4">tamnguyenforwork@gmail.com</td>
-                                            <td className="px-6 py-4">02199232323</td>
-                                            <td className="px-6 py-4">
-                                                <span className="block w-[400px]">
-                                                    137 Trần Hoà Bình, Phường 17, Quận Gò Vấp, Thành phố Hồ Chí Minh
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">{formatCurrency(250000)}</td>
-                                            <td className="px-6 py-4">
-                                                <BadgeOrderStatus status="success" />
-                                            </td>
-                                            <td className="px-6 py-4">{formatDate('2025-04-10')}</td>
-                                            <td
-                                                className="px-6 py-4 whitespace-nowrap cursor-pointer"
-                                                onClick={() => setOpenProductDetailsModal(true)}
-                                            >
-                                                <span className="text-gray-500 link transition-all">Xem chi tiết</span>
-                                            </td>
-                                        </tr>
+                                        {orders?.length > 0 &&
+                                            orders?.map((order) => {
+                                                return (
+                                                    <tr key={order?._id} className="bg-white border-b">
+                                                        <td className="px-6 py-4">
+                                                            <span
+                                                                onClick={() =>
+                                                                    setOpenProductDetailsModal({
+                                                                        open: true,
+                                                                        order: order,
+                                                                    })
+                                                                }
+                                                                className="cursor-pointer text-primary"
+                                                            >
+                                                                {order?._id}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex gap-2 items-center rounded-md overflow-hidden group">
+                                                                <img
+                                                                    src={order?.selectedCartItems[0]?.images[0]}
+                                                                    alt=""
+                                                                    className="w-[70px] h-[70px] object-cover rounded-md group-hover:scale-105 transition-all cursor-pointer"
+                                                                />
+                                                            </div>
+                                                        </td>
+
+                                                        <td className="px-6 py-4">
+                                                            <span className="text-blue">
+                                                                {order?.paymentMethod === 'cod' &&
+                                                                    'Thanh toán khi nhận hàng'}
+                                                                {order?.paymentMethod === 'momo' &&
+                                                                    'Thanh toán bằng Momo'}
+                                                                {order?.paymentMethod === 'vnoay' &&
+                                                                    'Thanh toán bằng VnPay'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <span className="text-primary">
+                                                                {formatCurrency(order?.finalPrice)}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <BadgeOrderStatus status={order?.orderStatus} />
+                                                        </td>
+                                                        <td className="px-6 py-4">{formatDate(order?.createdAt)}</td>
+                                                        <td
+                                                            className="px-6 py-4 whitespace-nowrap cursor-pointer"
+                                                            onClick={() =>
+                                                                setOpenProductDetailsModal({
+                                                                    open: true,
+                                                                    order: order,
+                                                                })
+                                                            }
+                                                        >
+                                                            <span className="text-gray-500 link transition-all">
+                                                                Xem chi tiết
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
                                     </tbody>
                                     <Dialog
                                         fullWidth={true}
                                         maxWidth="lg"
-                                        open={openProductDetailsModal}
+                                        open={openProductDetailsModal.open}
                                         onClose={handleCloseProductDetailsModal}
                                         aria-labelledby="alert-dialog-title"
                                         aria-describedby="alert-dialog-description"
@@ -181,7 +234,7 @@ const OrderHistoryPage = () => {
                                     >
                                         <DialogContent>
                                             <div className="bg-[#fff] p-4 container">
-                                                <div className="flex items-center w-full productDetailsModalContainer relative">
+                                                <div className="w-full productDetailsModalContainer relative">
                                                     <Button
                                                         className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[6px] right-[15px] !bg-[#f1f1f1]"
                                                         onClick={handleCloseProductDetailsModal}
@@ -203,22 +256,39 @@ const OrderHistoryPage = () => {
                                                         <div className="space-y-4">
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Order ID</span>
-                                                                <span className="text-gray-700">6b9283273230ase</span>
+                                                                <span className="text-primary">
+                                                                    {openProductDetailsModal?.order?._id}
+                                                                </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">
                                                                     Phương thức thanh toán
                                                                 </span>
-                                                                <span className="text-gray-700">Tiền mặt</span>
+                                                                <span className="text-gray-700 text-blue">
+                                                                    {openProductDetailsModal?.order?.paymentMethod ===
+                                                                        'cod' && 'Thanh toán khi nhận hàng'}
+                                                                    {openProductDetailsModal?.order?.paymentMethod ===
+                                                                        'momo' && 'Thanh toán bằng Momo'}
+                                                                    {openProductDetailsModal?.order?.paymentMethod ===
+                                                                        'vnoay' && 'Thanh toán bằng VnPay'}
+                                                                </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Ngày đặt hàng</span>
-                                                                <span className="text-gray-700">24 November 2023</span>
+                                                                <span className="text-gray-700">
+                                                                    {formatDate(
+                                                                        openProductDetailsModal?.order?.createdAt
+                                                                    )}
+                                                                </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Trạng thái</span>
                                                                 <span className="text-gray-700">
-                                                                    <BadgeOrderStatus status="success" />
+                                                                    <BadgeOrderStatus
+                                                                        status={
+                                                                            openProductDetailsModal?.order?.orderStatus
+                                                                        }
+                                                                    />
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -230,20 +300,41 @@ const OrderHistoryPage = () => {
                                                         <div className="space-y-4">
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Họ và tên</span>
-                                                                <span className="text-gray-700">Tam Soo</span>
+                                                                <span className="text-gray-700">
+                                                                    {openProductDetailsModal?.order?.userId?.name}
+                                                                </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Email</span>
-                                                                <span className="text-gray-700">name@example.com</span>
+                                                                <span className="text-gray-700">
+                                                                    {openProductDetailsModal?.order?.userId?.email}
+                                                                </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Số điện thoại</span>
-                                                                <span className="text-gray-700">+123 456 7890</span>
+                                                                <span className="text-gray-700">
+                                                                    {
+                                                                        openProductDetailsModal?.order?.userId
+                                                                            ?.phoneNumber
+                                                                    }
+                                                                </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Địa chỉ</span>
                                                                 <span className="text-gray-700">
-                                                                    62 Miles Drive St, Newark, NJ 07103, California
+                                                                    {`Đường ${
+                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                            ?.streetLine || ''
+                                                                    }, Phường ${
+                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                            ?.ward || ''
+                                                                    }, Quận ${
+                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                            ?.district || ''
+                                                                    }, Thành phố ${
+                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                            ?.city || ''
+                                                                    }`}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -253,115 +344,123 @@ const OrderHistoryPage = () => {
                                                             Thông tin sản phẩm
                                                         </h3>
                                                         <div className="mt-4">
-                                                            <div className="flex items-center bg-gray-50 p-4 rounded-lg">
-                                                                <div className="w-[20%] group cursor-pointer">
-                                                                    <img
-                                                                        alt="Image of an Apple iMac"
-                                                                        className="w-[70px] h-[70px] object-cover rounded-md mr-4 group-hover:scale-105 transition-all"
-                                                                        src="https://image.tienphong.vn/w1000/Uploaded/2025/neg-sleclyr/2023_03_23/cd1617e3ac74acc9dac4766027234fd8-2045.jpeg"
-                                                                    />
-                                                                </div>
-                                                                <div className="mx-4 w-[60%]">
-                                                                    <p className="text-gray-700">
-                                                                        PC system All in One APPLE iMac (2023)
-                                                                        mqrq3ro/a, Apple M3, 24" Retina 4.5K, 8GB, SSD
-                                                                        256GB, 10-core GPU, macOS Sonoma, Blue, Keyboard
-                                                                        layout INT
-                                                                    </p>
-                                                                </div>
-                                                                <div className="w-[20%] flex items-center justify-end gap-5">
-                                                                    <p className="text-gray-700">x1</p>
-                                                                    <p className="text-gray-700 font-[600]">
-                                                                        {formatCurrency(3000000)}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex items-center bg-gray-50 p-4 rounded-lg">
-                                                                <div className="w-[20%] group cursor-pointer">
-                                                                    <img
-                                                                        alt="Image of an Apple iMac"
-                                                                        className="w-[70px] h-[70px] object-cover rounded-md mr-4 group-hover:scale-105 transition-all"
-                                                                        src="https://image.tienphong.vn/w1000/Uploaded/2025/neg-sleclyr/2023_03_23/cd1617e3ac74acc9dac4766027234fd8-2045.jpeg"
-                                                                    />
-                                                                </div>
-                                                                <div className="mx-4 w-[60%]">
-                                                                    <p className="text-gray-700">
-                                                                        PC system All in One APPLE iMac (2023)
-                                                                        mqrq3ro/a, Apple M3, 24" Retina 4.5K, 8GB, SSD
-                                                                        256GB, 10-core GPU, macOS Sonoma, Blue, Keyboard
-                                                                        layout INT
-                                                                    </p>
-                                                                </div>
-                                                                <div className="w-[20%] flex items-center justify-end gap-5">
-                                                                    <p className="text-gray-700">x1</p>
-                                                                    <p className="text-gray-700 font-[600]">
-                                                                        {formatCurrency(3000000)}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex items-center bg-gray-50 p-4 rounded-lg">
-                                                                <div className="w-[20%] group cursor-pointer">
-                                                                    <img
-                                                                        alt="Image of an Apple iMac"
-                                                                        className="w-[70px] h-[70px] object-cover rounded-md mr-4 group-hover:scale-105 transition-all"
-                                                                        src="https://image.tienphong.vn/w1000/Uploaded/2025/neg-sleclyr/2023_03_23/cd1617e3ac74acc9dac4766027234fd8-2045.jpeg"
-                                                                    />
-                                                                </div>
-                                                                <div className="mx-4 w-[60%]">
-                                                                    <p className="text-gray-700">
-                                                                        PC system All in One APPLE iMac (2023)
-                                                                        mqrq3ro/a, Apple M3, 24" Retina 4.5K, 8GB, SSD
-                                                                        256GB, 10-core GPU, macOS Sonoma, Blue, Keyboard
-                                                                        layout INT
-                                                                    </p>
-                                                                </div>
-                                                                <div className="w-[20%] flex items-center justify-end gap-5">
-                                                                    <p className="text-gray-700">x1</p>
-                                                                    <p className="text-gray-700 font-[600]">
-                                                                        {formatCurrency(3000000)}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                            {openProductDetailsModal?.order?.selectedCartItems?.length >
+                                                                0 &&
+                                                                openProductDetailsModal?.order?.selectedCartItems?.map(
+                                                                    (cartItem) => {
+                                                                        return (
+                                                                            <div
+                                                                                key={cartItem?._id}
+                                                                                className="flex items-center bg-gray-50 p-4 rounded-lg"
+                                                                            >
+                                                                                <div className="w-[20%] group cursor-pointer">
+                                                                                    <img
+                                                                                        alt="Image of an Apple iMac"
+                                                                                        className="w-[70px] h-[70px] object-cover rounded-md mr-4 group-hover:scale-105 transition-all"
+                                                                                        src={cartItem?.images[0]}
+                                                                                    />
+                                                                                </div>
+                                                                                <div className="mx-4 w-[47%]">
+                                                                                    <p className="text-gray-700">
+                                                                                        {cartItem?.name}
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div className="w-[33%] flex items-center justify-end gap-5">
+                                                                                    <p className="text-gray-700">
+                                                                                        {cartItem?.sizeProduct}
+                                                                                    </p>
+                                                                                    <p className="text-gray-700">
+                                                                                        {cartItem?.quantityProduct}
+                                                                                    </p>
+                                                                                    <p className="text-gray-700 font-[600]">
+                                                                                        {formatCurrency(
+                                                                                            cartItem?.price
+                                                                                        )}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        );
+                                                                    }
+                                                                )}
 
-                                                        {/* Price info */}
-                                                        <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
-                                                            Tổng quan giá
-                                                        </h3>
-                                                        <div className="space-y-4">
-                                                            <div className="flex items-center justify-between">
-                                                                <span className="text-gray-500">Giá sản phẩm</span>
-                                                                <span className="text-gray-700">
-                                                                    {formatCurrency(3000000)}
-                                                                </span>
+                                                            {/* Price info */}
+                                                            <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
+                                                                Tổng quan giá
+                                                            </h3>
+                                                            <div className="space-y-4">
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-gray-500">Tổng số lượng</span>
+                                                                    <span className="text-gray-700">
+                                                                        {openProductDetailsModal?.order?.totalQuantity}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-gray-500">Tổng tiền đơn</span>
+                                                                    <span className="text-gray-700">
+                                                                        {formatCurrency(
+                                                                            openProductDetailsModal?.order?.totalPrice
+                                                                        )}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-gray-500">
+                                                                        Tổng tiền phí vận chuyển
+                                                                    </span>
+                                                                    <span className="text-gray-700">
+                                                                        {formatCurrency(
+                                                                            openProductDetailsModal?.order?.shippingFee
+                                                                        )}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-gray-500">Voucher</span>
+                                                                    <span className="text-gray-700">
+                                                                        {openProductDetailsModal?.order
+                                                                            ?.discountType === 'percent'
+                                                                            ? `${openProductDetailsModal?.order?.discountValue}%`
+                                                                            : `${formatCurrency(
+                                                                                  openProductDetailsModal?.order
+                                                                                      ?.discountValue
+                                                                              )}`}
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                            <div className="flex items-center justify-between">
-                                                                <span className="text-gray-500">Phí ship</span>
-                                                                <span className="text-gray-700">
-                                                                    {formatCurrency(0)}
-                                                                </span>
+                                                            <div className="mb-1 mt-6">
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-gray-700 text-xl pb-4 font-[600]">
+                                                                        Tổng thanh toán
+                                                                    </span>
+                                                                    <span className="font-[600] text-[28px] text-primary">
+                                                                        {formatCurrency(
+                                                                            openProductDetailsModal?.order?.finalPrice
+                                                                        )}
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="mb-1 mt-6">
-                                                            <div className="flex items-center justify-between">
-                                                                <span className="text-gray-700 text-xl pb-4 font-[600]">
-                                                                    Tổng giá
-                                                                </span>
-                                                                <span className="font-[600]">
-                                                                    {formatCurrency(3000000)}
-                                                                </span>
-                                                            </div>
-                                                        </div>
 
-                                                        <Divider />
+                                                            <Divider />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="p-6 rounded-lg">
-                                                    <div className="flex items-center justify-between gap-3 mt-4">
-                                                        <Button className="btn-org btn-login" onClick={printPDF}>
-                                                            In đơn hàng
-                                                        </Button>
-                                                        <Button className="btn-border btn-login">Huỷ đơn</Button>
+                                                    <div className="p-6 rounded-lg">
+                                                        <div className="flex items-center justify-between gap-3 mt-4">
+                                                            <Button className="btn-org btn-login" onClick={printPDF}>
+                                                                In đơn hàng
+                                                            </Button>
+                                                            <Button
+                                                                onClick={() =>
+                                                                    handleCancelOrder(
+                                                                        openProductDetailsModal?.order?._id
+                                                                    )
+                                                                }
+                                                                className="btn-border btn-login"
+                                                            >
+                                                                {cancelOrder ? (
+                                                                    <CircularProgress color="inherit" />
+                                                                ) : (
+                                                                    'Huỷ đơn'
+                                                                )}
+                                                            </Button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

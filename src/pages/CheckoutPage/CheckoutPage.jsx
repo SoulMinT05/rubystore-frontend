@@ -255,7 +255,7 @@ const CheckoutPage = () => {
                             <span className="text-[14px] font-[400] w-[202px]">{checkoutData?.totalQuantity}</span>
                         </div>
                         <div className="ml-auto min-h-[40px] w-fit text-right flex items-center gap-12">
-                            <span className="text-[14px] font-[400]">Tổng tiền hàng</span>
+                            <span className="text-[14px] font-[400]">Tổng tiền đơn</span>
                             <span className="text-[14px] font-[400] w-[202px]">
                                 {formatCurrency(checkoutData?.totalPrice)}
                             </span>

@@ -38,6 +38,8 @@ const Footer = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (!context.isLogin) return;
+
         const fetchCart = async () => {
             const { data } = await axiosClient.get('/api/user/cart');
             dispatch(
@@ -47,7 +49,7 @@ const Footer = () => {
             );
         };
         fetchCart();
-    }, [dispatch]);
+    }, [context?.isLogin, dispatch]);
     return (
         <>
             <footer className="py-6 bg-[#fafafa]">

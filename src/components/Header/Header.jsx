@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCart } from '../../redux/cartSlice';
 
 const Header = () => {
+    const context = useContext(MyContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -37,6 +38,8 @@ const Header = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (!context.isLogin) return;
+
         const fetchCart = async () => {
             const { data } = await axiosClient.get('/api/user/cart');
             dispatch(
@@ -46,12 +49,11 @@ const Header = () => {
             );
         };
         fetchCart();
-    }, [dispatch]);
+    }, [context?.isLogin, dispatch]);
 
     const navigate = useNavigate();
 
     const open = Boolean(anchorEl);
-    const context = useContext(MyContext);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);

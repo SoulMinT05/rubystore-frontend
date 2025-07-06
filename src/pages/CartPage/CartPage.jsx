@@ -48,6 +48,8 @@ const CartPage = () => {
     const finalPrice = Math.max(totalPrice - cart.discountValue, 0) + (cart.shippingFee || 0);
 
     useEffect(() => {
+        if (!context.isLogin) return;
+
         const fetchCart = async () => {
             setIsLoadingCarts(true);
             const { data } = await axiosClient.get('/api/user/cart');
@@ -64,7 +66,7 @@ const CartPage = () => {
             setIsLoadingCarts(false);
         };
         fetchCart();
-    }, [dispatch]);
+    }, [context?.isLogin, dispatch]);
 
     useEffect(() => {
         if (sectionRef.current) {
