@@ -31,8 +31,6 @@ const SearchResultsPage = () => {
     const [selectedSortValue, setSelectedSortValue] = useState('Thứ tự A đến Z');
 
     const [searchParams] = useSearchParams();
-    const categoryId = searchParams.get('categoryId');
-    const [categoryName, setCategoryName] = useState('');
 
     const keyword = searchParams.get('keyword');
 
@@ -41,7 +39,6 @@ const SearchResultsPage = () => {
             if (!keyword) return;
             try {
                 const { data } = await axiosAuth.get(`/api/product/search-results?keyword=${keyword}`);
-                console.log('dataSearchResult: ', data);
                 if (data.success) {
                     setProductsList(data.products);
                 }
@@ -52,19 +49,6 @@ const SearchResultsPage = () => {
 
         fetchSearchResults();
     }, [keyword]);
-
-    useEffect(() => {
-        if (categoryId) {
-            axiosAuth
-                .get(`/api/product/all-products-category-id/${categoryId}`)
-                .then((res) => {
-                    setCategoryName(res?.data?.products[0]?.categoryName);
-                })
-                .catch((error) => {
-                    console.error('Lỗi khi fetch category:', error);
-                });
-        }
-    }, [categoryId]);
 
     useEffect(() => {
         if (productsList?.length > 0) {
@@ -104,13 +88,8 @@ const SearchResultsPage = () => {
                     <Link underline="hover" color="inherit" to="/" className="link transition">
                         Trang chủ
                     </Link>
-                    <Link
-                        underline="hover"
-                        color="inherit"
-                        to={`/product?categoryId=${categoryId}`}
-                        className="link transition"
-                    >
-                        {categoryName}
+                    <Link underline="hover" color="inherit" className="link transition">
+                        Kết quả tìm kiếm
                     </Link>
                 </Breadcrumbs>
             </div>

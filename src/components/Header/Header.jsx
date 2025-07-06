@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Search from '../Search/Search';
+import SearchBox from '../SearchBox/SearchBox';
 import { Button } from '@mui/material';
 import { Badge } from '@mui/material';
 import { Tooltip } from '@mui/material';
@@ -173,7 +173,7 @@ const Header = () => {
                         </Link>
                     </div>
                     <div className="col2 w-[40%]">
-                        <Search />
+                        <SearchBox />
                     </div>
                     <div className="col3 w-[35%] flex items-center pl-7">
                         <ul className="flex items-center justify-end gap-3 w-full">

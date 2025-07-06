@@ -142,7 +142,6 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
         setIsLoading(true);
         try {
             const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
-            console.log('dataFetchFilter--search: ', data);
             if (data.success) {
                 setProductsList(data?.products);
                 setTotalPages(data?.totalPages);

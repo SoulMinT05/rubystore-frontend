@@ -35,7 +35,7 @@ const HomeBlogsItem = ({ blog }) => {
                 </span>
             </div>
             <div className="info py-4">
-                <h2 className="text-[15px] font-[600] text-black mb-1">
+                <h2 className="text-[15px] font-[600] text-black mb-1 line-clamp-1">
                     <Link to={`/blog/${blog?._id}`} className="link">
                         {blog?.name}
                     </Link>

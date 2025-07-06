@@ -71,7 +71,7 @@ const HomePage = () => {
         const getFeaturedProducts = async () => {
             const { data } = await axiosAuth.get('/api/product/feature');
             if (data.success) {
-                setFeaturedProducts(data?.featuredProducts);
+                setFeaturedProducts(data?.products);
             }
         };
 
@@ -193,7 +193,7 @@ const HomePage = () => {
                     </div>
 
                     {/* <HomeAdsBannerSlider items={4} /> */}
-                    <HomeAdsBannerSliderSecond items={4} banners={banners} />
+                    {/* <HomeAdsBannerSliderSecond items={4} banners={banners} /> */}
                 </div>
             </section>
 
