@@ -96,16 +96,33 @@ const ReviewComponent = ({ product }) => {
 
     useEffect(() => {
         socket.on('newReview', (newReview) => {
-            console.log('socketNewReview: ', newReview);
             dispatch(addReview(newReview));
+        });
+        socket.on('newReply', (data) => {
+            dispatch(
+                addReply({
+                    reviewId: data?.reviewId,
+                    newReply: data?.newReply,
+                })
+            );
+        });
+        socket.on('deletedReview', (reviewId) => {
+            dispatch(deleteReview({ reviewId }));
+        });
+        socket.on('deletedReply', (data) => {
+            dispatch(
+                deleteReply({
+                    reviewId: data?.reviewId,
+                    replyId: data?.replyId,
+                })
+            );
         });
         return () => {
             socket.off('newReview');
+            socket.off('newReply');
+            socket.off('deletedReview');
+            socket.off('deletedReply');
         };
-    }, []);
-
-    useEffect(() => {
-        console.log('reviews: ', reviews);
     }, []);
 
     const handleAddReview = async (e) => {
@@ -138,12 +155,6 @@ const ReviewComponent = ({ product }) => {
             console.log('dataAddReply: ', data);
             if (data.success) {
                 context.openAlertBox('success', data.message);
-                dispatch(
-                    addReply({
-                        reviewId,
-                        newReply: data?.newReply,
-                    })
-                );
                 setSelectedReplyIndex(null);
                 setReplyText('');
             }
@@ -162,7 +173,6 @@ const ReviewComponent = ({ product }) => {
             console.log('dataDelete: ', data);
             if (data.success) {
                 context.openAlertBox('success', data.message);
-                dispatch(deleteReview({ reviewId }));
                 handleCloseReview();
             }
         } catch (err) {
@@ -183,7 +193,6 @@ const ReviewComponent = ({ product }) => {
             console.log('dataDeleteReply: ', data);
             if (data.success) {
                 context.openAlertBox('success', data.message);
-                dispatch(deleteReply({ reviewId, replyId }));
                 handleCloseReply();
             }
         } catch (err) {
