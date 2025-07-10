@@ -4,7 +4,15 @@ import { Button, TextField, CircularProgress, Rating, Pagination } from '@mui/ma
 import './ReviewComponent.scss';
 import axiosClient from '../../apis/axiosClient';
 import { MyContext } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { addReply, addReview, deleteReply, deleteReview } from '../../redux/reviewSlice';
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { socket } from '../../config/socket';
 function formatDate(dateString) {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -13,8 +21,11 @@ function formatDate(dateString) {
     return `${day}/${month}/${year}`;
 }
 
-const ReviewComponent = ({ product, getDetailsReview }) => {
-    const { reviews } = useContext(MyContext);
+const ReviewComponent = ({ product }) => {
+    const context = useContext(MyContext);
+    const { reviews } = useSelector((state) => state.review);
+    const dispatch = useDispatch();
+
     const [review, setReview] = useState({
         userId: '',
         productId: product?._id,
@@ -22,8 +33,36 @@ const ReviewComponent = ({ product, getDetailsReview }) => {
         comment: '',
         rating: '5',
     });
-    const context = useContext(MyContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const [replyText, setReplyText] = useState('');
+    const [selectedReplyIndex, setSelectedReplyIndex] = useState(null);
+
+    const [isLoadingAddReview, setIsLoadingAddReview] = useState(false);
+    const [isLoadingAddReply, setIsLoadingAddReply] = useState(false);
+    const [openReview, setOpenReview] = useState(false);
+    const [openReply, setOpenReply] = useState(false);
+    const [reviewId, setReviewId] = useState(null);
+    const [replyId, setReplyId] = useState(null);
+    const [isLoadingDeleteReview, setIsLoadingDeleteReview] = useState(false);
+    const [isLoadingDeleteReply, setIsLoadingDeleteReply] = useState(false);
+
+    const handleClickOpenReview = (id) => {
+        setOpenReview(true);
+        setReviewId(id);
+    };
+
+    const handleCloseReview = () => {
+        setOpenReview(false);
+    };
+
+    const handleClickOpenReply = (reviewId, replyId) => {
+        setOpenReply(true);
+        setReviewId(reviewId);
+        setReplyId(replyId);
+    };
+    const handleCloseReply = () => {
+        setOpenReply(false);
+    };
+
     const itemsPerPage = 10;
     // State lưu trang hiện tại
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,10 +74,6 @@ const ReviewComponent = ({ product, getDetailsReview }) => {
     };
     // Cắt dữ liệu theo trang
     const currentReviews = reviews?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-    useEffect(() => {
-        getDetailsReview();
-    }, []);
 
     useEffect(() => {
         window.scrollTo({
@@ -59,24 +94,103 @@ const ReviewComponent = ({ product, getDetailsReview }) => {
         setReview({ ...review, rating: newValue });
     };
 
+    useEffect(() => {
+        socket.on('newReview', (newReview) => {
+            console.log('socketNewReview: ', newReview);
+            dispatch(addReview(newReview));
+        });
+        return () => {
+            socket.off('newReview');
+        };
+    }, []);
+
+    useEffect(() => {
+        console.log('reviews: ', reviews);
+    }, []);
+
     const handleAddReview = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        setIsLoadingAddReview(true);
         try {
             const { data } = await axiosClient.post('/api/user/addReview', review);
+            console.log('dataAdd: ', data);
             if (data.success) {
                 context.openAlertBox('success', data.message);
                 setReview((prev) => ({
                     ...prev,
                     comment: '',
                 }));
-                await getDetailsReview();
             }
         } catch (err) {
             console.log(err);
             context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
         } finally {
-            setIsLoading(false);
+            setIsLoadingAddReview(false);
+        }
+    };
+
+    const handleAddReply = async (reviewId) => {
+        setIsLoadingAddReply(true);
+        try {
+            const { data } = await axiosClient.post(`/api/user/addReplyToReview/${reviewId}`, {
+                replyText,
+            });
+            console.log('dataAddReply: ', data);
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(
+                    addReply({
+                        reviewId,
+                        newReply: data?.newReply,
+                    })
+                );
+                setSelectedReplyIndex(null);
+                setReplyText('');
+            }
+        } catch (err) {
+            console.log(err);
+            context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
+        } finally {
+            setIsLoadingAddReply(false);
+        }
+    };
+
+    const handleDeleteReview = async () => {
+        setIsLoadingDeleteReview(true);
+        try {
+            const { data } = await axiosClient.delete(`/api/user/deleteReview/${reviewId}`);
+            console.log('dataDelete: ', data);
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(deleteReview({ reviewId }));
+                handleCloseReview();
+            }
+        } catch (err) {
+            console.log(err);
+            context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
+        } finally {
+            setIsLoadingDeleteReview(false);
+        }
+    };
+
+    const handleDeleteReply = async () => {
+        setIsLoadingDeleteReply(true);
+        console.log('reviewId: ', reviewId);
+        console.log('replyId: ', replyId);
+
+        try {
+            const { data } = await axiosClient.delete(`/api/user/deleteReplyFromReview/${reviewId}/${replyId}`);
+            console.log('dataDeleteReply: ', data);
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(deleteReply({ reviewId, replyId }));
+                handleCloseReply();
+            }
+        } catch (err) {
+            console.log(err);
+            context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
+        } finally {
+            setIsLoadingDeleteReply(false);
         }
     };
 
@@ -97,34 +211,115 @@ const ReviewComponent = ({ product, getDetailsReview }) => {
                     />
                     <br />
                     <br />
-                    <Rating name="rating" value={review.rating} onChange={handleRatingChange} size="medium" />
+                    <Rating name="rating" value={review?.rating} onChange={handleRatingChange} size="medium" />
 
                     <div className="flex items-center mt-2">
                         <Button type="submit" className="btn-org">
-                            {isLoading === true ? <CircularProgress color="inherit" /> : 'Gửi đánh giá'}
+                            {isLoadingAddReview === true ? <CircularProgress color="inherit" /> : 'Gửi đánh giá'}
                         </Button>
                     </div>
                 </form>
             </div>
 
             <h2 className="text-[18px] mt-6">Đánh giá từ khách hàng</h2>
-            <div className="reviewScroll w-full max-h-[1300px] over-x-hidden mt-5 pr-5">
+            <div className="reviewScroll w-full max-h-[1000vh] over-x-hidden mt-5 pr-5">
                 <div className="review pt-5 pb-5 border-b border-[rgba(0,0,0,0.1)] w-full ">
                     {currentReviews?.length !== 0 &&
                         currentReviews?.map((review, index) => {
                             return (
-                                <div className="flex items-center justify-between mt-4 mb-8" key={index}>
-                                    <div className="info w-[60%] flex items-center gap-3">
-                                        <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
-                                            <img src={review?.userId?.avatar} alt="avatar" className="w-full" />
+                                <div key={index}>
+                                    <div className="flex items-center justify-between mt-4 mb-2">
+                                        <div className="info w-[60%] flex items-center gap-3">
+                                            <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
+                                                <img src={review?.userId?.avatar} alt="avatar" className="w-full" />
+                                            </div>
+                                            <div className="w-[80%]">
+                                                <h4 className="text-[16px]">{review?.userId?.name}</h4>
+                                                <h5 className="text-[13px] mb-0">{formatDate(review?.createdAt)}</h5>
+                                                <p className="mt-0 mb-0">{review?.comment}</p>
+                                            </div>
                                         </div>
-                                        <div className="w-[80%]">
-                                            <h4 className="text-[16px]">{review?.userId?.name}</h4>
-                                            <h5 className="text-[13px] mb-0">{formatDate(review?.createdAt)}</h5>
-                                            <p className="mt-0 mb-0">{review?.comment}</p>
-                                        </div>
+                                        <Rating name="size-small" value={review?.rating} readOnly />
                                     </div>
-                                    <Rating name="size-small" defaultValue={review?.rating} readOnly />
+                                    {/* Nút trả lời */}
+                                    <div className="flex items-center gap-4">
+                                        <span
+                                            className="text-blue-600 cursor-pointer text-sm mt-2 ml-[90px]"
+                                            onClick={() =>
+                                                setSelectedReplyIndex(index === selectedReplyIndex ? null : index)
+                                            }
+                                        >
+                                            Phản hồi
+                                        </span>
+                                        <span
+                                            className="text-primary cursor-pointer text-sm mt-2"
+                                            onClick={() => handleClickOpenReview(review._id)}
+                                        >
+                                            Xóa
+                                        </span>
+                                    </div>
+
+                                    {/* Danh sách reply */}
+                                    {review.replies?.length > 0 && (
+                                        <div key={review._id}>
+                                            {review.replies.map((reply) => (
+                                                <div key={reply._id} className="ml-[90px] mt-0 space-y-3">
+                                                    <div className="flex items-center justify-between mt-4 mb-2">
+                                                        <div className="info w-[60%] flex items-center gap-3">
+                                                            <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
+                                                                <img
+                                                                    src={review?.userId?.avatar}
+                                                                    alt="avatar"
+                                                                    className="w-full"
+                                                                />
+                                                            </div>
+                                                            <div className="w-[80%]">
+                                                                <h4 className="text-[16px]">{review?.userId?.name}</h4>
+                                                                <h5 className="text-[13px] mb-0">
+                                                                    {formatDate(reply?.createdAt)}
+                                                                </h5>
+                                                                <p className="mt-0 mb-0">{reply?.replyText}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 ">
+                                                        <span
+                                                            className="text-primary ml-[90px] cursor-pointer text-sm mt-2"
+                                                            onClick={() => handleClickOpenReply(review._id, reply._id)}
+                                                        >
+                                                            Xóa
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Ô nhập trả lời */}
+                                    {index === selectedReplyIndex && (
+                                        <div className="ml-[90px] mt-2">
+                                            <TextField
+                                                id="outlined-multiline-flexible"
+                                                label="Viết phản hồi..."
+                                                className="w-full mb-5"
+                                                multiline
+                                                rows={5}
+                                                name="replyText"
+                                                value={replyText}
+                                                onChange={(e) => setReplyText(e.target.value)}
+                                            />
+                                            <Button
+                                                className="!mt-4 btn-org text-white px-3 py-1 rounded text-sm"
+                                                onClick={() => handleAddReply(review?._id)}
+                                            >
+                                                {isLoadingAddReply === true ? (
+                                                    <CircularProgress color="inherit" />
+                                                ) : (
+                                                    'Gửi phản hồi'
+                                                )}
+                                            </Button>
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}
@@ -136,6 +331,53 @@ const ReviewComponent = ({ product, getDetailsReview }) => {
             </div>
 
             <br />
+
+            <Dialog
+                open={openReview}
+                onClose={handleCloseReview}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{'Xoá đánh giá?'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Bạn có chắc chắn xoá đánh giá này không?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseReview}>Huỷ</Button>
+                    {isLoadingDeleteReview === true ? (
+                        <CircularProgress color="inherit" />
+                    ) : (
+                        <Button className="btn-red" onClick={handleDeleteReview} autoFocus>
+                            Xác nhận
+                        </Button>
+                    )}
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openReply}
+                onClose={handleCloseReply}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{'Xoá phản hồi?'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Bạn có chắc chắn xoá phản hồi này không?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseReply}>Huỷ</Button>
+                    {isLoadingDeleteReply === true ? (
+                        <CircularProgress color="inherit" />
+                    ) : (
+                        <Button className="btn-red" onClick={handleDeleteReply} autoFocus>
+                            Xác nhận
+                        </Button>
+                    )}
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

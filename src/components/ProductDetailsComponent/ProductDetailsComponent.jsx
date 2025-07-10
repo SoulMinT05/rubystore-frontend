@@ -8,7 +8,7 @@ import { FaRegHeart } from 'react-icons/fa';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { Button, Rating } from '@mui/material';
 import { MyContext } from '../../App';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
 import { addToCart } from '../../redux/cartSlice';
@@ -20,12 +20,13 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 
-const ProductDetailsComponent = ({ product, reviews }) => {
+const ProductDetailsComponent = ({ product }) => {
     const context = useContext(MyContext);
     const [productActionIndex, setProductActionIndex] = useState(null);
     const [quantityProduct, setQuantityProduct] = useState(1);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { reviews } = useSelector((state) => state.review);
 
     const handleAddToCart = async () => {
         if (!context.isLogin) {
@@ -71,9 +72,7 @@ const ProductDetailsComponent = ({ product, reviews }) => {
                     Thương hiệu : <span className="font-[500] text-black opacity-75">{product?.brand}</span>
                 </span>
                 <Rating name="size-small" defaultValue={product?.averageRating} readOnly size="small" />
-                <span className="text-[13px] cursor-pointer">
-                    Đánh giá ({reviews?.length || product?.reviewCount || 0})
-                </span>
+                <span className="text-[13px] cursor-pointer">Đánh giá ({reviews?.length || 0})</span>
             </div>
 
             <div className="flex items-center gap-4 mt-4">

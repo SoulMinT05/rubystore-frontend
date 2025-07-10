@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Rating from '@mui/material/Rating';
 import { Button, TextField, CircularProgress } from '@mui/material';
@@ -15,11 +15,15 @@ import axiosAuth from '../../apis/axiosAuth';
 import DOMPurify from 'dompurify';
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
 import { MyContext } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchReviews } from '../../redux/reviewSlice';
 
 const ProductDetailsPage = () => {
     const { id } = useParams();
+    const { reviews } = useSelector((state) => state?.review);
+    const dispatch = useDispatch();
+
     const [activeTab, setActiveTab] = useState(0);
-    const { reviews, setReviews } = useContext(MyContext);
     const [product, setProduct] = useState();
     const [averageRating, setAverageRating] = useState('');
     const [relatedProducts, setRelatedProducts] = useState([]);
@@ -33,20 +37,23 @@ const ProductDetailsPage = () => {
             setProduct(updatedProduct);
         }
     }, [reviews]);
-    const getDetailsReview = async () => {
-        try {
-            const { data } = await axiosAuth.get(`/api/user/reviews/${id}`);
-            setReviews(data?.product?.review);
-            setAverageRating(data?.product?.averageRating);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+
     const sanitizedDescription = DOMPurify.sanitize(product?.description, {
         ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'span', 'img'],
         ALLOWED_ATTR: ['src', 'alt', 'title', 'width', 'height', 'style'],
     });
     const [isLoading, setIsLoading] = useState(false);
+
+    const getDetailsReview = async () => {
+        try {
+            const { data } = await axiosAuth.get(`/api/user/reviews/${id}`);
+            console.log('dataDetailsRv: ', data);
+            dispatch(fetchReviews(data?.product?.review));
+            setAverageRating(data?.product?.averageRating);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -57,7 +64,7 @@ const ProductDetailsPage = () => {
                 setIsLoading(false);
 
                 const relatedProducts = await axiosAuth.get(
-                    `/api/product/all-products-sub-category-id/${data?.product?.subCategoryId}`,
+                    `/api/product/all-products-sub-category-id/${data?.product?.subCategoryId}`
                 );
                 if (relatedProducts?.data?.success) {
                     const filteredProducts = relatedProducts?.data?.products.filter((product) => product?._id !== id);
@@ -112,7 +119,7 @@ const ProductDetailsPage = () => {
                             </div>
 
                             <div className="productContent w-[60%] pr-10 pl-10">
-                                <ProductDetailsComponent product={product} reviews={reviews} />
+                                <ProductDetailsComponent product={product} />
                             </div>
                         </div>
 
@@ -148,9 +155,7 @@ const ProductDetailsPage = () => {
                             )}
                             {activeTab === 1 && (
                                 <div className="shadow-md w-[100%] py-5 px-8 rounded-md">
-                                    {product?._id && (
-                                        <ReviewComponent product={product} getDetailsReview={getDetailsReview} />
-                                    )}
+                                    {product?._id && <ReviewComponent product={product} />}
                                 </div>
                             )}
                         </div>
