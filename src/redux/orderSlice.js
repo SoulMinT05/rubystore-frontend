@@ -23,9 +23,16 @@ const orderSlice = createSlice({
                     : order;
             });
         },
+        updateOrderStatus: (state, action) => {
+            const { orderId, newStatus } = action.payload;
+            const orderIndex = state.orders.findIndex((order) => order._id === orderId);
+            if (orderIndex !== -1) {
+                state.orders[orderIndex].orderStatus = newStatus;
+            }
+        },
     },
 });
 
-export const { fetchOrders, cancelOrderStatus } = orderSlice.actions;
+export const { fetchOrders, cancelOrderStatus, updateOrderStatus } = orderSlice.actions;
 
 export default orderSlice.reducer;

@@ -13,7 +13,8 @@ import jsPDF from 'jspdf';
 import axiosClient from '../../apis/axiosClient';
 import { MyContext } from '../../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { cancelOrderStatus, fetchOrders } from '../../redux/orderSlice';
+import { cancelOrderStatus, fetchOrders, updateOrderStatus } from '../../redux/orderSlice';
+import { socket } from '../../config/socket';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -33,26 +34,39 @@ function formatDate(dateString) {
 const OrderHistoryPage = () => {
     const context = useContext(MyContext);
     const dispatch = useDispatch();
-    const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
+    const [openOrderDetailsModal, setOpenOrderDetailsModal] = useState({
         open: false,
         order: null,
     });
-    // const [orders, setOrders] = useState([]);
     const orders = useSelector((state) => state.order.orders);
     const [cancelOrder, setCancelOrder] = useState(false);
 
-    const handleCloseProductDetailsModal = () => {
-        setOpenProductDetailsModal({
+    const handleCloseOrderDetailsModal = () => {
+        setOpenOrderDetailsModal({
             open: false,
             order: null,
         });
     };
 
     useEffect(() => {
+        socket.on('updateOrderStatus', (data) => {
+            console.log('Client nhận được sự kiện:', data);
+            dispatch(
+                updateOrderStatus({
+                    orderId: data?.orderId,
+                    newStatus: data?.newStatus,
+                })
+            );
+        });
+        return () => {
+            socket.off('updateOrderStatus');
+        };
+    }, []);
+
+    useEffect(() => {
         const getOrders = async () => {
             const { data } = await axiosClient.get('/api/order');
             if (data.success) {
-                // setOrders(data?.orders);
                 dispatch(fetchOrders(data?.orders));
             }
         };
@@ -115,7 +129,7 @@ const OrderHistoryPage = () => {
                         orderId: data?.order?._id,
                     })
                 );
-                handleCloseProductDetailsModal();
+                handleCloseOrderDetailsModal();
             }
         } catch (error) {
             console.log('error: ', error);
@@ -167,7 +181,7 @@ const OrderHistoryPage = () => {
                                                         <td className="px-6 py-4">
                                                             <span
                                                                 onClick={() =>
-                                                                    setOpenProductDetailsModal({
+                                                                    setOpenOrderDetailsModal({
                                                                         open: true,
                                                                         order: order,
                                                                     })
@@ -209,7 +223,7 @@ const OrderHistoryPage = () => {
                                                         <td
                                                             className="px-6 py-4 whitespace-nowrap cursor-pointer"
                                                             onClick={() =>
-                                                                setOpenProductDetailsModal({
+                                                                setOpenOrderDetailsModal({
                                                                     open: true,
                                                                     order: order,
                                                                 })
@@ -226,18 +240,18 @@ const OrderHistoryPage = () => {
                                     <Dialog
                                         fullWidth={true}
                                         maxWidth="lg"
-                                        open={openProductDetailsModal.open}
-                                        onClose={handleCloseProductDetailsModal}
+                                        open={openOrderDetailsModal.open}
+                                        onClose={handleCloseOrderDetailsModal}
                                         aria-labelledby="alert-dialog-title"
                                         aria-describedby="alert-dialog-description"
-                                        className="productDetailsModal"
+                                        className="orderDetailsModal"
                                     >
                                         <DialogContent>
                                             <div className="bg-[#fff] p-4 container">
-                                                <div className="w-full productDetailsModalContainer relative">
+                                                <div className="w-full orderDetailsModalContainer relative">
                                                     <Button
                                                         className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[6px] right-[15px] !bg-[#f1f1f1]"
-                                                        onClick={handleCloseProductDetailsModal}
+                                                        onClick={handleCloseOrderDetailsModal}
                                                     >
                                                         <IoCloseSharp className="text-[20px]" />
                                                     </Button>
@@ -257,7 +271,7 @@ const OrderHistoryPage = () => {
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Order ID</span>
                                                                 <span className="text-primary">
-                                                                    {openProductDetailsModal?.order?._id}
+                                                                    {openOrderDetailsModal?.order?._id}
                                                                 </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
@@ -265,11 +279,11 @@ const OrderHistoryPage = () => {
                                                                     Phương thức thanh toán
                                                                 </span>
                                                                 <span className="text-gray-700 text-blue">
-                                                                    {openProductDetailsModal?.order?.paymentMethod ===
+                                                                    {openOrderDetailsModal?.order?.paymentMethod ===
                                                                         'cod' && 'Thanh toán khi nhận hàng'}
-                                                                    {openProductDetailsModal?.order?.paymentMethod ===
+                                                                    {openOrderDetailsModal?.order?.paymentMethod ===
                                                                         'momo' && 'Thanh toán bằng Momo'}
-                                                                    {openProductDetailsModal?.order?.paymentMethod ===
+                                                                    {openOrderDetailsModal?.order?.paymentMethod ===
                                                                         'vnoay' && 'Thanh toán bằng VnPay'}
                                                                 </span>
                                                             </div>
@@ -277,7 +291,7 @@ const OrderHistoryPage = () => {
                                                                 <span className="text-gray-500">Ngày đặt hàng</span>
                                                                 <span className="text-gray-700">
                                                                     {formatDate(
-                                                                        openProductDetailsModal?.order?.createdAt
+                                                                        openOrderDetailsModal?.order?.createdAt
                                                                     )}
                                                                 </span>
                                                             </div>
@@ -286,7 +300,7 @@ const OrderHistoryPage = () => {
                                                                 <span className="text-gray-700">
                                                                     <BadgeOrderStatus
                                                                         status={
-                                                                            openProductDetailsModal?.order?.orderStatus
+                                                                            openOrderDetailsModal?.order?.orderStatus
                                                                         }
                                                                     />
                                                                 </span>
@@ -301,38 +315,35 @@ const OrderHistoryPage = () => {
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Họ và tên</span>
                                                                 <span className="text-gray-700">
-                                                                    {openProductDetailsModal?.order?.userId?.name}
+                                                                    {openOrderDetailsModal?.order?.userId?.name}
                                                                 </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Email</span>
                                                                 <span className="text-gray-700">
-                                                                    {openProductDetailsModal?.order?.userId?.email}
+                                                                    {openOrderDetailsModal?.order?.userId?.email}
                                                                 </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Số điện thoại</span>
                                                                 <span className="text-gray-700">
-                                                                    {
-                                                                        openProductDetailsModal?.order?.userId
-                                                                            ?.phoneNumber
-                                                                    }
+                                                                    {openOrderDetailsModal?.order?.userId?.phoneNumber}
                                                                 </span>
                                                             </div>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Địa chỉ</span>
                                                                 <span className="text-gray-700">
                                                                     {`Đường ${
-                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                        openOrderDetailsModal?.order?.shippingAddress
                                                                             ?.streetLine || ''
                                                                     }, Phường ${
-                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                        openOrderDetailsModal?.order?.shippingAddress
                                                                             ?.ward || ''
                                                                     }, Quận ${
-                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                        openOrderDetailsModal?.order?.shippingAddress
                                                                             ?.district || ''
                                                                     }, Thành phố ${
-                                                                        openProductDetailsModal?.order?.shippingAddress
+                                                                        openOrderDetailsModal?.order?.shippingAddress
                                                                             ?.city || ''
                                                                     }`}
                                                                 </span>
@@ -344,9 +355,9 @@ const OrderHistoryPage = () => {
                                                             Thông tin sản phẩm
                                                         </h3>
                                                         <div className="mt-4">
-                                                            {openProductDetailsModal?.order?.selectedCartItems?.length >
+                                                            {openOrderDetailsModal?.order?.selectedCartItems?.length >
                                                                 0 &&
-                                                                openProductDetailsModal?.order?.selectedCartItems?.map(
+                                                                openOrderDetailsModal?.order?.selectedCartItems?.map(
                                                                     (cartItem) => {
                                                                         return (
                                                                             <div
@@ -391,14 +402,14 @@ const OrderHistoryPage = () => {
                                                                 <div className="flex items-center justify-between">
                                                                     <span className="text-gray-500">Tổng số lượng</span>
                                                                     <span className="text-gray-700">
-                                                                        {openProductDetailsModal?.order?.totalQuantity}
+                                                                        {openOrderDetailsModal?.order?.totalQuantity}
                                                                     </span>
                                                                 </div>
                                                                 <div className="flex items-center justify-between">
                                                                     <span className="text-gray-500">Tổng tiền đơn</span>
                                                                     <span className="text-gray-700">
                                                                         {formatCurrency(
-                                                                            openProductDetailsModal?.order?.totalPrice
+                                                                            openOrderDetailsModal?.order?.totalPrice
                                                                         )}
                                                                     </span>
                                                                 </div>
@@ -408,18 +419,18 @@ const OrderHistoryPage = () => {
                                                                     </span>
                                                                     <span className="text-gray-700">
                                                                         {formatCurrency(
-                                                                            openProductDetailsModal?.order?.shippingFee
+                                                                            openOrderDetailsModal?.order?.shippingFee
                                                                         )}
                                                                     </span>
                                                                 </div>
                                                                 <div className="flex items-center justify-between">
                                                                     <span className="text-gray-500">Voucher</span>
                                                                     <span className="text-gray-700">
-                                                                        {openProductDetailsModal?.order
-                                                                            ?.discountType === 'percent'
-                                                                            ? `${openProductDetailsModal?.order?.discountValue}%`
+                                                                        {openOrderDetailsModal?.order?.discountType ===
+                                                                        'percent'
+                                                                            ? `${openOrderDetailsModal?.order?.discountValue}%`
                                                                             : `${formatCurrency(
-                                                                                  openProductDetailsModal?.order
+                                                                                  openOrderDetailsModal?.order
                                                                                       ?.discountValue
                                                                               )}`}
                                                                     </span>
@@ -432,7 +443,7 @@ const OrderHistoryPage = () => {
                                                                     </span>
                                                                     <span className="font-[600] text-[28px] text-primary">
                                                                         {formatCurrency(
-                                                                            openProductDetailsModal?.order?.finalPrice
+                                                                            openOrderDetailsModal?.order?.finalPrice
                                                                         )}
                                                                     </span>
                                                                 </div>
@@ -448,9 +459,7 @@ const OrderHistoryPage = () => {
                                                             </Button>
                                                             <Button
                                                                 onClick={() =>
-                                                                    handleCancelOrder(
-                                                                        openProductDetailsModal?.order?._id
-                                                                    )
+                                                                    handleCancelOrder(openOrderDetailsModal?.order?._id)
                                                                 }
                                                                 className="btn-border btn-login"
                                                             >

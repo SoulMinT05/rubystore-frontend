@@ -24,6 +24,10 @@ import store from './redux/store';
 import UpdateAddressComponent from './components/UpdateAddressComponent/UpdateAddressComponent';
 import { AppBar, IconButton, Slide, Toolbar, Typography } from '@mui/material';
 import { IoMdClose } from 'react-icons/io';
+
+// SOCKET IO
+import { socket } from './config/socket';
+
 const MyContext = createContext();
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -56,17 +60,24 @@ function App() {
             item,
         });
     };
-
     const handleCloseProductDetailsModal = () => {
         setOpenProductDetailsModal({
             open: false,
             item: {},
         });
     };
-
     const toggleCartPanel = (newOpen) => {
         setOpenCartPanel(newOpen);
     };
+
+    useEffect(() => {
+        socket.on('sendMessage', (message) => {
+            console.log('message: ', message);
+        });
+        return () => {
+            socket.off('sendMessage');
+        };
+    }, []);
 
     useEffect(() => {
         const checkAuth = async () => {
