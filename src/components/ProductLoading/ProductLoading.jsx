@@ -20,7 +20,7 @@ const ProductLoading = () => {
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-2"></div>
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-2"></div>
             </div>
-            <div classNameName="col w-[16%] h-[250px]">
+            <div className="col w-[16%] h-[250px]">
                 <div className="flex items-center justify-center mb-3 w-full h-48 bg-gray-300 rounded dark:bg-gray-700">
                     <svg
                         className="w-10 h-10 text-gray-200 dark:text-gray-600"
@@ -37,7 +37,7 @@ const ProductLoading = () => {
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-2"></div>
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-2"></div>
             </div>
-            <div classNameName="col w-[16%] h-[250px]">
+            <div className="col w-[16%] h-[250px]">
                 <div className="flex items-center justify-center mb-3 w-full h-48 bg-gray-300 rounded dark:bg-gray-700">
                     <svg
                         className="w-10 h-10 text-gray-200 dark:text-gray-600"
@@ -54,7 +54,7 @@ const ProductLoading = () => {
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-2"></div>
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-2"></div>
             </div>
-            <div classNameName="col w-[16%] h-[250px]">
+            <div className="col w-[16%] h-[250px]">
                 <div className="flex items-center justify-center mb-3 w-full h-48 bg-gray-300 rounded dark:bg-gray-700">
                     <svg
                         className="w-10 h-10 text-gray-200 dark:text-gray-600"
@@ -71,7 +71,7 @@ const ProductLoading = () => {
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-2"></div>
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-2"></div>
             </div>
-            <div classNameName="col w-[16%] h-[250px]">
+            <div className="col w-[16%] h-[250px]">
                 <div className="flex items-center justify-center mb-3 w-full h-48 bg-gray-300 rounded dark:bg-gray-700">
                     <svg
                         className="w-10 h-10 text-gray-200 dark:text-gray-600"
@@ -88,7 +88,7 @@ const ProductLoading = () => {
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-2"></div>
                 <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-2"></div>
             </div>
-            <div classNameName="col w-[16%] h-[250px]">
+            <div className="col w-[16%] h-[250px]">
                 <div className="flex items-center justify-center mb-3 w-full h-48 bg-gray-300 rounded dark:bg-gray-700">
                     <svg
                         className="w-10 h-10 text-gray-200 dark:text-gray-600"

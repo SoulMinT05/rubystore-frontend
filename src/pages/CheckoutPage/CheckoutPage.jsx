@@ -7,9 +7,10 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
 
-import './CheckoutPage.css';
+import './CheckoutPage.scss';
 import { useDispatch } from 'react-redux';
 import { removeOrderedItems } from '../../redux/cartSlice';
+import { addNotification } from '../../redux/notificationSlice';
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -38,7 +39,6 @@ const CheckoutPage = () => {
             setIsLoadingCheckoutToken(true);
             try {
                 const { data } = await axiosClient.get(`/api/checkoutToken/${tokenId}`);
-                console.log('dataCheckOutId: ', data);
                 if (data?.success) {
                     setCheckoutData(data.checkoutData); // hoặc data.checkoutToken
                 }
@@ -62,14 +62,14 @@ const CheckoutPage = () => {
                 paymentMethod,
                 note,
             });
-            console.log('dataCreateOrder: ', data);
             if (data?.success) {
                 context.openAlertBox('success', data?.message);
                 dispatch(removeOrderedItems(data?.orderedItemIds));
+                dispatch(addNotification(data?.newNotification));
                 navigate('/cart');
             }
         } catch (error) {
-            console.log('error: ', error);
+            console.error('error: ', error);
         } finally {
             setIsLoadingCreateOrder(false);
         }

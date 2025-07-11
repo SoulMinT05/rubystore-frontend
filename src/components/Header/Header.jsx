@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchBox from '../SearchBox/SearchBox';
-import { Button } from '@mui/material';
+import { Avatar, Box, Button, Divider, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import { Badge } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import Menu from '@mui/material/Menu';
@@ -10,13 +10,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { MdOutlineShoppingCart } from 'react-icons/md';
 import { IoGitCompareOutline } from 'react-icons/io5';
+import { IoMdNotificationsOutline } from 'react-icons/io';
 import { FaRegHeart } from 'react-icons/fa6';
 import { FaRegUser } from 'react-icons/fa';
 import { IoBagCheckOutline } from 'react-icons/io5';
+import { FaRegComments } from 'react-icons/fa';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
 import { IoKeyOutline } from 'react-icons/io5';
 import Cookies from 'js-cookie';
+
+import { Popper, Paper, ClickAwayListener, List, ListItem, IconButton } from '@mui/material';
 
 import Navigation from '../Navigation/Navigation';
 import { MyContext } from '../../App';
@@ -28,32 +32,78 @@ import axiosToken from '../../apis/axiosToken';
 import axiosClient from '../../apis/axiosClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCart } from '../../redux/cartSlice';
+import { fetchNotifications, getUnreadCountNotifications, markNotificationRead } from '../../redux/notificationSlice';
+
+const getNotificationAvatar = (type) => {
+    switch (type) {
+        case 'order':
+            return (
+                <Avatar sx={{ bgcolor: 'primary.main' }}>
+                    <IoBagCheckOutline size={20} color="white" />
+                </Avatar>
+            );
+        case 'review':
+            return (
+                <Avatar sx={{ bgcolor: 'primary.main' }}>
+                    <FaRegComments size={18} color="white" />
+                </Avatar>
+            );
+        //   case 'system':
+        //   return (
+        //     <Avatar sx={{ bgcolor: 'primary.main' }}>
+        //       <IoInformationCircleOutline size={20} color="white" />
+        //     </Avatar>
+        //   );
+        default:
+            return <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />;
+    }
+};
 
 const Header = () => {
+    const { cart } = useSelector((state) => state.cart);
+    const { notifications } = useSelector((state) => state.notification);
+    const { unreadCountNotifications } = useSelector((state) => state.notification);
+
+    const dispatch = useDispatch();
     const context = useContext(MyContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
-    const { cart } = useSelector((state) => state.cart);
-    const dispatch = useDispatch();
+    const open = Boolean(anchorEl);
+    const anchorRef = useRef(null);
+    const [openNotifications, setOpenNotifications] = useState(false);
+    const [isNotificationAsRead, setIsNotificationAsRead] = useState(false);
 
     useEffect(() => {
-        if (!context.isLogin) return;
+        const getNotification = async () => {
+            const { data } = await axiosClient.get('/api/notification/getNotifications?limit=4');
+            console.log('dataNotification: ', data);
+            if (data.success) {
+                dispatch(fetchNotifications(data?.notifications));
+                dispatch(getUnreadCountNotifications(data?.unreadCountNotifications));
+            }
+        };
+        getNotification();
+    }, []);
 
+    useEffect(() => {
+        console.log('notifications: ', notifications);
+    }, []);
+
+    useEffect(() => {
         const fetchCart = async () => {
             const { data } = await axiosClient.get('/api/user/cart');
-            dispatch(
-                getCart({
-                    products: data?.cart?.items || [],
-                })
-            );
+            if (data.success) {
+                dispatch(
+                    getCart({
+                        products: data?.cart?.items || [],
+                    })
+                );
+            }
         };
         fetchCart();
     }, [context?.isLogin, dispatch]);
 
     const navigate = useNavigate();
-
-    const open = Boolean(anchorEl);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -80,14 +130,11 @@ const Header = () => {
     }, [context?.userInfo?.avatar]);
 
     useEffect(() => {
-        // if (!context.isLogin) return;
-
         const checkLogin = async () => {
             try {
                 const { data } = await axiosClient.get('/api/user/check-login', {
                     withCredentials: true,
                 });
-                console.log('dataCheckLogin: ', data);
                 if (data?.success) {
                     context.setIsLogin(true);
                 }
@@ -136,6 +183,22 @@ const Header = () => {
         } finally {
             setIsLoading(false);
             setAnchorEl(null);
+        }
+    };
+
+    const markNotificationAsRead = async (notificationId) => {
+        setIsNotificationAsRead(true);
+        try {
+            const { data } = await axiosClient.post(`/api/notification/markNotificationAsRead/${notificationId}`);
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(markNotificationRead({ notificationId: data?.notificationId }));
+            }
+        } catch (error) {
+            console.log(error);
+            context.openAlertBox('error', error?.response?.data?.message || 'Đã xảy ra lỗi!');
+        } finally {
+            setIsNotificationAsRead(false);
         }
     };
 
@@ -283,12 +346,143 @@ const Header = () => {
                                     </Menu>
                                 </>
                             )}
-                            <li className="mx-2">
+                            {/* <li className="mx-2">
                                 <Tooltip title="So sánh" placement="top">
                                     <Badge className="icon-header" badgeContent={4} color="primary">
                                         <IoGitCompareOutline className="text-2xl" />
                                     </Badge>
                                 </Tooltip>
+                            </li> */}
+                            <li
+                                onMouseEnter={() => setOpenNotifications(true)}
+                                onMouseLeave={() => setOpenNotifications(false)}
+                                className="relative mx-2 cursor-pointer z-2000"
+                            >
+                                <Tooltip title="Thông báo" placement="top">
+                                    <Badge
+                                        className="icon-header"
+                                        ref={anchorRef}
+                                        badgeContent={unreadCountNotifications}
+                                        color="primary"
+                                        sx={{
+                                            '& .MuiBadge-badge': {
+                                                right: 2,
+                                                top: 2,
+                                            },
+                                        }}
+                                    >
+                                        <span className="w-[28px] h-[28px] flex items-center justify-center">
+                                            <IoMdNotificationsOutline className="text-3xl" />
+                                        </span>
+                                    </Badge>
+                                </Tooltip>
+
+                                {/* Pseudo hover bridge */}
+                                <span className="absolute -left-[8px] right-0 w-[48px] h-[24px] -bottom-[24px] z-10" />
+
+                                <Popper
+                                    open={openNotifications}
+                                    anchorEl={anchorRef.current}
+                                    placement="bottom"
+                                    disablePortal
+                                    modifiers={[
+                                        {
+                                            name: 'offset',
+                                            options: {
+                                                offset: [0, 8],
+                                            },
+                                        },
+                                    ]}
+                                    sx={{ cursor: 'pointer', zIndex: 1500 }}
+                                >
+                                    <Paper
+                                        elevation={3}
+                                        sx={{
+                                            width: 500,
+                                            mt: 1,
+                                            mr: 4,
+                                            position: 'relative',
+                                        }}
+                                        tabIndex={-1} // ✅ Tránh lỗi focus gây aria-hidden
+                                    >
+                                        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                            {notifications?.length > 0 &&
+                                                notifications?.map((notification) => {
+                                                    return (
+                                                        <ListItem
+                                                            key={notification._id}
+                                                            alignItems="flex-start"
+                                                            className={`cursor-pointer hover:bg-gray-100 ${
+                                                                notification?.isRead === false
+                                                                    ? 'bg-red-50 transition-colors'
+                                                                    : ''
+                                                            } `}
+                                                        >
+                                                            <ListItemAvatar>
+                                                                {getNotificationAvatar(notification?.type)}
+                                                            </ListItemAvatar>
+                                                            <Box className="flex flex-col justify-center w-full">
+                                                                <Typography variant="body1" fontWeight={500}>
+                                                                    {notification?.title}
+                                                                </Typography>
+                                                                <Typography
+                                                                    variant="body2"
+                                                                    color="text.secondary"
+                                                                    className="mt-1"
+                                                                >
+                                                                    {notification?.description}
+                                                                </Typography>
+
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        justifyContent: 'space-between',
+                                                                        alignItems: 'center',
+                                                                        marginTop: '12px',
+                                                                    }}
+                                                                >
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="text.disabled"
+                                                                        className="!text-[13px]"
+                                                                    >
+                                                                        {formatDateUTCPlus7(notification?.createdAt)}
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        onClick={() =>
+                                                                            markNotificationAsRead(notification?._id)
+                                                                        }
+                                                                        variant="caption"
+                                                                        className={`!text-[13px] italic ${
+                                                                            notification?.isRead
+                                                                                ? 'text-gray-500'
+                                                                                : 'text-blue-500 hover:underline cursor-pointer'
+                                                                        }`}
+                                                                    >
+                                                                        {isNotificationAsRead
+                                                                            ? 'Đang đánh dấu'
+                                                                            : notification?.isRead
+                                                                            ? 'Đã đọc'
+                                                                            : 'Đánh dấu là đã đọc'}
+                                                                    </Typography>
+                                                                </Box>
+                                                            </Box>
+                                                        </ListItem>
+                                                    );
+                                                })}
+                                            <Divider sx={{ marginLeft: 0 }} variant="inset" component="li" />
+
+                                            <ListItem
+                                                className="justify-center hover:underline text-blue-600 cursor-pointer py-2"
+                                                onClick={() => navigate('/notifications')} // Hoặc gọi hàm gì đó nếu có
+                                            >
+                                                <Typography variant="body2" className="font-medium !mx-auto">
+                                                    Xem tất cả
+                                                </Typography>
+                                            </ListItem>
+                                        </List>
+                                    </Paper>
+                                </Popper>
                             </li>
                             <li className="mx-2">
                                 <Tooltip title="Yêu thích" placement="top">
@@ -320,3 +514,17 @@ const Header = () => {
 };
 
 export default Header;
+
+function formatDateUTCPlus7(dateString) {
+    const date = new Date(dateString);
+    date.setHours(date.getHours());
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${hours}:${minutes}:${seconds} ${day}/${month}/${year} `;
+}

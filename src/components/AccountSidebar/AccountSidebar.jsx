@@ -97,7 +97,14 @@ const AccountSidebar = () => {
             </div>
             <ul className="list-none pb-5 bg-[#f1f1f1] myAccountTabs">
                 <li className="w-full">
-                    <NavLink to="/my-account" activeClassName="active">
+                    <NavLink
+                        to="/my-account"
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
+                                : 'w-full'
+                        }
+                    >
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <FaRegUser className="text-[17px]" />
                             <span>Trang cá nhân</span>
@@ -105,7 +112,14 @@ const AccountSidebar = () => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink to="/order-history" activeClassName="active">
+                    <NavLink
+                        to="/order-history"
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
+                                : 'w-full'
+                        }
+                    >
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoBagCheckOutline className="text-[17px]" />
                             <span>Lịch sử đơn hàng</span>
@@ -113,7 +127,14 @@ const AccountSidebar = () => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink to="/wishlist" activeClassName="active">
+                    <NavLink
+                        to="/wishlist"
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
+                                : 'w-full'
+                        }
+                    >
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoMdHeartEmpty className="text-[17px]" />
                             <span>Danh sách yêu thích</span>
@@ -121,7 +142,14 @@ const AccountSidebar = () => {
                     </NavLink>
                 </li>
                 <li className="w-full">
-                    <NavLink to="/change-password" activeClassName="active">
+                    <NavLink
+                        to="/change-password"
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
+                                : 'w-full'
+                        }
+                    >
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoKeyOutline className="text-[17px]" />
                             <span>Đổi mật khẩu</span>
@@ -130,7 +158,14 @@ const AccountSidebar = () => {
                 </li>
 
                 <li className="w-full">
-                    <NavLink to="/" activeClassName="active">
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
+                                : 'w-full'
+                        }
+                    >
                         <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoIosLogOut className="text-[18px] text-[#ff5252]" />
                             <span className="text-[#ff5252]">Đăng xuất</span>

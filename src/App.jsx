@@ -171,83 +171,81 @@ function App() {
     };
     return (
         <>
-            <StoreProvider>
-                <BrowserRouter>
-                    <Provider store={store}>
-                        <MyContext.Provider value={values}>
-                            <Header />
-                            <AppRoutes />
-                            <Footer />
-                            <ToastContainer />
+            <Provider store={store}>
+                <MyContext.Provider value={values}>
+                    <BrowserRouter>
+                        <Header />
+                        <AppRoutes />
+                        <Footer />
+                        <ToastContainer />
 
-                            <Dialog
-                                fullWidth={true}
-                                maxWidth="lg"
-                                open={openProductDetailsModal.open}
-                                onClose={handleCloseProductDetailsModal}
-                                aria-labelledby="alert-dialog-title"
-                                aria-describedby="alert-dialog-description"
-                                className="productDetailsModal"
-                            >
-                                <DialogContent>
-                                    <div className="flex items-center w-full productDetailsModalContainer relative">
-                                        <Button
-                                            className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[15px] right-[15px] !bg-[#f1f1f1]"
-                                            onClick={handleCloseProductDetailsModal}
-                                        >
-                                            <IoCloseSharp className="text-[20px]" />
-                                        </Button>
-                                        {openProductDetailsModal?.item?._id && (
-                                            <>
-                                                <div className="col1 w-[40%] px-3">
-                                                    <ProductZoom images={openProductDetailsModal?.item?.images} />
-                                                </div>
+                        <Dialog
+                            fullWidth={true}
+                            maxWidth="lg"
+                            open={openProductDetailsModal.open}
+                            onClose={handleCloseProductDetailsModal}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            className="productDetailsModal"
+                        >
+                            <DialogContent>
+                                <div className="flex items-center w-full productDetailsModalContainer relative">
+                                    <Button
+                                        className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[15px] right-[15px] !bg-[#f1f1f1]"
+                                        onClick={handleCloseProductDetailsModal}
+                                    >
+                                        <IoCloseSharp className="text-[20px]" />
+                                    </Button>
+                                    {openProductDetailsModal?.item?._id && (
+                                        <>
+                                            <div className="col1 w-[40%] px-3">
+                                                <ProductZoom images={openProductDetailsModal?.item?.images} />
+                                            </div>
 
-                                                <div className="col2 w-[60%] py-8 px-8 pr-16 productContent">
-                                                    <ProductDetailsComponent product={openProductDetailsModal?.item} />
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
+                                            <div className="col2 w-[60%] py-8 px-8 pr-16 productContent">
+                                                <ProductDetailsComponent product={openProductDetailsModal?.item} />
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            </DialogContent>
+                        </Dialog>
 
-                            <Dialog
-                                fullScreen
-                                open={isOpenFullScreenPanel.open}
-                                onClose={() =>
-                                    setIsOpenFullScreenPanel({
-                                        open: false,
-                                    })
-                                }
-                                TransitionComponent={Transition}
-                            >
-                                <AppBar sx={{ position: 'relative' }}>
-                                    <Toolbar>
-                                        <IconButton
-                                            edge="start"
-                                            color="inherit"
-                                            onClick={() =>
-                                                setIsOpenFullScreenPanel({
-                                                    open: false,
-                                                })
-                                            }
-                                            aria-label="close"
-                                        >
-                                            <IoMdClose className="text-gray-800" />
-                                        </IconButton>
-                                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                                            <span className="text-gray-800">{isOpenFullScreenPanel?.model}</span>
-                                        </Typography>
-                                    </Toolbar>
-                                </AppBar>
+                        <Dialog
+                            fullScreen
+                            open={isOpenFullScreenPanel.open}
+                            onClose={() =>
+                                setIsOpenFullScreenPanel({
+                                    open: false,
+                                })
+                            }
+                            TransitionComponent={Transition}
+                        >
+                            <AppBar sx={{ position: 'relative' }}>
+                                <Toolbar>
+                                    <IconButton
+                                        edge="start"
+                                        color="inherit"
+                                        onClick={() =>
+                                            setIsOpenFullScreenPanel({
+                                                open: false,
+                                            })
+                                        }
+                                        aria-label="close"
+                                    >
+                                        <IoMdClose className="text-gray-800" />
+                                    </IconButton>
+                                    <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                                        <span className="text-gray-800">{isOpenFullScreenPanel?.model}</span>
+                                    </Typography>
+                                </Toolbar>
+                            </AppBar>
 
-                                {isOpenFullScreenPanel?.model === 'Cập nhật địa chỉ' && <UpdateAddressComponent />}
-                            </Dialog>
-                        </MyContext.Provider>
-                    </Provider>
-                </BrowserRouter>
-            </StoreProvider>
+                            {isOpenFullScreenPanel?.model === 'Cập nhật địa chỉ' && <UpdateAddressComponent />}
+                        </Dialog>
+                    </BrowserRouter>
+                </MyContext.Provider>
+            </Provider>
         </>
     );
 }

@@ -70,9 +70,9 @@ const CartItems = ({
                     oldSize: selectedSize, // 🟡 đang chọn hiện tại
                     newSize: value, // 🟢 size vừa click chọn
                 });
-                console.log('dataUpdateSize: ', data);
+                // console.log('dataUpdateSize: ', data);
                 if (data?.success) {
-                    context.openAlertBox('success', 'Cập nhật size sản phẩm thành công');
+                    // context.openAlertBox('success', 'Cập nhật size sản phẩm thành công');
                     dispatch(
                         updateCartItemSize({
                             productId,
@@ -105,7 +105,7 @@ const CartItems = ({
                 });
 
                 if (data?.success) {
-                    context.openAlertBox('success', 'Tăng số lượng sản phẩm thành công');
+                    // context.openAlertBox('success', 'Tăng số lượng sản phẩm thành công');
 
                     const updatedItem = data.shoppingCart.find(
                         (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
@@ -143,10 +143,10 @@ const CartItems = ({
                     sizeProduct: selectedSize,
                     quantityProduct: newQuantity,
                 });
-                console.log('dataDecrease: ', data);
+                // console.log('dataDecrease: ', data);
 
                 if (data?.success) {
-                    context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
+                    // context.openAlertBox('success', 'Giảm số lượng sản phẩm thành công');
 
                     const updatedItem = data.shoppingCart.find(
                         (item) => item?.product.toString() === productId.toString() && item.sizeProduct === selectedSize
@@ -172,9 +172,9 @@ const CartItems = ({
             const { data } = await axiosClient.post('/api/user/removeProductCart', {
                 cartId,
             });
-            console.log('dataRemoveCart: ', data);
+            // console.log('dataRemoveCart: ', data);
             if (data?.success) {
-                context.openAlertBox('success', data.message);
+                // context.openAlertBox('success', data.message);
                 dispatch(removeCart(cartId));
             } else {
                 console.error('Không thể thêm vào giỏ hàng:', data.message);
@@ -245,7 +245,7 @@ const CartItems = ({
                 </div>
             </td>
             <td className="px-6 py-2">
-                <p className="w-[80px] text-[12px]">
+                <div className="w-[80px] text-[12px]">
                     <div className="flex items-center gap-2">
                         <span
                             className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-2 px-3 rounded-md cursor-pointer"
@@ -263,7 +263,7 @@ const CartItems = ({
                             <FaPlus className="text-[11px]" />
                         </span>
                     </div>
-                </p>
+                </div>
             </td>
             <td className="px-6 py-2">
                 <p className="w-[80px] text-[12px]">{formatCurrency(quantity * price)}</p>

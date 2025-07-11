@@ -54,7 +54,6 @@ const CartPage = () => {
             setIsLoadingCarts(true);
             const { data } = await axiosClient.get('/api/user/cart');
             if (data?.success) {
-                console.log('dataCart: ', data);
                 dispatch(
                     getCart({
                         products: data?.cart?.items || [],
@@ -116,7 +115,6 @@ const CartPage = () => {
             const { data } = await axiosClient.post('/api/user/deleteMultipleCartItems', {
                 cartIds: selectedCarts,
             });
-            console.log('dataDelteMultipleCart: ', data);
             if (data?.success) {
                 context.openAlertBox('success', data.message);
                 dispatch(removeMultipleCartItems(selectedCarts));
@@ -144,7 +142,6 @@ const CartPage = () => {
                 code: codeVoucher,
                 totalPrice,
             });
-            console.log('dataApplyVoucher: ', data);
             if (data?.success) {
                 dispatch(
                     applyVoucher({
@@ -169,14 +166,6 @@ const CartPage = () => {
             context.openAlertBox('error', 'Vui lòng chọn sản phẩm để thanh toán!');
             return;
         }
-        console.log('selectedCartItems: ', selectedCartItems);
-        console.log('totalQuantity: ', totalQuantity);
-        console.log('totalPrice: ', totalPrice);
-        console.log('finalPrice: ', finalPrice);
-        console.log('cart?.voucher?.discountType: ', cart?.voucher?.discountType);
-        console.log('cart?.voucher?.discountValue: ', cart?.voucher?.discountValue);
-        console.log('cart?.voucher: ', cart?.voucher);
-
         setIsLoadingCheckout(true);
 
         try {

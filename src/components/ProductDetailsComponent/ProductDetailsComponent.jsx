@@ -46,9 +46,8 @@ const ProductDetailsComponent = ({ product }) => {
                 sizeProduct,
                 quantityProduct,
             });
-            console.log('dataAddToCart: ', data);
             if (data?.success) {
-                context.openAlertBox('success', data.message);
+                // context.openAlertBox('success', data.message);
 
                 const updatedItem = data.shoppingCart.find(
                     (item) => item?.product.toString() === product._id.toString() && item.sizeProduct === sizeProduct
