@@ -32,19 +32,36 @@ import axiosToken from '../../apis/axiosToken';
 import axiosClient from '../../apis/axiosClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCart } from '../../redux/cartSlice';
-import { fetchNotifications, getUnreadCountNotifications, markNotificationRead } from '../../redux/notificationSlice';
+import {
+    addNotification,
+    fetchNotifications,
+    getUnreadCountNotifications,
+    markNotificationRead,
+} from '../../redux/notificationSlice';
+import { socket } from '../../config/socket';
 
-const getNotificationAvatar = (type) => {
+const tailwindColorMap = {
+    'bg-blue-500': '#3b82f6',
+    'bg-green-500': '#22c55e',
+    'bg-yellow-500': '#eab308',
+    'bg-purple-500': '#8b5cf6',
+    'bg-red-500': '#ef4444',
+    'bg-gray-500': '#6b7280',
+};
+
+const getNotificationAvatar = (type, bgColor) => {
+    const hexColor = tailwindColorMap[bgColor] || '#6b7280';
+
     switch (type) {
         case 'order':
             return (
-                <Avatar sx={{ bgcolor: 'primary.main' }}>
+                <Avatar sx={{ bgcolor: hexColor }}>
                     <IoBagCheckOutline size={20} color="white" />
                 </Avatar>
             );
         case 'review':
             return (
-                <Avatar sx={{ bgcolor: 'primary.main' }}>
+                <Avatar sx={{ bgcolor: hexColor }}>
                     <FaRegComments size={18} color="white" />
                 </Avatar>
             );
@@ -72,6 +89,20 @@ const Header = () => {
     const anchorRef = useRef(null);
     const [openNotifications, setOpenNotifications] = useState(false);
     const [isNotificationAsRead, setIsNotificationAsRead] = useState(false);
+
+    useEffect(() => {
+        socket.emit('joinRoom', context.userInfo?._id);
+    }, [context.isLogin, context.userInfo?._id]);
+
+    useEffect(() => {
+        socket.on('notificationOrder', (newUpdateNotification) => {
+            console.log('Client nhận được sự kiện update notification từ admin:', newUpdateNotification);
+            dispatch(addNotification(newUpdateNotification));
+        });
+        return () => {
+            socket.off('notificationOrder');
+        };
+    }, []);
 
     useEffect(() => {
         const getNotification = async () => {
@@ -193,6 +224,24 @@ const Header = () => {
             if (data.success) {
                 context.openAlertBox('success', data.message);
                 dispatch(markNotificationRead({ notificationId: data?.notificationId }));
+            }
+        } catch (error) {
+            console.log(error);
+            context.openAlertBox('error', error?.response?.data?.message || 'Đã xảy ra lỗi!');
+        } finally {
+            setIsNotificationAsRead(false);
+        }
+    };
+
+    const handleMarkAsReadAndNavigate = async (notificationId) => {
+        setIsNotificationAsRead(true);
+        try {
+            const { data } = await axiosClient.post(`/api/notification/markNotificationAsRead/${notificationId}`);
+            if (data.success) {
+                // context.openAlertBox('success', data.message);
+                dispatch(markNotificationRead({ notificationId: data?.notificationId }));
+                setOpenNotifications(false);
+                navigate(`${data.targetUrl}`);
             }
         } catch (error) {
             console.log(error);
@@ -410,6 +459,9 @@ const Header = () => {
                                                 notifications?.map((notification) => {
                                                     return (
                                                         <ListItem
+                                                            onClick={() =>
+                                                                handleMarkAsReadAndNavigate(notification._id)
+                                                            }
                                                             key={notification._id}
                                                             alignItems="flex-start"
                                                             className={`cursor-pointer hover:bg-gray-100 ${
@@ -419,7 +471,10 @@ const Header = () => {
                                                             } `}
                                                         >
                                                             <ListItemAvatar>
-                                                                {getNotificationAvatar(notification?.type)}
+                                                                {getNotificationAvatar(
+                                                                    notification?.type,
+                                                                    notification?.bgColor
+                                                                )}
                                                             </ListItemAvatar>
                                                             <Box className="flex flex-col justify-center w-full">
                                                                 <Typography variant="body1" fontWeight={500}>
@@ -449,9 +504,10 @@ const Header = () => {
                                                                         {formatDateUTCPlus7(notification?.createdAt)}
                                                                     </Typography>
                                                                     <Typography
-                                                                        onClick={() =>
-                                                                            markNotificationAsRead(notification?._id)
-                                                                        }
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            markNotificationAsRead(notification?._id);
+                                                                        }}
                                                                         variant="caption"
                                                                         className={`!text-[13px] italic ${
                                                                             notification?.isRead

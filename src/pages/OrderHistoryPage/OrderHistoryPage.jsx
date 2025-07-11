@@ -15,6 +15,7 @@ import { MyContext } from '../../App';
 import { useDispatch, useSelector } from 'react-redux';
 import { cancelOrderStatus, fetchOrders, updateOrderStatus } from '../../redux/orderSlice';
 import { socket } from '../../config/socket';
+import { addNotification } from '../../redux/notificationSlice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -50,7 +51,7 @@ const OrderHistoryPage = () => {
 
     useEffect(() => {
         socket.on('updateOrderStatus', (data) => {
-            console.log('Client nhận được sự kiện:', data);
+            console.log('Client nhận được sự kiện update order từ admin:', data);
             dispatch(
                 updateOrderStatus({
                     orderId: data?.orderId,
@@ -129,6 +130,7 @@ const OrderHistoryPage = () => {
                         orderId: data?.order?._id,
                     })
                 );
+                dispatch(addNotification(data.newCancelNotification));
                 handleCloseOrderDetailsModal();
             }
         } catch (error) {
