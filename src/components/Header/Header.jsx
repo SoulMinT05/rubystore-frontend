@@ -99,8 +99,13 @@ const Header = () => {
             console.log('Client nhận được sự kiện update notification từ admin:', newUpdateNotification);
             dispatch(addNotification(newUpdateNotification));
         });
+        socket.on('notificationReplyToReview', (data) => {
+            console.log('dataReplyToReview: ', data);
+            dispatch(addNotification(data));
+        });
         return () => {
             socket.off('notificationOrder');
+            socket.off('notificationReplyToReview');
         };
     }, []);
 
@@ -114,10 +119,6 @@ const Header = () => {
             }
         };
         getNotification();
-    }, []);
-
-    useEffect(() => {
-        console.log('notifications: ', notifications);
     }, []);
 
     useEffect(() => {
@@ -222,7 +223,7 @@ const Header = () => {
         try {
             const { data } = await axiosClient.post(`/api/notification/markNotificationAsRead/${notificationId}`);
             if (data.success) {
-                context.openAlertBox('success', data.message);
+                // context.openAlertBox('success', data.message);
                 dispatch(markNotificationRead({ notificationId: data?.notificationId }));
             }
         } catch (error) {
@@ -395,13 +396,6 @@ const Header = () => {
                                     </Menu>
                                 </>
                             )}
-                            {/* <li className="mx-2">
-                                <Tooltip title="So sánh" placement="top">
-                                    <Badge className="icon-header" badgeContent={4} color="primary">
-                                        <IoGitCompareOutline className="text-2xl" />
-                                    </Badge>
-                                </Tooltip>
-                            </li> */}
                             <li
                                 onMouseEnter={() => setOpenNotifications(true)}
                                 onMouseLeave={() => setOpenNotifications(false)}
@@ -471,9 +465,13 @@ const Header = () => {
                                                             } `}
                                                         >
                                                             <ListItemAvatar>
-                                                                {getNotificationAvatar(
-                                                                    notification?.type,
-                                                                    notification?.bgColor
+                                                                {notification?.type === 'order' ? (
+                                                                    getNotificationAvatar(
+                                                                        notification?.type,
+                                                                        notification?.bgColor
+                                                                    )
+                                                                ) : (
+                                                                    <Avatar src={notification?.avatarSender} />
                                                                 )}
                                                             </ListItemAvatar>
                                                             <Box className="flex flex-col justify-center w-full">

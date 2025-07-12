@@ -4,7 +4,7 @@ import Rating from '@mui/material/Rating';
 import { Button, TextField, CircularProgress } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 import ProductZoom from '../../components/ProductZoom/ProductZoom';
 
@@ -23,10 +23,27 @@ const ProductDetailsPage = () => {
     const { reviews } = useSelector((state) => state?.review);
     const dispatch = useDispatch();
 
+    const location = useLocation();
     const [activeTab, setActiveTab] = useState(0);
+    const searchParams = new URLSearchParams(location.search);
+
+    const tab = searchParams.get('tab');
+
     const [product, setProduct] = useState();
     const [averageRating, setAverageRating] = useState('');
     const [relatedProducts, setRelatedProducts] = useState([]);
+
+    useEffect(() => {
+        if (tab === 'review') {
+            setActiveTab(1);
+
+            // Scroll đến phần review sau khi tab được active
+            setTimeout(() => {
+                document.getElementById('review-section')?.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
+    }, [tab]);
+
     useEffect(() => {
         getDetailsReview();
     }, []);
@@ -154,7 +171,7 @@ const ProductDetailsPage = () => {
                                 />
                             )}
                             {activeTab === 1 && (
-                                <div className="shadow-md w-[100%] py-5 px-8 rounded-md">
+                                <div id="review-section" className="shadow-md w-[100%] py-5 px-8 rounded-md">
                                     {product?._id && <ReviewComponent product={product} />}
                                 </div>
                             )}

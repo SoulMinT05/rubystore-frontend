@@ -14,6 +14,7 @@ const notificationSlice = createSlice({
         },
         addNotification: (state, action) => {
             state.notifications.unshift(action.payload);
+            state.notifications = state.notifications.slice(0, 4);
             state.unreadCountNotifications += 1;
         },
         getUnreadCountNotifications: (state, action) => {

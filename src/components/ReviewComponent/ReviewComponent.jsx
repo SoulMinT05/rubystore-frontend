@@ -185,8 +185,6 @@ const ReviewComponent = ({ product }) => {
 
     const handleDeleteReply = async () => {
         setIsLoadingDeleteReply(true);
-        console.log('reviewId: ', reviewId);
-        console.log('replyId: ', replyId);
 
         try {
             const { data } = await axiosClient.delete(`/api/user/deleteReplyFromReview/${reviewId}/${replyId}`);
@@ -236,7 +234,7 @@ const ReviewComponent = ({ product }) => {
                     {currentReviews?.length !== 0 &&
                         currentReviews?.map((review, index) => {
                             return (
-                                <div key={index}>
+                                <div key={review._id}>
                                     <div className="flex items-center justify-between mt-4 mb-2">
                                         <div className="info w-[60%] flex items-center gap-3">
                                             <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
@@ -260,12 +258,14 @@ const ReviewComponent = ({ product }) => {
                                         >
                                             Phản hồi
                                         </span>
-                                        <span
-                                            className="text-primary cursor-pointer text-sm mt-2"
-                                            onClick={() => handleClickOpenReview(review._id)}
-                                        >
-                                            Xóa
-                                        </span>
+                                        {context?.userInfo?._id === review?.userId?._id && (
+                                            <span
+                                                className="text-primary cursor-pointer text-sm mt-2"
+                                                onClick={() => handleClickOpenReview(review._id)}
+                                            >
+                                                Xóa
+                                            </span>
+                                        )}
                                     </div>
 
                                     {/* Danh sách reply */}
@@ -277,13 +277,13 @@ const ReviewComponent = ({ product }) => {
                                                         <div className="info w-[60%] flex items-center gap-3">
                                                             <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
                                                                 <img
-                                                                    src={review?.userId?.avatar}
+                                                                    src={reply?.userId?.avatar}
                                                                     alt="avatar"
                                                                     className="w-full"
                                                                 />
                                                             </div>
                                                             <div className="w-[80%]">
-                                                                <h4 className="text-[16px]">{review?.userId?.name}</h4>
+                                                                <h4 className="text-[16px]">{reply?.userId?.name}</h4>
                                                                 <h5 className="text-[13px] mb-0">
                                                                     {formatDate(reply?.createdAt)}
                                                                 </h5>
@@ -292,12 +292,16 @@ const ReviewComponent = ({ product }) => {
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-4 ">
-                                                        <span
-                                                            className="text-primary ml-[90px] cursor-pointer text-sm mt-2"
-                                                            onClick={() => handleClickOpenReply(review._id, reply._id)}
-                                                        >
-                                                            Xóa
-                                                        </span>
+                                                        {reply?.userId?._id === context?.userInfo?._id && (
+                                                            <span
+                                                                className="text-primary ml-[90px] cursor-pointer text-sm mt-2"
+                                                                onClick={() =>
+                                                                    handleClickOpenReply(review._id, reply._id)
+                                                                }
+                                                            >
+                                                                Xóa
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))}
