@@ -17,6 +17,8 @@ import PrivateRoute from './PrivateRoute';
 import ChangePasswordPage from '../components/ChangePasswordPage/ChangePasswordPage';
 import ScrollToTopComponent from '../components/ScrollToTopComponent/ScrollToTopComponent';
 import SearchResultsPage from '../pages/SearchResultsPage/SearchResultsPage';
+import MessagePage from '../pages/MessagePage/MessagePage';
+import MessagePageDetails from '../pages/MessagePageDetails/MessagePageDetails';
 
 const AppRoutes = () => (
     <>
@@ -71,6 +73,22 @@ const AppRoutes = () => (
                 element={
                     <PrivateRoute>
                         <ChangePasswordPage />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/message"
+                element={
+                    <PrivateRoute>
+                        <MessagePage />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/message/:id"
+                element={
+                    <PrivateRoute>
+                        <MessagePageDetails />
                     </PrivateRoute>
                 }
             />

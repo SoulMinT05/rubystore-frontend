@@ -18,6 +18,8 @@ import { FaRegComments } from 'react-icons/fa';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
 import { IoKeyOutline } from 'react-icons/io5';
+import { LuSend } from 'react-icons/lu';
+
 import Cookies from 'js-cookie';
 
 import { Popper, Paper, ClickAwayListener, List, ListItem, IconButton } from '@mui/material';
@@ -92,6 +94,10 @@ const Header = () => {
 
     useEffect(() => {
         socket.emit('joinRoom', context.userInfo?._id);
+    }, [context.isLogin, context.userInfo?._id]);
+
+    useEffect(() => {
+        socket.emit('joinMessageRoom', context.userInfo?._id);
     }, [context.isLogin, context.userInfo?._id]);
 
     useEffect(() => {
@@ -361,6 +367,12 @@ const Header = () => {
                                             <MenuItem onClick={handleClose} className="flex gap-2 !py-2">
                                                 <FaRegUser className="text-[18px]" />
                                                 <span className="text-[14px]">Tài khoản</span>
+                                            </MenuItem>
+                                        </Link>
+                                        <Link to="/message" className="w-full block">
+                                            <MenuItem onClick={handleClose} className="flex gap-2 !py-2">
+                                                <LuSend className="text-[18px]" />
+                                                <span className="text-[14px]">Tin nhắn</span>
                                             </MenuItem>
                                         </Link>
                                         <Link to="/order-history" className="w-full block">

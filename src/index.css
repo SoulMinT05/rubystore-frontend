@@ -37,7 +37,8 @@ h6 {
     height: 8px !important;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #ff5252;
+    background-color: #ccc;
+    border-radius: 9999px;
 }
 ::-webkit-scrollbar-track {
     background-color: #fff;

@@ -25,6 +25,13 @@ import UpdateAddressComponent from './components/UpdateAddressComponent/UpdateAd
 import { AppBar, IconButton, Slide, Toolbar, Typography } from '@mui/material';
 import { IoMdClose } from 'react-icons/io';
 
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi'; // nếu muốn tiếng Việt
+
+dayjs.extend(relativeTime);
+dayjs.locale('vi'); // dùng nếu bạn muốn "2 phút trước" thay vì "2 minutes ago"
+
 // SOCKET IO
 import { socket } from './config/socket';
 
