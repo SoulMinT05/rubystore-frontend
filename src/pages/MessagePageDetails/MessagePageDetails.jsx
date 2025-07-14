@@ -52,7 +52,7 @@ const MessagePageDetails = () => {
                 </div>
             </div>
             <div
-                className="container flex  h-[100vh] rounded-xl border"
+                className="container flex  h-[80vh] rounded-xl border"
                 style={{ borderColor: 'rgba(255, 255, 255, 0.125)' }}
             >
                 <MessageListSidebar />

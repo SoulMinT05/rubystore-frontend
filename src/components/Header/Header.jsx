@@ -101,6 +101,16 @@ const Header = () => {
     }, [context.isLogin, context.userInfo?._id]);
 
     useEffect(() => {
+        socket.on('notificationNewMessage', (data) => {
+            console.log('Client nhan notificationNewMessage: ', data);
+            dispatch(addNotification(data));
+        });
+        return () => {
+            socket.off('notificationNewMessage');
+        };
+    }, []);
+
+    useEffect(() => {
         socket.on('notificationOrder', (newUpdateNotification) => {
             console.log('Client nhận được sự kiện update notification từ admin:', newUpdateNotification);
             dispatch(addNotification(newUpdateNotification));
