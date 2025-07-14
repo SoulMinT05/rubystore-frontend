@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { cancelOrderStatus, fetchOrders, updateOrderStatus } from '../../redux/orderSlice';
 import { socket } from '../../config/socket';
 import { addNotification } from '../../redux/notificationSlice';
+import { Link } from 'react-router-dom';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -43,10 +44,16 @@ const OrderHistoryPage = () => {
     const [cancelOrder, setCancelOrder] = useState(false);
 
     const handleCloseOrderDetailsModal = () => {
-        setOpenOrderDetailsModal({
+        setOpenOrderDetailsModal((prev) => ({
+            ...prev,
             open: false,
-            order: null,
-        });
+        }));
+        setTimeout(() => {
+            setOpenOrderDetailsModal({
+                open: false,
+                order: null,
+            });
+        }, 300);
     };
 
     useEffect(() => {
@@ -153,10 +160,10 @@ const OrderHistoryPage = () => {
                             <h2 className="pb-3">Lịch sử đơn hàng</h2>
 
                             <p className="mt-0">
-                                Tổng {'  '}
+                                Tổng tất cả {'  '}
                                 <span className="font-bold text-primary">
                                     {orders?.length}
-                                    <span> đơn hàng đã đặt</span>
+                                    <span> đơn hàng</span>
                                 </span>
                             </p>
 
@@ -168,76 +175,148 @@ const OrderHistoryPage = () => {
                                         <tr>
                                             <th className="px-4 py-3 whitespace-nowrap">Mã đơn hàng</th>
                                             <th className="px-4 py-3 whitespace-nowrap">Sản phẩm</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Size</th>
                                             <th className="px-4 py-3 whitespace-nowrap">Phương thức thanh toán</th>
                                             <th className="px-4 py-3 whitespace-nowrap">Thành tiền</th>
                                             <th className="px-4 py-3 whitespace-nowrap">Trạng thái đơn hàng</th>
                                             <th className="px-4 py-3 whitespace-nowrap">Ngày đặt</th>
                                             <th className="px-4 py-3 whitespace-nowrap">Thao tác</th>
+                                            <th className="px-4 py-3 whitespace-nowrap">Đánh giá sản phẩm</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {orders?.length > 0 &&
-                                            orders?.map((order) => {
-                                                return (
-                                                    <tr key={order?._id} className="bg-white border-b">
-                                                        <td className="px-6 py-4">
-                                                            <span
-                                                                onClick={() =>
-                                                                    setOpenOrderDetailsModal({
-                                                                        open: true,
-                                                                        order: order,
-                                                                    })
-                                                                }
-                                                                className="cursor-pointer text-primary"
-                                                            >
-                                                                {order?._id}
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <div className="flex gap-2 items-center rounded-md overflow-hidden group">
-                                                                <img
-                                                                    src={order?.selectedCartItems[0]?.images[0]}
-                                                                    alt=""
-                                                                    className="w-[70px] h-[70px] object-cover rounded-md group-hover:scale-105 transition-all cursor-pointer"
-                                                                />
-                                                            </div>
-                                                        </td>
+                                            orders?.map((order) =>
+                                                order.selectedCartItems.map((item, idx) => (
+                                                    <tr key={`${order._id}-${idx}`} className="bg-white border-b">
+                                                        {idx === 0 && (
+                                                            <>
+                                                                <td
+                                                                    className="px-6 py-4"
+                                                                    rowSpan={order.selectedCartItems.length}
+                                                                >
+                                                                    <span
+                                                                        onClick={() =>
+                                                                            setOpenOrderDetailsModal({
+                                                                                open: true,
+                                                                                order: order,
+                                                                            })
+                                                                        }
+                                                                        className="cursor-pointer text-primary"
+                                                                    >
+                                                                        {order._id}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    <Link to={`/product/${item?.product.toString()}`}>
+                                                                        <div className="flex gap-2 items-center rounded-md overflow-hidden group">
+                                                                            <img
+                                                                                src={item?.images[0]}
+                                                                                alt=""
+                                                                                className="w-[70px] h-[70px] object-cover rounded-md group-hover:scale-105 transition-all cursor-pointer"
+                                                                            />
+                                                                        </div>
+                                                                    </Link>
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    <span className="text-blue">
+                                                                        {item?.sizeProduct}
+                                                                    </span>
+                                                                </td>
+                                                                <td
+                                                                    className="px-6 py-4"
+                                                                    rowSpan={order.selectedCartItems.length}
+                                                                >
+                                                                    <span className="text-blue">
+                                                                        {order.paymentMethod === 'cod' &&
+                                                                            'Thanh toán khi nhận hàng'}
+                                                                        {order.paymentMethod === 'momo' &&
+                                                                            'Thanh toán bằng Momo'}
+                                                                        {order.paymentMethod === 'vnpay' &&
+                                                                            'Thanh toán bằng VnPay'}
+                                                                    </span>
+                                                                </td>
+                                                                <td
+                                                                    className="px-6 py-4"
+                                                                    rowSpan={order.selectedCartItems.length}
+                                                                >
+                                                                    <span className="text-primary">
+                                                                        {formatCurrency(order.finalPrice)}
+                                                                    </span>
+                                                                </td>
+                                                                <td
+                                                                    className="px-6 py-4"
+                                                                    rowSpan={order.selectedCartItems.length}
+                                                                >
+                                                                    <BadgeOrderStatus status={order.orderStatus} />
+                                                                </td>
+                                                                <td
+                                                                    className="px-6 py-4"
+                                                                    rowSpan={order.selectedCartItems.length}
+                                                                >
+                                                                    {formatDate(order.createdAt)}
+                                                                </td>
+                                                                <td
+                                                                    className="px-6 py-4 whitespace-nowrap cursor-pointer"
+                                                                    onClick={() =>
+                                                                        setOpenOrderDetailsModal({
+                                                                            open: true,
+                                                                            order: order,
+                                                                        })
+                                                                    }
+                                                                    rowSpan={order.selectedCartItems.length}
+                                                                >
+                                                                    <span className="text-gray-500 link transition-all">
+                                                                        Xem chi tiết
+                                                                    </span>
+                                                                </td>
+                                                            </>
+                                                        )}
 
-                                                        <td className="px-6 py-4">
-                                                            <span className="text-blue">
-                                                                {order?.paymentMethod === 'cod' &&
-                                                                    'Thanh toán khi nhận hàng'}
-                                                                {order?.paymentMethod === 'momo' &&
-                                                                    'Thanh toán bằng Momo'}
-                                                                {order?.paymentMethod === 'vnoay' &&
-                                                                    'Thanh toán bằng VnPay'}
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className="text-primary">
-                                                                {formatCurrency(order?.finalPrice)}
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <BadgeOrderStatus status={order?.orderStatus} />
-                                                        </td>
-                                                        <td className="px-6 py-4">{formatDate(order?.createdAt)}</td>
-                                                        <td
-                                                            className="px-6 py-4 whitespace-nowrap cursor-pointer"
-                                                            onClick={() =>
-                                                                setOpenOrderDetailsModal({
-                                                                    open: true,
-                                                                    order: order,
-                                                                })
-                                                            }
-                                                        >
-                                                            <span className="text-gray-500 link transition-all">
-                                                                Xem chi tiết
-                                                            </span>
+                                                        {idx !== 0 && (
+                                                            <>
+                                                                <td className="px-6 py-4">
+                                                                    <Link to={`/product/${item?.product.toString()}`}>
+                                                                        <div className="flex gap-2 items-center rounded-md overflow-hidden group">
+                                                                            <img
+                                                                                src={item?.images[0]}
+                                                                                alt=""
+                                                                                className="w-[70px] h-[70px] object-cover rounded-md group-hover:scale-105 transition-all cursor-pointer"
+                                                                            />
+                                                                        </div>
+                                                                    </Link>
+                                                                </td>
+                                                                <td className="px-6 py-4">
+                                                                    <span className="text-blue">
+                                                                        {item?.sizeProduct}
+                                                                    </span>
+                                                                </td>
+                                                            </>
+                                                        )}
+                                                        <td className="px-6 py-4 ">
+                                                            {item?.isReviewed ? (
+                                                                <span className="text-green-500 font-medium">
+                                                                    Đã đánh giá
+                                                                </span>
+                                                            ) : order?.orderStatus === 'delivered' ? (
+                                                                <Link
+                                                                    to={`/product/${item?.product.toString()}?tab=review&size=${
+                                                                        item?.sizeProduct
+                                                                    }`}
+                                                                >
+                                                                    <span className="text-blue-500 cursor-pointer hover:underline transition-all">
+                                                                        Đánh giá ngay
+                                                                    </span>
+                                                                </Link>
+                                                            ) : (
+                                                                <span className="text-gray-400 italic">
+                                                                    Chờ giao hàng để đánh giá
+                                                                </span>
+                                                            )}
                                                         </td>
                                                     </tr>
-                                                );
-                                            })}
+                                                ))
+                                            )}
                                     </tbody>
                                     <Dialog
                                         fullWidth={true}

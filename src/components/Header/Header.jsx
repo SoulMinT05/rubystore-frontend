@@ -318,9 +318,6 @@ const Header = () => {
                                         className="!text-[#000] myAccountWrap flex items-center gap-3 cursor-pointer"
                                         onClick={handleClick}
                                     >
-                                        {/* <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-[#f1f1f1]">
-                                            <FaRegUser className="text-[16px] text-[rgba(0,0,0,0.7)]" />
-                                        </Button> */}
                                         <img
                                             src={context?.userInfo?.avatar}
                                             alt=""
@@ -418,167 +415,175 @@ const Header = () => {
                                     </Menu>
                                 </>
                             )}
-                            <li
-                                onMouseEnter={() => setOpenNotifications(true)}
-                                onMouseLeave={() => setOpenNotifications(false)}
-                                className="relative mx-2 cursor-pointer z-2000"
-                            >
-                                <Tooltip title="Thông báo" placement="top">
-                                    <Badge
-                                        className="icon-header"
-                                        ref={anchorRef}
-                                        badgeContent={unreadCountNotifications}
-                                        color="primary"
-                                        sx={{
-                                            '& .MuiBadge-badge': {
-                                                right: 2,
-                                                top: 2,
-                                            },
-                                        }}
+                            {context?.userInfo?._id && (
+                                <>
+                                    <li
+                                        onMouseEnter={() => setOpenNotifications(true)}
+                                        onMouseLeave={() => setOpenNotifications(false)}
+                                        className="relative mx-2 cursor-pointer z-2000"
                                     >
-                                        <span className="w-[28px] h-[28px] flex items-center justify-center">
-                                            <IoMdNotificationsOutline className="text-3xl" />
-                                        </span>
-                                    </Badge>
-                                </Tooltip>
-
-                                {/* Pseudo hover bridge */}
-                                <span className="absolute -left-[8px] right-0 w-[48px] h-[24px] -bottom-[24px] z-10" />
-
-                                <Popper
-                                    open={openNotifications}
-                                    anchorEl={anchorRef.current}
-                                    placement="bottom"
-                                    disablePortal
-                                    modifiers={[
-                                        {
-                                            name: 'offset',
-                                            options: {
-                                                offset: [0, 8],
-                                            },
-                                        },
-                                    ]}
-                                    sx={{ cursor: 'pointer', zIndex: 1500 }}
-                                >
-                                    <Paper
-                                        elevation={3}
-                                        sx={{
-                                            width: 500,
-                                            mt: 1,
-                                            mr: 4,
-                                            position: 'relative',
-                                        }}
-                                        tabIndex={-1} // ✅ Tránh lỗi focus gây aria-hidden
-                                    >
-                                        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                                            {notifications?.length > 0 &&
-                                                notifications?.map((notification) => {
-                                                    return (
-                                                        <ListItem
-                                                            onClick={() =>
-                                                                handleMarkAsReadAndNavigate(notification._id)
-                                                            }
-                                                            key={notification._id}
-                                                            alignItems="flex-start"
-                                                            className={`cursor-pointer hover:bg-gray-100 ${
-                                                                notification?.isRead === false
-                                                                    ? 'bg-red-50 transition-colors'
-                                                                    : ''
-                                                            } `}
-                                                        >
-                                                            <ListItemAvatar>
-                                                                {notification?.type === 'order' ? (
-                                                                    getNotificationAvatar(
-                                                                        notification?.type,
-                                                                        notification?.bgColor
-                                                                    )
-                                                                ) : (
-                                                                    <Avatar src={notification?.avatarSender} />
-                                                                )}
-                                                            </ListItemAvatar>
-                                                            <Box className="flex flex-col justify-center w-full">
-                                                                <Typography variant="body1" fontWeight={500}>
-                                                                    {notification?.title}
-                                                                </Typography>
-                                                                <Typography
-                                                                    variant="body2"
-                                                                    color="text.secondary"
-                                                                    className="mt-1"
-                                                                >
-                                                                    {notification?.description}
-                                                                </Typography>
-
-                                                                <Box
-                                                                    sx={{
-                                                                        display: 'flex',
-                                                                        justifyContent: 'space-between',
-                                                                        alignItems: 'center',
-                                                                        marginTop: '12px',
-                                                                    }}
-                                                                >
-                                                                    <Typography
-                                                                        variant="caption"
-                                                                        color="text.disabled"
-                                                                        className="!text-[13px]"
-                                                                    >
-                                                                        {formatDateUTCPlus7(notification?.createdAt)}
-                                                                    </Typography>
-                                                                    <Typography
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            markNotificationAsRead(notification?._id);
-                                                                        }}
-                                                                        variant="caption"
-                                                                        className={`!text-[13px] italic ${
-                                                                            notification?.isRead
-                                                                                ? 'text-gray-500'
-                                                                                : 'text-blue-500 hover:underline cursor-pointer'
-                                                                        }`}
-                                                                    >
-                                                                        {isNotificationAsRead
-                                                                            ? 'Đang đánh dấu'
-                                                                            : notification?.isRead
-                                                                            ? 'Đã đọc'
-                                                                            : 'Đánh dấu là đã đọc'}
-                                                                    </Typography>
-                                                                </Box>
-                                                            </Box>
-                                                        </ListItem>
-                                                    );
-                                                })}
-                                            <Divider sx={{ marginLeft: 0 }} variant="inset" component="li" />
-
-                                            <ListItem
-                                                className="justify-center hover:underline text-blue-600 cursor-pointer py-2"
-                                                onClick={() => navigate('/notifications')} // Hoặc gọi hàm gì đó nếu có
+                                        <Tooltip title="Thông báo" placement="top">
+                                            <Badge
+                                                className="icon-header"
+                                                ref={anchorRef}
+                                                badgeContent={unreadCountNotifications}
+                                                color="primary"
+                                                sx={{
+                                                    '& .MuiBadge-badge': {
+                                                        right: 2,
+                                                        top: 2,
+                                                    },
+                                                }}
                                             >
-                                                <Typography variant="body2" className="font-medium !mx-auto">
-                                                    Xem tất cả
-                                                </Typography>
-                                            </ListItem>
-                                        </List>
-                                    </Paper>
-                                </Popper>
-                            </li>
-                            <li className="mx-2">
-                                <Tooltip title="Yêu thích" placement="top">
-                                    <Badge className="icon-header" badgeContent={4} color="primary">
-                                        <FaRegHeart className="text-2xl" />
-                                    </Badge>
-                                </Tooltip>
-                            </li>
-                            <li className="mx-2">
-                                <Tooltip title="Giỏ hàng" placement="top">
-                                    <Badge
-                                        onClick={() => context.setOpenCartPanel(true)}
-                                        className="icon-header"
-                                        badgeContent={cart?.products?.length}
-                                        color="primary"
-                                    >
-                                        <MdOutlineShoppingCart className="text-2xl" />
-                                    </Badge>
-                                </Tooltip>
-                            </li>
+                                                <span className="w-[28px] h-[28px] flex items-center justify-center">
+                                                    <IoMdNotificationsOutline className="text-3xl" />
+                                                </span>
+                                            </Badge>
+                                        </Tooltip>
+
+                                        {/* Pseudo hover bridge */}
+                                        <span className="absolute -left-[8px] right-0 w-[48px] h-[24px] -bottom-[24px] z-10" />
+
+                                        <Popper
+                                            open={openNotifications}
+                                            anchorEl={anchorRef.current}
+                                            placement="bottom"
+                                            disablePortal
+                                            modifiers={[
+                                                {
+                                                    name: 'offset',
+                                                    options: {
+                                                        offset: [0, 8],
+                                                    },
+                                                },
+                                            ]}
+                                            sx={{ cursor: 'pointer', zIndex: 1500 }}
+                                        >
+                                            <Paper
+                                                elevation={3}
+                                                sx={{
+                                                    width: 500,
+                                                    mt: 1,
+                                                    mr: 4,
+                                                    position: 'relative',
+                                                }}
+                                                tabIndex={-1} // ✅ Tránh lỗi focus gây aria-hidden
+                                            >
+                                                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                                    {notifications?.length > 0 &&
+                                                        notifications?.map((notification) => {
+                                                            return (
+                                                                <ListItem
+                                                                    onClick={() =>
+                                                                        handleMarkAsReadAndNavigate(notification._id)
+                                                                    }
+                                                                    key={notification._id}
+                                                                    alignItems="flex-start"
+                                                                    className={`cursor-pointer hover:bg-gray-100 ${
+                                                                        notification?.isRead === false
+                                                                            ? 'bg-red-50 transition-colors'
+                                                                            : ''
+                                                                    } `}
+                                                                >
+                                                                    <ListItemAvatar>
+                                                                        {notification?.type === 'order' ? (
+                                                                            getNotificationAvatar(
+                                                                                notification?.type,
+                                                                                notification?.bgColor
+                                                                            )
+                                                                        ) : (
+                                                                            <Avatar src={notification?.avatarSender} />
+                                                                        )}
+                                                                    </ListItemAvatar>
+                                                                    <Box className="flex flex-col justify-center w-full">
+                                                                        <Typography variant="body1" fontWeight={500}>
+                                                                            {notification?.title}
+                                                                        </Typography>
+                                                                        <Typography
+                                                                            variant="body2"
+                                                                            color="text.secondary"
+                                                                            className="mt-1"
+                                                                        >
+                                                                            {notification?.description}
+                                                                        </Typography>
+
+                                                                        <Box
+                                                                            sx={{
+                                                                                display: 'flex',
+                                                                                justifyContent: 'space-between',
+                                                                                alignItems: 'center',
+                                                                                marginTop: '12px',
+                                                                            }}
+                                                                        >
+                                                                            <Typography
+                                                                                variant="caption"
+                                                                                color="text.disabled"
+                                                                                className="!text-[13px]"
+                                                                            >
+                                                                                {formatDateUTCPlus7(
+                                                                                    notification?.createdAt
+                                                                                )}
+                                                                            </Typography>
+                                                                            <Typography
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    markNotificationAsRead(
+                                                                                        notification?._id
+                                                                                    );
+                                                                                }}
+                                                                                variant="caption"
+                                                                                className={`!text-[13px] italic ${
+                                                                                    notification?.isRead
+                                                                                        ? 'text-gray-500'
+                                                                                        : 'text-blue-500 hover:underline cursor-pointer'
+                                                                                }`}
+                                                                            >
+                                                                                {isNotificationAsRead
+                                                                                    ? 'Đang đánh dấu'
+                                                                                    : notification?.isRead
+                                                                                    ? 'Đã đọc'
+                                                                                    : 'Đánh dấu là đã đọc'}
+                                                                            </Typography>
+                                                                        </Box>
+                                                                    </Box>
+                                                                </ListItem>
+                                                            );
+                                                        })}
+                                                    <Divider sx={{ marginLeft: 0 }} variant="inset" component="li" />
+
+                                                    <ListItem
+                                                        className="justify-center hover:underline text-blue-600 cursor-pointer py-2"
+                                                        onClick={() => navigate('/notifications')} // Hoặc gọi hàm gì đó nếu có
+                                                    >
+                                                        <Typography variant="body2" className="font-medium !mx-auto">
+                                                            Xem tất cả
+                                                        </Typography>
+                                                    </ListItem>
+                                                </List>
+                                            </Paper>
+                                        </Popper>
+                                    </li>
+                                    <li className="mx-2">
+                                        <Tooltip title="Yêu thích" placement="top">
+                                            <Badge className="icon-header" badgeContent={4} color="primary">
+                                                <FaRegHeart className="text-2xl" />
+                                            </Badge>
+                                        </Tooltip>
+                                    </li>
+                                    <li className="mx-2">
+                                        <Tooltip title="Giỏ hàng" placement="top">
+                                            <Badge
+                                                onClick={() => context.setOpenCartPanel(true)}
+                                                className="icon-header"
+                                                badgeContent={cart?.products?.length}
+                                                color="primary"
+                                            >
+                                                <MdOutlineShoppingCart className="text-2xl" />
+                                            </Badge>
+                                        </Tooltip>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     </div>
                 </div>

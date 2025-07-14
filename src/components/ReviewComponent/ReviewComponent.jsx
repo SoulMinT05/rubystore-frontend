@@ -13,6 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { socket } from '../../config/socket';
+import { useLocation } from 'react-router-dom';
 function formatDate(dateString) {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -26,9 +27,14 @@ const ReviewComponent = ({ product }) => {
     const { reviews } = useSelector((state) => state.review);
     const dispatch = useDispatch();
 
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const sizeFromUrl = queryParams.get('size') || '';
+
     const [review, setReview] = useState({
         userId: '',
         productId: product?._id,
+        sizeProduct: sizeFromUrl,
         images: [],
         comment: '',
         rating: '5',
@@ -203,33 +209,48 @@ const ReviewComponent = ({ product }) => {
 
     return (
         <div className="w-full productReviewsContainer">
-            <div className="reviewForm py-4 rounded-none border-gray-250 border-b-[2px]">
-                <h2 className="text-[18px]">Đánh giá</h2>
-                <form onSubmit={handleAddReview} className="w-full mt-5">
-                    <TextField
-                        id="outlined-multiline-flexible"
-                        label="Viết đánh giá"
-                        className="w-full mb-5"
-                        multiline
-                        rows={5}
-                        name="comment"
-                        value={review?.comment}
-                        onChange={handleChange}
-                    />
-                    <br />
-                    <br />
-                    <Rating name="rating" value={review?.rating} onChange={handleRatingChange} size="medium" />
+            {!context?.userInfo?._id ||
+                (review?.productId && review?.sizeProduct && (
+                    <div className="reviewForm py-4 rounded-none border-gray-250 border-b-[2px]">
+                        <h2 className="text-[18px]">Đánh giá</h2>
+                        <form onSubmit={handleAddReview} className="w-full mt-5">
+                            <TextField
+                                id="outlined-multiline-flexible"
+                                label="Viết đánh giá"
+                                className="w-full mb-5"
+                                multiline
+                                rows={5}
+                                name="comment"
+                                value={review?.comment}
+                                onChange={handleChange}
+                            />
+                            <br />
+                            <br />
+                            <Rating name="rating" value={review?.rating} onChange={handleRatingChange} size="medium" />
 
-                    <div className="flex items-center mt-2">
-                        <Button type="submit" className="btn-org">
-                            {isLoadingAddReview === true ? <CircularProgress color="inherit" /> : 'Gửi đánh giá'}
-                        </Button>
+                            <div className="flex items-center mt-2">
+                                <Button type="submit" className="btn-org">
+                                    {isLoadingAddReview === true ? (
+                                        <CircularProgress color="inherit" />
+                                    ) : (
+                                        'Gửi đánh giá'
+                                    )}
+                                </Button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
+                ))}
 
-            <h2 className="text-[18px] mt-6">Đánh giá từ khách hàng</h2>
-            <div className="reviewScroll w-full max-h-[1000vh] over-x-hidden mt-5 pr-5">
+            <h2 className="text-[18px] mt-4">Đánh giá từ khách hàng</h2>
+            <div className="">
+                <span className="italic text-[13px] text-gray-700 ">
+                    Để đánh giá, quý khách cần đặt hàng thành công và chọn{' '}
+                </span>
+                <span className="text-primary">Mục Đánh giá </span>
+                <span className="italic text-[13px] text-gray-700 ">trong những đơn ở mục </span>
+                <span className="text-primary">Lịch sử đơn hàng </span>
+            </div>
+            <div className="reviewScroll w-full max-h-[1000vh] over-x-hidden mt-2 pr-5">
                 <div className="review pt-5 pb-5 border-b border-[rgba(0,0,0,0.1)] w-full ">
                     {currentReviews?.length !== 0 &&
                         currentReviews?.map((review, index) => {
