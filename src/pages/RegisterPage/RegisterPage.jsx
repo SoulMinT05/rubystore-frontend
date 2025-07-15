@@ -50,7 +50,6 @@ const RegisterPage = () => {
             });
 
             const data = await res.json();
-            console.log('data: ', data);
             setFormFields({
                 name: '',
                 email: '',

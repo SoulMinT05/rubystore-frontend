@@ -75,7 +75,7 @@ const ProductListItemView = ({ product }) => {
                     </Link>
                 </h3>
                 <p className="text-[14px] mb-3 line-clamp-3">{product?.description}</p>
-                <Rating name="size-small" defaultValue={product?.rating} readOnly size="small" />
+                <Rating name="size-small" value={Number(product?.rating) || 0} readOnly size="small" />
 
                 <div className="flex items-center gap-4">
                     <span className="oldPrice line-through text-gray-500 text-[15px] font-[500]">

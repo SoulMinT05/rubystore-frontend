@@ -59,8 +59,6 @@ const ProductListPage = () => {
         setAnchorEl(null);
     };
     const handleSortBy = async (name, order, products, value) => {
-        console.log('Products list trước khi gửi:', products);
-
         if (!Array.isArray(products) || products.length === 0) {
             console.error('Products không phải là mảng hoặc rỗng.');
             return;

@@ -39,11 +39,8 @@ const ReviewComponent = ({ product }) => {
         comment: '',
         rating: '5',
     });
-    const [replyText, setReplyText] = useState('');
-    const [selectedReplyIndex, setSelectedReplyIndex] = useState(null);
 
     const [isLoadingAddReview, setIsLoadingAddReview] = useState(false);
-    const [isLoadingAddReply, setIsLoadingAddReply] = useState(false);
     const [openReview, setOpenReview] = useState(false);
     const [openReply, setOpenReply] = useState(false);
     const [reviewId, setReviewId] = useState(null);
@@ -152,26 +149,6 @@ const ReviewComponent = ({ product }) => {
         }
     };
 
-    const handleAddReply = async (reviewId) => {
-        setIsLoadingAddReply(true);
-        try {
-            const { data } = await axiosClient.post(`/api/user/addReplyToReview/${reviewId}`, {
-                replyText,
-            });
-            console.log('dataAddReply: ', data);
-            if (data.success) {
-                context.openAlertBox('success', data.message);
-                setSelectedReplyIndex(null);
-                setReplyText('');
-            }
-        } catch (err) {
-            console.log(err);
-            context.openAlertBox('error', err?.response?.data?.message || 'Đã xảy ra lỗi!');
-        } finally {
-            setIsLoadingAddReply(false);
-        }
-    };
-
     const handleDeleteReview = async () => {
         setIsLoadingDeleteReview(true);
         try {
@@ -226,7 +203,12 @@ const ReviewComponent = ({ product }) => {
                             />
                             <br />
                             <br />
-                            <Rating name="rating" value={review?.rating} onChange={handleRatingChange} size="medium" />
+                            <Rating
+                                name="rating"
+                                value={Number(review?.rating) || 0}
+                                onChange={handleRatingChange}
+                                size="medium"
+                            />
 
                             <div className="flex items-center mt-2">
                                 <Button type="submit" className="btn-org">
@@ -253,7 +235,7 @@ const ReviewComponent = ({ product }) => {
             <div className="reviewScroll w-full max-h-[1000vh] over-x-hidden mt-2 pr-5">
                 <div className="review pt-5 pb-5 border-b border-[rgba(0,0,0,0.1)] w-full ">
                     {currentReviews?.length !== 0 &&
-                        currentReviews?.map((review, index) => {
+                        currentReviews?.map((review) => {
                             return (
                                 <div key={review._id}>
                                     <div className="flex items-center justify-between mt-4 mb-2">
@@ -267,21 +249,21 @@ const ReviewComponent = ({ product }) => {
                                                 <p className="mt-0 mb-0">{review?.comment}</p>
                                             </div>
                                         </div>
-                                        <Rating name="size-small" value={review?.rating} readOnly />
+                                        <Rating name="size-small" value={Number(review?.rating) || 0} readOnly />
                                     </div>
                                     {/* Nút trả lời */}
                                     <div className="flex items-center gap-4">
-                                        <span
+                                        {/* <span
                                             className="text-blue-600 cursor-pointer text-sm mt-2 ml-[90px]"
                                             onClick={() =>
                                                 setSelectedReplyIndex(index === selectedReplyIndex ? null : index)
                                             }
                                         >
                                             Phản hồi
-                                        </span>
+                                        </span> */}
                                         {context?.userInfo?._id === review?.userId?._id && (
                                             <span
-                                                className="text-primary cursor-pointer text-sm mt-2"
+                                                className="text-primary cursor-pointer text-sm mt-2 ml-[90px]"
                                                 onClick={() => handleClickOpenReview(review._id)}
                                             >
                                                 Xóa
@@ -330,7 +312,7 @@ const ReviewComponent = ({ product }) => {
                                     )}
 
                                     {/* Ô nhập trả lời */}
-                                    {index === selectedReplyIndex && (
+                                    {/* {index === selectedReplyIndex && (
                                         <div className="ml-[90px] mt-2">
                                             <TextField
                                                 id="outlined-multiline-flexible"
@@ -353,7 +335,7 @@ const ReviewComponent = ({ product }) => {
                                                 )}
                                             </Button>
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                             );
                         })}

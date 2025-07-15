@@ -64,7 +64,6 @@ const ProductDetailsPage = () => {
     const getDetailsReview = async () => {
         try {
             const { data } = await axiosAuth.get(`/api/user/reviews/${id}`);
-            console.log('dataDetailsRv: ', data);
             dispatch(fetchReviews(data?.product?.review));
             setAverageRating(data?.product?.averageRating);
         } catch (error) {

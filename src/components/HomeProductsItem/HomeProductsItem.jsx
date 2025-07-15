@@ -73,7 +73,7 @@ const HomeProductsItem = ({ product }) => {
                         {product?.name}
                     </Link>
                 </h3>
-                <Rating name="size-small" defaultValue={product?.rating} readOnly size="small" />
+                <Rating name="size-small" value={Number(product?.rating) || 0} readOnly size="small" />
 
                 <div className="flex items-center gap-4">
                     <span className="oldPrice line-through text-gray-500 text-[15px] font-[]500">

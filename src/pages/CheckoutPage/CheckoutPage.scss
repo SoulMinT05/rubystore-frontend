@@ -4,3 +4,10 @@
 .scroll::-webkit-scrollbar-thumb {
     background-color: #ccc !important;
 }
+button .MuiCircularProgress-root {
+    width: 20px !important;
+    height: 20px !important;
+}
+.circ-white .MuiCircularProgress-circle {
+    stroke: white !important;
+}

@@ -70,7 +70,7 @@ const ProductDetailsComponent = ({ product }) => {
                 <span className="text-gray-400 text-[13px]">
                     Thương hiệu : <span className="font-[500] text-black opacity-75">{product?.brand}</span>
                 </span>
-                <Rating name="size-small" defaultValue={product?.averageRating} readOnly size="small" />
+                <Rating name="size-small" value={Number(product?.averageRating) || 0} readOnly size="small" />
                 <span className="text-[13px] cursor-pointer">Đánh giá ({reviews?.length || 0})</span>
             </div>
 

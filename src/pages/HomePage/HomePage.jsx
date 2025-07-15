@@ -84,7 +84,6 @@ const HomePage = () => {
                 const { data } = await axiosAuth.get(
                     `/api/product/all-products-category-id/${context?.categories[0]?._id}`
                 );
-                console.log('dataCategoryByProducts: ', data);
                 if (data.success) {
                     setPopularProducts(data?.products);
                 }

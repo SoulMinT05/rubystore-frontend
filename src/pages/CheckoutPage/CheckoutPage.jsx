@@ -120,7 +120,7 @@ const CheckoutPage = () => {
                 </div>
             </div>
             <div style={{ marginTop: '16px' }} className="container w-[80%] max-w-[80%] mx-auto flex gap-5">
-                <div className="relative overflow-x-auto mt-1 pb-5">
+                <div className="relative overflow-x-auto mt-1 pb-5 w-full ">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-700">
                         {!isLoadingCheckoutToken && checkoutData?.selectedCartItems?.length > 0 && (
                             <thead className="text-xs text-gray-700 uppercase bg-white">
@@ -285,8 +285,17 @@ const CheckoutPage = () => {
                             Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo
                             <Link className="text-[#4080ee]"> Điều khoản RubyStore</Link>
                         </h1>
-                        <Button onClick={handleCreateOrder} className="btn-org btn-md !w-[210px] !h-[40px] ">
-                            {isLoadingCreateOrder ? <CircularProgress color="inherit" /> : 'Đặt hàng'}
+                        <Button onClick={handleCreateOrder} className="btn-primary btn-md !w-[210px] !h-[40px] ">
+                            {isLoadingCreateOrder ? (
+                                <CircularProgress
+                                    className="circ-white"
+                                    size={20}
+                                    thickness={5}
+                                    sx={{ color: 'white' }}
+                                />
+                            ) : (
+                                'Đặt hàng'
+                            )}
                         </Button>
                     </div>
                 </div>

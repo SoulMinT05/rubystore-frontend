@@ -90,7 +90,6 @@ const Header = () => {
     const open = Boolean(anchorEl);
     const anchorRef = useRef(null);
     const [openNotifications, setOpenNotifications] = useState(false);
-    const [isNotificationAsRead, setIsNotificationAsRead] = useState(false);
 
     useEffect(() => {
         socket.emit('joinRoom', context.userInfo?._id);
@@ -128,7 +127,6 @@ const Header = () => {
     useEffect(() => {
         const getNotification = async () => {
             const { data } = await axiosClient.get('/api/notification/getNotifications?limit=4');
-            console.log('dataNotification: ', data);
             if (data.success) {
                 dispatch(fetchNotifications(data?.notifications));
                 dispatch(getUnreadCountNotifications(data?.unreadCountNotifications));
@@ -235,7 +233,6 @@ const Header = () => {
     };
 
     const markNotificationAsRead = async (notificationId) => {
-        setIsNotificationAsRead(true);
         try {
             const { data } = await axiosClient.post(`/api/notification/markNotificationAsRead/${notificationId}`);
             if (data.success) {
@@ -245,13 +242,10 @@ const Header = () => {
         } catch (error) {
             console.log(error);
             context.openAlertBox('error', error?.response?.data?.message || 'Đã xảy ra lỗi!');
-        } finally {
-            setIsNotificationAsRead(false);
         }
     };
 
     const handleMarkAsReadAndNavigate = async (notificationId) => {
-        setIsNotificationAsRead(true);
         try {
             const { data } = await axiosClient.post(`/api/notification/markNotificationAsRead/${notificationId}`);
             if (data.success) {
@@ -263,8 +257,6 @@ const Header = () => {
         } catch (error) {
             console.log(error);
             context.openAlertBox('error', error?.response?.data?.message || 'Đã xảy ra lỗi!');
-        } finally {
-            setIsNotificationAsRead(false);
         }
     };
 
@@ -538,9 +530,12 @@ const Header = () => {
                                                                                         : 'text-blue-500 hover:underline cursor-pointer'
                                                                                 }`}
                                                                             >
-                                                                                {isNotificationAsRead
+                                                                                {/* {isNotificationAsRead
                                                                                     ? 'Đang đánh dấu'
                                                                                     : notification?.isRead
+                                                                                    ? 'Đã đọc'
+                                                                                    : 'Đánh dấu là đã đọc'} */}
+                                                                                {notification?.isRead
                                                                                     ? 'Đã đọc'
                                                                                     : 'Đánh dấu là đã đọc'}
                                                                             </Typography>
