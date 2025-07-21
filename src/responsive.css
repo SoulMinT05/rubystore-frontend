@@ -21,6 +21,32 @@
     .css-1mf9qzl-MuiButtonBase-root-MuiTabScrollButton-root.Mui-disabled {
         display: none !important;
     }
+
+    .scrollableBox {
+        white-space: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        display: block !important;
+    }
+    .scrollableBox::-webkit-scrollbar {
+        display: none !important;
+    }
+    .scrollableBox .box {
+        display: inline-block !important;
+        vertical-align: top !important;
+        margin-right: 12px !important;
+        width: 300px !important;
+    }
+    .scrollableBox .box .info * {
+        white-space: break-spaces !important;
+    }
+    .scrollableBox .col {
+        display: inline-block !important;
+        vertical-align: top !important;
+        margin-right: 12px !important;
+        width: 200px !important;
+    }
+
     .btn-sm {
         padding: 3px 10px !important;
         font-size: 11px !important;

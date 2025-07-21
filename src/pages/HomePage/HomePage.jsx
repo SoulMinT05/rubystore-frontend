@@ -269,7 +269,7 @@ const HomePage = () => {
                                 },
                                 1100: {
                                     slidesPerView: 6,
-                                    spaceBetween: 10,
+                                    spaceBetween: 20,
                                 },
                             }}
                             className="blogSwiper"
