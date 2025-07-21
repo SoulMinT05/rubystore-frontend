@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
@@ -6,9 +6,11 @@ import { Autoplay, Navigation } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { MyContext } from '../../App';
 const HomeSlider = ({ homeSlides }) => {
+    const context = useContext(MyContext);
     return (
-        <div className="homeSlider py-4">
+        <div className="homeSlider pb-2 lg:py-4">
             <div className="container">
                 <Swiper
                     loop={true}
@@ -17,7 +19,7 @@ const HomeSlider = ({ homeSlides }) => {
                         delay: 25500,
                         disableOnInteraction: false,
                     }}
-                    navigation={true}
+                    navigation={context?.windowWidth < 992 ? false : true}
                     modules={[Autoplay, Navigation]}
                     className="homeSwiper"
                 >
@@ -25,7 +27,7 @@ const HomeSlider = ({ homeSlides }) => {
                         homeSlides?.map((homeSlide, index) => {
                             return (
                                 <SwiperSlide key={index}>
-                                    <div className="item rounded-[20px] overflow-hidden">
+                                    <div className="item rounded-[10px] overflow-hidden">
                                         <img
                                             src={homeSlide?.image}
                                             alt="Banner slide"
@@ -35,22 +37,6 @@ const HomeSlider = ({ homeSlides }) => {
                                 </SwiperSlide>
                             );
                         })}
-
-                    <SwiperSlide>
-                        <div className="item rounded-[20px] overflow-hidden">
-                            <img src="src/assets/slider-2.jpg" alt="Banner slide" className="w-full" />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item rounded-[20px] overflow-hidden">
-                            <img src="src/assets/slider-3.jpg" alt="Banner slide" className="w-full" />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="item rounded-[20px] overflow-hidden">
-                            <img src="src/assets/slider-4.jpg" alt="Banner slide" className="w-full" />
-                        </div>
-                    </SwiperSlide>
                 </Swiper>
             </div>
         </div>

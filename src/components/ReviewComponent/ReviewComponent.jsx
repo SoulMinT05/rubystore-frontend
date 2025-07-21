@@ -253,14 +253,6 @@ const ReviewComponent = ({ product }) => {
                                     </div>
                                     {/* Nút trả lời */}
                                     <div className="flex items-center gap-4">
-                                        {/* <span
-                                            className="text-blue-600 cursor-pointer text-sm mt-2 ml-[90px]"
-                                            onClick={() =>
-                                                setSelectedReplyIndex(index === selectedReplyIndex ? null : index)
-                                            }
-                                        >
-                                            Phản hồi
-                                        </span> */}
                                         {context?.userInfo?._id === review?.userId?._id && (
                                             <span
                                                 className="text-primary cursor-pointer text-sm mt-2 ml-[90px]"

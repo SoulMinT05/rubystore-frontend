@@ -24,7 +24,7 @@ const HomeProductsItem = ({ product }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
+        <div className="productItem min-h-[414px] sm:min-h-[430px] lg:min-h-[448px] shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
             <div className="group imgWrapper w-[100%] overflow-hidden rounded-md relative">
                 <Link to={`/product/${product?._id}`}>
                     <div className="img  h-[220px] overflow-hidden">
@@ -64,22 +64,28 @@ const HomeProductsItem = ({ product }) => {
                     </Tooltip>
                 </div>
             </div>
-            <div className="info p-3 py-5 relative pb-[50px] h-[220px] ">
-                <h6 className="text-[13px] line-clamp-1 !font-[400]">
+            <div className="info p-3 py-5 relative pb-[50px] min-h-[184px] sm:min-h-[205px] lg:min-h-[220px] ">
+                <h6 className="text-[12px] lg:text-[13px] line-clamp-1 !font-[400]">
                     <span className="link transition-all">{product?.brand}</span>
                 </h6>
-                <h3 className="text-[13px] min-h-[52px] line-clamp-3 title mt-1 font-[500] mb-1 text-[#000]">
+                <h3 className="text-[12px] lg:text-[13px] min-h-[36px] line-clamp-2 lg:min-h-[52px] lg:line-clamp-3  title mt-1 font-[500] mb-1 text-[#000]">
                     <Link to={`/product/${product?._id}`} className="link transition-all">
                         {product?.name}
                     </Link>
                 </h3>
                 <Rating name="size-small" value={Number(product?.rating) || 0} readOnly size="small" />
 
-                <div className="flex items-center gap-4">
-                    <span className="oldPrice line-through text-gray-500 text-[15px] font-[]500">
+                <div
+                    className={`flex items-center  gap-3 ${
+                        context?.windowWidth < 992 && context?.windowWidth >= 600 ? 'min-h-[50px]' : ''
+                    } flex-wrap`}
+                >
+                    <span className="oldPrice line-through text-gray-500 text-[12px] lg:text-[14px] font-[500] whitespace-nowrap">
                         {formatCurrency(product?.oldPrice)}
                     </span>
-                    <span className="price text-primary text-[15px] font-[600]">{formatCurrency(product?.price)}</span>
+                    <span className="price text-primary text-[12px] lg:text-[14px] font-[600] whitespace-nowrap">
+                        {formatCurrency(product?.price)}
+                    </span>
                 </div>
                 <div className="!absolute bottom-[15px] left-0 pl-3 pr-3 w-full">
                     <Button

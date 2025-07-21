@@ -2,13 +2,13 @@ import React from 'react';
 import '../HomeBannerImage/HomeBannerImage.css';
 import { Link } from 'react-router-dom';
 
-const HomeBannerImage = ({ info, image }) => {
+const HomeBannerImage = ({ image }) => {
     return (
-        <div className="homeBannerImage w-full overflow-hidden rounded-md group relative">
+        <div className="lg:h-[210px] w-full overflow-hidden rounded-md group relative">
             <img
                 src={image}
                 alt=""
-                className="w-full h-[115px]  object-cover transition-all duration-150 group-hover:scale-105"
+                className="w-full lg:h-[115px] object-cover transition-all duration-150 group-hover:scale-105"
             />
 
             {/* <div

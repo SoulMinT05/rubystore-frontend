@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { RiMenu2Fill } from 'react-icons/ri';
 import { LiaAngleDownSolid } from 'react-icons/lia';
 import { GoRocket } from 'react-icons/go';
@@ -9,13 +9,18 @@ import CategoryPanel from '../CategoryPanel/CategoryPanel';
 import '../Navigation/Navigation.css';
 import axiosAuth from '../../apis/axiosAuth';
 import { MyContext } from '../../App';
+import MobileNavigation from './MobileNavigation/MobileNavigation';
 
-const Navigation = () => {
-    const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
+const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
+    const context = useContext(MyContext);
     const [categories, setCategories] = useState([]);
     const openCategoryPanel = () => {
         setIsOpenCatPanel(true);
     };
+
+    useEffect(() => {
+        setIsOpenCatPanel(isOpenCatPanel);
+    }, [isOpenCatPanel, setIsOpenCatPanel]);
 
     useEffect(() => {
         const getCategories = async () => {
@@ -33,19 +38,24 @@ const Navigation = () => {
 
     return (
         <>
-            <nav className="py-2">
-                <div className="container flex items-center justify-end gap-2">
-                    <div className="col_1 w-[14%]">
-                        <Button className="!text-black gap-2 w-full" onClick={openCategoryPanel}>
-                            <RiMenu2Fill className="!text-[18px]" />
-                            Danh mục
-                            <LiaAngleDownSolid className="!text-[13px] ml-auto font-bold cursor-pointer" />
-                        </Button>
-                    </div>
-                    <div className="col_2 w-[67%]">
-                        <ul className="flex items-center gap-8 nav">
+            <nav className="navigation py-4 lg:py-2">
+                <div className="container flex items-center justify-start lg:justify-end gap-2">
+                    {context?.windowWidth > 992 && (
+                        <div className="col_1 w-[14%]">
+                            <Button className="!text-black gap-2 w-full" onClick={openCategoryPanel}>
+                                <RiMenu2Fill className="!text-[18px]" />
+                                Danh mục
+                                <LiaAngleDownSolid className="!text-[13px] ml-auto font-bold cursor-pointer" />
+                            </Button>
+                        </div>
+                    )}
+                    <div className="col_2 w-full lg:w-[67%]">
+                        <ul className="flex items-center gap-3 lg:gap-8 nav">
                             <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
+                                <Link
+                                    to="/"
+                                    className="link transition text-black text-[12px] lg:text-[14px] font-[500]"
+                                >
                                     Trang chủ
                                 </Link>
                             </li>
@@ -55,7 +65,7 @@ const Navigation = () => {
                                         <li key={index} className="list-none relative">
                                             <Link
                                                 to={`/product?categoryId=${category?._id}`}
-                                                className="link transition text-[14px] font-[500]"
+                                                className="link transition text-black text-[12px] lg:text-[14px] font-[500]"
                                             >
                                                 {category?.name}
                                             </Link>
@@ -99,7 +109,7 @@ const Navigation = () => {
                                                                                                 </Link>
                                                                                             </li>
                                                                                         );
-                                                                                    },
+                                                                                    }
                                                                                 )}
                                                                             </ul>
                                                                         </div>
@@ -115,7 +125,7 @@ const Navigation = () => {
                                 })}
                         </ul>
                     </div>
-                    <div className="col_3 w-[19%]">
+                    <div className="col_3 w-[19%] hidden lg:block">
                         <p className="text-[14px] font-[500] flex items-center gap-3 mb-0 mt-0">
                             <GoRocket className="text-[18px]" />
                             Giao hàng quốc tế miễn phí
@@ -131,6 +141,8 @@ const Navigation = () => {
                     setIsOpenCatPanel={setIsOpenCatPanel}
                 />
             )}
+
+            {context.userInfo?._id && context.windowWidth < 992 && <MobileNavigation />}
         </>
     );
 };

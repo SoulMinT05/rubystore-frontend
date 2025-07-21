@@ -17,6 +17,7 @@ import { Navigation } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
+
 import HomeBlogsItem from '../../components/HomeBlogsItem/HomeBlogsItem';
 import HomeBannerSlider from '../../components/HomeBannerSlider/HomeBannerSlider';
 import HomeBannerImage from '../../components/HomeBannerImage/HomeBannerImage';
@@ -128,18 +129,22 @@ const HomePage = () => {
 
     return (
         <>
-            {homeSlides?.length !== 0 && <HomeSlider homeSlides={homeSlides} />}
+            <div className="relative ">{homeSlides?.length !== 0 && <HomeSlider homeSlides={homeSlides} />}</div>
 
             {context?.categories?.length !== 0 && <HomeCatSlider categories={context?.categories} />}
 
             <section className="bg-white py-8">
                 <div className="container">
-                    <div className="flex items-center justify-between">
-                        <div className="leftSec">
-                            <h2 className="text-[20px] font-[600]">Sản phẩm phổ biến</h2>
-                            <p className="text-[14px] font-[400] mt-0 mb-0">Đừng bỏ lỡ giá tốt vào cuối tháng 3</p>
+                    <div className="flex items-center justify-between flex-col lg:flex-row">
+                        <div className="leftSec w-full lg:w-[40%]">
+                            <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600]">
+                                Sản phẩm phổ biến
+                            </h2>
+                            <p className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[14px] font-[400] mt-0 mb-0">
+                                Đừng bỏ lỡ giá tốt vào cuối tháng 3
+                            </p>
                         </div>
-                        <div className="rightSec w-[60%]">
+                        <div className="rightSec w-full lg:w-[60%]">
                             <Tabs
                                 value={value}
                                 onChange={handleChange}
@@ -166,29 +171,31 @@ const HomePage = () => {
                 </div>
             </section>
 
-            <section className="py-6">
-                <div className="container flex gap-2">
-                    <div className="part1 w-[70%] h-[230px]">
+            <section className="py-6 pt-0 bg-white">
+                <div className="container flex flex-col lg:flex-row gap-2">
+                    <div className="part1 w-full lg:w-[70%] lg:h-[230px]">
                         <HomeBannerSlider />
                     </div>
-                    <div className="part2 w-[30%] h-[230px] flex items-center justify-between flex-col">
-                        <HomeBannerImage info="left" image={'src/assets/banner_1.jpeg'} />
-                        <HomeBannerImage info="right" image={'src/assets/banner_2.jpeg'} />
+                    <div className="part2 w-full lg:w-[30%] lg:h-[230px] flex items-center gap-2 justify-between flex-row lg:flex-col">
+                        <HomeBannerImage image="src/assets/banner_1.jpeg" />
+                        <HomeBannerImage image="src/assets/banner_2.jpeg" />
                     </div>
                 </div>
             </section>
 
-            <section className="py-4 pt-6 bg-white">
+            <section className="py-4 lg:pt-6 bg-white">
                 <div className="container">
-                    <div className="freeShipping w-full py-4 p-4 border-2 border-[#ff5252] flex items-center justify-between rounded-md mb-7">
+                    <div className="freeShipping w-full py-4 p-4 border-2 border-[#ff5252] flex flex-col lg:flex-row items-center justify-center lg:justify-between rounded-md lg:mb-7">
                         <div className="col1 flex items-center gap-4">
-                            <LiaShippingFastSolid className="text-[50px]" />
-                            <span className="text-[20px] font-[600] uppercase">Giao hàng miễn phí</span>
+                            <LiaShippingFastSolid className="text-[30px] lg:text-[50px]" />
+                            <span className="text-[16px] lg:text-[20px] font-[600] uppercase">Giao hàng miễn phí</span>
                         </div>
                         <div className="col2">
-                            <p className="mb-0 font-[500]">Miễn phí giao hàng cho lần đầu tiên và đơn giá trên 700k</p>
+                            <p className="mb-0 font-[500] text-center">
+                                Miễn phí giao hàng cho lần đầu tiên và đơn giá trên 700k
+                            </p>
                         </div>
-                        <p className="font-bold text-[25px]">- Chỉ 700k</p>
+                        <p className="font-bold text-[20px] lg:text-[25px]">- Chỉ 700k</p>
                     </div>
 
                     {/* <HomeAdsBannerSlider items={4} /> */}
@@ -199,7 +206,9 @@ const HomePage = () => {
             {/* Latest Products */}
             <section className="py-5 pt-0 bg-white">
                 <div className="container">
-                    <h2 className="text-[20px] font-[600]">Sản phẩm mới nhất</h2>
+                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600] -pb-2">
+                        Sản phẩm mới nhất
+                    </h2>
                     {products?.length === 0 && <ProductLoading />}
                     {products?.length !== 0 && <HomeProductsSlider items={6} products={products} />}
 
@@ -210,7 +219,9 @@ const HomePage = () => {
             {/* Featured Products */}
             <section className="py-5 pt-0 bg-white">
                 <div className="container">
-                    <h2 className="text-[20px] font-[600]">Sản phẩm đặc trưng</h2>
+                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600]">
+                        Sản phẩm đặc trưng
+                    </h2>
                     {featuredProducts?.length === 0 && <ProductLoading />}
                     {featuredProducts?.length !== 0 && <HomeProductsSlider items={6} products={featuredProducts} />}
 
@@ -221,7 +232,9 @@ const HomePage = () => {
             {blogs?.length !== 0 && (
                 <section className="blogSection py-5 pb-8 pt-0 bg-white">
                     <div className="container">
-                        <h2 className="text-[20px] font-[600] mb-4">Bài viết mới nhất</h2>
+                        <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600] mb-4">
+                            Bài viết mới nhất
+                        </h2>
                         <Swiper
                             slidesPerView={4}
                             spaceBetween={30}

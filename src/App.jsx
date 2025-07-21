@@ -52,6 +52,9 @@ function App() {
         id: '',
     });
     const [openCartPanel, setOpenCartPanel] = useState(false);
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
     const [isAuthChecking, setIsAuthChecking] = useState(true);
     const [isLogin, setIsLogin] = useState(false);
     const [emailVerify, setEmailVerify] = useState('');
@@ -83,6 +86,19 @@ function App() {
         });
         return () => {
             socket.off('sendMessage');
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        // resize: Người dùng kéo thay đổi kích thước cửa sổ trình duyệt
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
 
@@ -175,6 +191,7 @@ function App() {
         getBlogs,
         reviews,
         setReviews,
+        windowWidth,
     };
     return (
         <>

@@ -1,0 +1,44 @@
+@media only screen and (min-width: 320px) and (max-width: 992px) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+    .mobileNav a.active button {
+        @apply !text-primary;
+    }
+    .navigation ul {
+        white-space: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+    .navigation ul::-webkit-scrollbar {
+        display: none !important;
+    }
+    .container {
+        width: 98%;
+        max-width: 98%;
+    }
+    .css-1mf9qzl-MuiButtonBase-root-MuiTabScrollButton-root.Mui-disabled {
+        display: none !important;
+    }
+    .btn-sm {
+        padding: 3px 10px !important;
+        font-size: 11px !important;
+    }
+    .btn-lg {
+        padding: 5px 10px !important;
+        font-size: 14px !important;
+    }
+    .btn {
+        padding: 5px 10px !important;
+        font-size: 12px !important;
+    }
+    .btn svg {
+        font-size: 15px !important;
+    }
+}
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+    .MuiTabs-flexContainer button {
+        font-size: 13px !important;
+    }
+}
