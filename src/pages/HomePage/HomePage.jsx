@@ -12,11 +12,12 @@ import Box from '@mui/material/Box';
 import HomeProductsSlider from '../../components/HomeProductsSlider/HomeProductsSlider';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+import { Navigation, FreeMode } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'swiper/css/free-mode';
 
 import HomeBlogsItem from '../../components/HomeBlogsItem/HomeBlogsItem';
 import HomeBannerSlider from '../../components/HomeBannerSlider/HomeBannerSlider';
@@ -129,7 +130,7 @@ const HomePage = () => {
 
     return (
         <>
-            <div className="relative ">{homeSlides?.length !== 0 && <HomeSlider homeSlides={homeSlides} />}</div>
+            <div className=" ">{homeSlides?.length !== 0 && <HomeSlider homeSlides={homeSlides} />}</div>
 
             {context?.categories?.length !== 0 && <HomeCatSlider categories={context?.categories} />}
 
@@ -238,8 +239,39 @@ const HomePage = () => {
                         <Swiper
                             slidesPerView={4}
                             spaceBetween={30}
-                            navigation={true}
-                            modules={[Navigation]}
+                            navigation={context?.windowWidth > 992 ? true : false}
+                            modules={[Navigation, FreeMode]}
+                            freeMode={true}
+                            breakpoints={{
+                                250: {
+                                    slidesPerView: 1,
+                                    spaceBetween: 10,
+                                },
+                                300: {
+                                    slidesPerView: 2,
+                                    spaceBetween: 10,
+                                },
+                                530: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 10,
+                                },
+                                600: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 10,
+                                },
+                                800: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 10,
+                                },
+                                990: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 10,
+                                },
+                                1100: {
+                                    slidesPerView: 6,
+                                    spaceBetween: 10,
+                                },
+                            }}
                             className="blogSwiper"
                         >
                             {blogs?.map((blog, index) => {

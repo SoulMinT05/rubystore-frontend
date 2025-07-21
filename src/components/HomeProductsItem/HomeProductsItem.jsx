@@ -24,10 +24,10 @@ const HomeProductsItem = ({ product }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="productItem min-h-[414px] sm:min-h-[430px] lg:min-h-[448px] shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
+        <div className="productItem min-h-[424px] sm:min-h-[430px] lg:min-h-[448px] shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
             <div className="group imgWrapper w-[100%] overflow-hidden rounded-md relative">
                 <Link to={`/product/${product?._id}`}>
-                    <div className="img  h-[220px] overflow-hidden">
+                    <div className="img h-[220px] overflow-hidden">
                         <img src={product?.images[0]} alt="" className="w-full" />
                         <img
                             src={product?.images[1]}
@@ -76,9 +76,13 @@ const HomeProductsItem = ({ product }) => {
                 <Rating name="size-small" value={Number(product?.rating) || 0} readOnly size="small" />
 
                 <div
-                    className={`flex items-center  gap-3 ${
-                        context?.windowWidth < 992 && context?.windowWidth >= 600 ? 'min-h-[50px]' : ''
-                    } flex-wrap`}
+                    className={`flex items-center gap-3 ${
+                        context?.windowWidth <= 422
+                            ? 'min-h-[48px] h-[48px]'
+                            : context?.windowWidth < 992 && context?.windowWidth >= 600
+                            ? 'min-h-[50px]'
+                            : ''
+                    }  flex-wrap`}
                 >
                     <span className="oldPrice line-through text-gray-500 text-[12px] lg:text-[14px] font-[500] whitespace-nowrap">
                         {formatCurrency(product?.oldPrice)}

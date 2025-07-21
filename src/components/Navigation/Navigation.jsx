@@ -39,7 +39,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
     return (
         <>
             <nav className="navigation py-4 lg:py-2">
-                <div className="container flex items-center justify-start lg:justify-end gap-2">
+                <div className="container flex items-center justify-start lg:justify-end gap-2 !mx-4 lg:mx-0">
                     {context?.windowWidth > 992 && (
                         <div className="col_1 w-[14%]">
                             <Button className="!text-black gap-2 w-full" onClick={openCategoryPanel}>
