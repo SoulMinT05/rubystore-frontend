@@ -29,7 +29,6 @@ import ProductLoading from '../../components/ProductLoading/ProductLoading';
 const HomePage = () => {
     const context = useContext(MyContext);
     const [value, setValue] = useState(0);
-    const [banners, setBanners] = useState([]);
     const [homeSlides, setHomeSlides] = useState([]);
     const [popularProducts, setPopularProducts] = useState([]);
     const [products, setProducts] = useState([]);
@@ -38,16 +37,6 @@ const HomePage = () => {
         setValue(newValue);
     };
 
-    useEffect(() => {
-        const getBanners = async () => {
-            const { data } = await axiosAuth.get('/api/banner/all-banners');
-            if (data.success) {
-                setBanners(data?.banners);
-            }
-        };
-
-        getBanners();
-    }, []);
     useEffect(() => {
         const getHomeSlides = async () => {
             const { data } = await axiosAuth.get('/api/homeSlide/all-home-slides');

@@ -177,9 +177,10 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
     }, [price]);
 
     const handleApplyFilter = () => {
-        setPage(1); // Reset lại page về 1
-        fetchFilterProducts();
-        setIsFilterApplied(true);
+        // setPage(1); // Reset lại page về 1
+        // fetchFilterProducts();
+        // setIsFilterApplied(true);
+        context?.setOpenFilterProducts(false);
     };
 
     // Nếu người dùng xác nhận, thì gọi API
@@ -191,183 +192,194 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
     }, [isFilterApplied]);
 
     return (
-        <aside className="sidebar py-5 sticky top-[130px] z-[50]">
-            <div className="box">
-                <h3 className="w-full mb-3 text-[16px] font-[600] flex items-center pr-5">
-                    Phân loại sản phẩm
-                    <Button
-                        className="!w-[30px] !h-[30px] !min-w-[30px] !rounded-full !ml-auto !text-[#000]"
-                        onClick={() => setIsOpenCategoryFilter(!isOpenCategoryFilter)}
-                    >
-                        {isOpenCategoryFilter === true ? <FaAngleUp /> : <FaAngleDown />}
-                    </Button>
-                </h3>
-                <Collapse isOpened={isOpenCategoryFilter}>
-                    <div className="scroll px-4 relative -left-[13px]">
-                        {context?.categories?.length !== 0 &&
-                            context?.categories?.map((category, index) => {
-                                return (
-                                    <FormControlLabel
-                                        key={index}
-                                        value={category?._id}
-                                        control={<Checkbox size="small" />}
-                                        checked={filterProducts?.categoryId?.includes(category?._id)}
-                                        label={category?.name}
-                                        onChange={() => handleCheckboxChange('categoryId', category?._id)}
-                                        className="w-full"
+        <aside className="sidebar pt-0 pb-6 lg:py-5 static lg:sticky top-[130px] z-[50]">
+            <div className="max-h-[60vh] lg:max-h-[150vh] overflow-auto lg:overflow-hidden">
+                <div className="box">
+                    <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
+                        Loại sản phẩm
+                        <Button
+                            className="!w-[30px] !h-[30px] !min-w-[30px] !rounded-full !ml-auto !text-[#000]"
+                            onClick={() => setIsOpenCategoryFilter(!isOpenCategoryFilter)}
+                        >
+                            {isOpenCategoryFilter === true ? <FaAngleUp /> : <FaAngleDown />}
+                        </Button>
+                    </h3>
+                    <Collapse isOpened={isOpenCategoryFilter}>
+                        <div className="scroll px-4 relative -left-[13px]">
+                            {context?.categories?.length !== 0 &&
+                                context?.categories?.map((category, index) => {
+                                    return (
+                                        <FormControlLabel
+                                            key={index}
+                                            value={category?._id}
+                                            control={<Checkbox size="small" />}
+                                            checked={filterProducts?.categoryId?.includes(category?._id)}
+                                            label={category?.name}
+                                            onChange={() => handleCheckboxChange('categoryId', category?._id)}
+                                            className="w-full"
+                                        />
+                                    );
+                                })}
+                        </div>
+                    </Collapse>
+                </div>
+
+                <div className="box">
+                    <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
+                        Trạng thái
+                        <Button
+                            className="!w-[30px] !h-[30px] !min-w-[30px] !rounded-full !ml-auto !text-[#000]"
+                            onClick={() => setIsOpenAvailFilter(!isOpenAvailFilter)}
+                        >
+                            {isOpenAvailFilter === true ? <FaAngleUp /> : <FaAngleDown />}
+                        </Button>
+                    </h3>
+                    <Collapse isOpened={isOpenAvailFilter}>
+                        <div className="scroll px-4 relative -left-[13px]">
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        size="small"
+                                        checked={filterProducts.stockStatus === 'available'}
+                                        onChange={() => {
+                                            setFilterProducts((prev) => ({
+                                                ...prev,
+                                                stockStatus: prev.stockStatus === 'available' ? '' : 'available',
+                                                page: 1,
+                                            }));
+                                            setPage(1);
+                                        }}
                                     />
-                                );
-                            })}
-                    </div>
-                </Collapse>
-            </div>
+                                }
+                                label="Còn hàng"
+                                className="w-full"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        size="small"
+                                        checked={filterProducts.stockStatus === 'unavailable'}
+                                        onChange={() => {
+                                            setFilterProducts((prev) => ({
+                                                ...prev,
+                                                stockStatus: prev.stockStatus === 'unavailable' ? '' : 'unavailable',
+                                                page: 1,
+                                            }));
+                                            setPage(1);
+                                        }}
+                                    />
+                                }
+                                label="Hết hàng"
+                                className="w-full"
+                            />
+                        </div>
+                    </Collapse>
+                </div>
 
-            <div className="box">
-                <h3 className="w-full mb-3 text-[16px] font-[600] flex items-center pr-5">
-                    Trạng thái
-                    <Button
-                        className="!w-[30px] !h-[30px] !min-w-[30px] !rounded-full !ml-auto !text-[#000]"
-                        onClick={() => setIsOpenAvailFilter(!isOpenAvailFilter)}
-                    >
-                        {isOpenAvailFilter === true ? <FaAngleUp /> : <FaAngleDown />}
-                    </Button>
-                </h3>
-                <Collapse isOpened={isOpenAvailFilter}>
-                    <div className="scroll px-4 relative -left-[13px]">
+                <div className="box mt-3">
+                    <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
+                        Kích cỡ
+                        <Button
+                            className="!w-[30px] !h-[30px] !min-w-[30px] !rounded-full !ml-auto !text-[#000]"
+                            onClick={() => setIsOpenSizeFilter(!isOpenSizeFilter)}
+                        >
+                            {isOpenSizeFilter === true ? <FaAngleUp /> : <FaAngleDown />}
+                        </Button>
+                    </h3>
+                    <Collapse isOpened={isOpenSizeFilter}>
+                        <div className="scroll px-4 relative -left-[13px]">
+                            <FormControlLabel control={<Checkbox size="small" />} label="Nhỏ (16)" className="w-full" />
+                            <FormControlLabel control={<Checkbox size="small" />} label="Vừa (20)" className="w-full" />
+                            <FormControlLabel control={<Checkbox size="small" />} label="Lớn (15)" className="w-full" />
+                            <FormControlLabel control={<Checkbox size="small" />} label="XL (15)" className="w-full" />
+                            <FormControlLabel control={<Checkbox size="small" />} label="XXL (15)" className="w-full" />
+                        </div>
+                    </Collapse>
+                </div>
+
+                {/* Price */}
+                <div className="box mt-4">
+                    <h3 className="w-full mb-3 text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
+                        Giá
+                    </h3>
+                    <RangeSlider value={price} onInput={setPrice} min={10000} max={10000000} step={5} />
+                    <div className="flex pt-4 pb-2 priceRange">
+                        <span className="text-[12px] lg:text-[12px]">
+                            Từ <strong className="text-dark"> {formatCurrency(price[0])}</strong>
+                        </span>
+                        <span className="ml-auto text-[12px] lg:text-[12px]">
+                            Đến <strong className="text-dark"> {formatCurrency(price[1])}</strong>
+                        </span>
+                    </div>
+                </div>
+
+                <div className="box mt-4">
+                    <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
+                        Đánh giá
+                    </h3>
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    size="small"
-                                    checked={filterProducts.stockStatus === 'available'}
-                                    onChange={() => {
-                                        setFilterProducts((prev) => ({
-                                            ...prev,
-                                            stockStatus: prev.stockStatus === 'available' ? '' : 'available',
-                                            page: 1,
-                                        }));
-                                        setPage(1);
-                                    }}
-                                />
-                            }
-                            label="Còn hàng"
-                            className="w-full"
+                            className="pl-2 lg:pl-0"
+                            value={5}
+                            control={<Checkbox size="small" />}
+                            checked={filterProducts?.rating?.includes(5)}
+                            onChange={() => handleCheckboxChange('rating', 5)}
                         />
+                        <Rating name="size-small" defaultValue={5} readOnly size="small" />
+                    </div>
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    size="small"
-                                    checked={filterProducts.stockStatus === 'unavailable'}
-                                    onChange={() => {
-                                        setFilterProducts((prev) => ({
-                                            ...prev,
-                                            stockStatus: prev.stockStatus === 'unavailable' ? '' : 'unavailable',
-                                            page: 1,
-                                        }));
-                                        setPage(1);
-                                    }}
-                                />
-                            }
-                            label="Hết hàng"
-                            className="w-full"
+                            className="pl-2 lg:pl-0"
+                            value={4}
+                            control={<Checkbox size="small" />}
+                            checked={filterProducts?.rating?.includes(4)}
+                            onChange={() => handleCheckboxChange('rating', 4)}
                         />
+                        <Rating name="size-small" defaultValue={4} readOnly size="small" />
                     </div>
-                </Collapse>
-            </div>
-
-            <div className="box mt-3">
-                <h3 className="w-full mb-3 text-[16px] font-[600] flex items-center pr-5">
-                    Kích cỡ
-                    <Button
-                        className="!w-[30px] !h-[30px] !min-w-[30px] !rounded-full !ml-auto !text-[#000]"
-                        onClick={() => setIsOpenSizeFilter(!isOpenSizeFilter)}
-                    >
-                        {isOpenSizeFilter === true ? <FaAngleUp /> : <FaAngleDown />}
-                    </Button>
-                </h3>
-                <Collapse isOpened={isOpenSizeFilter}>
-                    <div className="scroll px-4 relative -left-[13px]">
-                        <FormControlLabel control={<Checkbox size="small" />} label="Nhỏ (16)" className="w-full" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="Vừa (20)" className="w-full" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="Lớn (15)" className="w-full" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="XL (15)" className="w-full" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="XXL (15)" className="w-full" />
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                        <FormControlLabel
+                            className="pl-2 lg:pl-0"
+                            value={3}
+                            control={<Checkbox size="small" />}
+                            checked={filterProducts?.rating?.includes(3)}
+                            onChange={() => handleCheckboxChange('rating', 3)}
+                        />
+                        <Rating name="size-small" defaultValue={3} readOnly size="small" />
                     </div>
-                </Collapse>
-            </div>
-
-            {/* Price */}
-            <div className="box mt-4">
-                <h3 className="w-full mb-3 text-[16px] font-[600] flex items-center pr-5">Giá</h3>
-                <RangeSlider value={price} onInput={setPrice} min={10000} max={10000000} step={5} />
-                <div className="flex pt-4 pb-2 priceRange">
-                    <span className="text-[13px]">
-                        Từ <strong className="text-dark">: {formatCurrency(price[0])}</strong>
-                    </span>
-                    <span className="ml-auto text-[13px]">
-                        Từ <strong className="text-dark">: {formatCurrency(price[1])}</strong>
-                    </span>
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                        <FormControlLabel
+                            className="pl-2 lg:pl-0"
+                            value={2}
+                            control={<Checkbox size="small" />}
+                            checked={filterProducts?.rating?.includes(2)}
+                            onChange={() => handleCheckboxChange('rating', 2)}
+                        />
+                        <Rating name="size-small" defaultValue={2} readOnly size="small" />
+                    </div>
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                        <FormControlLabel
+                            className="pl-2 lg:pl-0"
+                            value={1}
+                            control={<Checkbox size="small" />}
+                            checked={filterProducts?.rating?.includes(1)}
+                            onChange={() => handleCheckboxChange('rating', 1)}
+                        />
+                        <Rating name="size-small" defaultValue={1} readOnly size="small" />
+                    </div>
                 </div>
             </div>
 
-            <div className="box mt-4">
-                <h3 className="w-full mb-3 text-[16px] font-[600] flex items-center pr-5">Đánh giá</h3>
-
-                <div className="flex items-center">
-                    <FormControlLabel
-                        value={5}
-                        control={<Checkbox size="small" />}
-                        checked={filterProducts?.rating?.includes(5)}
-                        onChange={() => handleCheckboxChange('rating', 5)}
-                    />
-                    <Rating name="size-small" defaultValue={5} readOnly size="small" />
-                </div>
-                <div className="flex items-center">
-                    <FormControlLabel
-                        value={4}
-                        control={<Checkbox size="small" />}
-                        checked={filterProducts?.rating?.includes(4)}
-                        onChange={() => handleCheckboxChange('rating', 4)}
-                    />
-                    <Rating name="size-small" defaultValue={4} readOnly size="small" />
-                </div>
-                <div className="flex items-center">
-                    <FormControlLabel
-                        value={3}
-                        control={<Checkbox size="small" />}
-                        checked={filterProducts?.rating?.includes(3)}
-                        onChange={() => handleCheckboxChange('rating', 3)}
-                    />
-                    <Rating name="size-small" defaultValue={3} readOnly size="small" />
-                </div>
-                <div className="flex items-center">
-                    <FormControlLabel
-                        value={2}
-                        control={<Checkbox size="small" />}
-                        checked={filterProducts?.rating?.includes(2)}
-                        onChange={() => handleCheckboxChange('rating', 2)}
-                    />
-                    <Rating name="size-small" defaultValue={2} readOnly size="small" />
-                </div>
-                <div className="flex items-center">
-                    <FormControlLabel
-                        value={1}
-                        control={<Checkbox size="small" />}
-                        checked={filterProducts?.rating?.includes(1)}
-                        onChange={() => handleCheckboxChange('rating', 1)}
-                    />
-                    <Rating name="size-small" defaultValue={1} readOnly size="small" />
-                </div>
-            </div>
-            <div className="box mt-4 flex justify-end">
+            {context?.windowWidth < 992 && (
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={handleApplyFilter}
-                    className="!bg-primary !text-white !w-full !normal-case"
+                    className="!bg-primary !text-white !mt-4 !w-full !normal-case"
                 >
                     Xác nhận
                 </Button>
-            </div>
+            )}
         </aside>
     );
 };

@@ -62,9 +62,36 @@
     .btn svg {
         font-size: 15px !important;
     }
+    ::-webkit-scrollbar {
+        width: 8px !important; /* cho cuộn dọc */
+        height: 8px !important; /* cho cuộn ngang */
+    }
+    .sidebarWrapper.open {
+        bottom: 0px !important;
+        opacity: 1 !important;
+    }
 }
 @media only screen and (min-width: 320px) and (max-width: 767px) {
     .MuiTabs-flexContainer button {
         font-size: 13px !important;
+    }
+    .sidebar {
+        max-height: 100vh !important;
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
+    }
+    .sidebar::-webkit-scrollbar {
+        display: none !important;
+    }
+}
+@media only screen and (min-width: 450px) and (max-width: 639px) {
+    .item_view_image {
+        height: 430px;
+        width: 70%;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+    .item_view_discount {
+        left: 16%;
     }
 }

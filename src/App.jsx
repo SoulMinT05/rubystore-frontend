@@ -54,6 +54,8 @@ function App() {
     const [openCartPanel, setOpenCartPanel] = useState(false);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [openFilterProducts, setOpenFilterProducts] = useState(false);
+    const [isFilterProductsBtnShow, setIsFilterProductsBtnShow] = useState(false);
 
     const [isAuthChecking, setIsAuthChecking] = useState(true);
     const [isLogin, setIsLogin] = useState(false);
@@ -62,7 +64,6 @@ function App() {
     const [userInfo, setUserInfo] = useState(null);
     const [categories, setCategories] = useState([]);
     const [blogs, setBlogs] = useState([]);
-    const [reviews, setReviews] = useState([]);
 
     const handleOpenProductDetailsModal = (open, item) => {
         setOpenProductDetailsModal({
@@ -189,9 +190,11 @@ function App() {
         blogs,
         setBlogs,
         getBlogs,
-        reviews,
-        setReviews,
         windowWidth,
+        openFilterProducts,
+        setOpenFilterProducts,
+        isFilterProductsBtnShow,
+        setIsFilterProductsBtnShow,
     };
     return (
         <>

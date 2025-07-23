@@ -79,8 +79,10 @@ const HomeProductsItem = ({ product }) => {
                     className={`flex items-center gap-3 ${
                         context?.windowWidth <= 422
                             ? 'min-h-[48px] h-[48px]'
-                            : context?.windowWidth < 992 && context?.windowWidth >= 600
+                            : context?.windowWidth >= 600 && context?.windowWidth < 992
                             ? 'min-h-[50px]'
+                            : context?.windowWidth > 992
+                            ? 'h-[54px] mb-[6px]'
                             : ''
                     }  flex-wrap`}
                 >

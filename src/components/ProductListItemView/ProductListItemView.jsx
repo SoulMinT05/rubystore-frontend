@@ -10,7 +10,7 @@ import { IoGitCompareOutline } from 'react-icons/io5';
 import { MdZoomOutMap } from 'react-icons/md';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 
-import '../ProductListItemView/ProductListItemView.css';
+import './ProductListItemView.css';
 import { MyContext } from '../../App';
 
 const formatCurrency = (amount) => {
@@ -23,19 +23,19 @@ const ProductListItemView = ({ product }) => {
     const context = useContext(MyContext);
     const navigate = useNavigate();
     return (
-        <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)] flex items-center">
-            <div className="group imgWrapper w-[25%] overflow-hidden rounded-md relative">
+        <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)] flex flex-col lg:flex-row items-center">
+            <div className="group imgWrapper w-full lg:w-[30%] overflow-hidden rounded-md relative">
                 <Link to={`/product/${product?._id}`}>
-                    <div className="img overflow-hidden">
-                        <img src={product?.images[0]} alt="" className="w-full" />
+                    <div className="img item_view_image h-[380px] sm:w-full sm:h-[320px] md:h-[300px] xl:h-[360px] overflow-hidden lg:py-4 lg:pl-2">
+                        <img src={product?.images[0]} alt="" className="w-full h-full object-cover lg:rounded-md " />
                         <img
                             src={product?.images[1]}
                             alt=""
-                            className="w-full transition-all duration-300 absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-scale:105"
+                            className="w-full h-full object-cover lg:rounded-md transition-all duration-300 absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-scale:105"
                         />
                     </div>
                 </Link>
-                <span className="discount flex items-center absolute top-[10px] left-[10px] z-50 bg-primary text-white rounded-lg p-1 text-[12px] font-[500]">
+                <span className="discount item_view_discount flex items-center absolute top-[10px] left-[10px] z-50 bg-primary text-white rounded-lg p-1 text-[12px] font-[500]">
                     {product?.discount}%
                 </span>
                 <div
@@ -63,31 +63,46 @@ const ProductListItemView = ({ product }) => {
                     </Tooltip>
                 </div>
             </div>
-            <div className="info p-3 py-5 px-8 w-[75%]">
-                <h6 className="text-[15px] !font-[400]">
+            <div className="info py-5 px-3 lg:px-8 w-full lg:w-[70%]">
+                <h6 className="text-[12px] lg:text-[13px] !font-[400]">
                     <Link to="/" className="link transition-all">
                         {product?.brand}
                     </Link>
                 </h6>
-                <h3 className="text-[18px] title mt-3 font-[500] mb-3 text-[#000]">
+                <h3 className="text-[12px] lg:text-[13px] min-h-[36px] lg:min-h-[0] line-clamp-2 title mt-3 font-[500] mb-3 text-[#000]">
                     <Link to="/" className="link transition-all">
                         {product?.name}
                     </Link>
                 </h3>
-                <p className="text-[14px] mb-3 line-clamp-3">{product?.description}</p>
+                <p className="text-[12px] lg:text-[13px] mb-3 line-clamp-2">{product?.description}</p>
                 <Rating name="size-small" value={Number(product?.rating) || 0} readOnly size="small" />
 
-                <div className="flex items-center gap-4">
-                    <span className="oldPrice line-through text-gray-500 text-[15px] font-[500]">
+                <div
+                    className={`flex items-center gap-3 
+                        ${
+                            context?.windowWidth <= 422
+                                ? 'min-h-[48px] h-[48px]'
+                                : context?.windowWidth >= 600 && context?.windowWidth < 992
+                                ? 'min-h-[50px]'
+                                : ''
+                        }  
+                    flex-wrap`}
+                >
+                    <span className="oldPrice line-through text-gray-500 text-[12px] lg:text-[14px] font-[500]">
                         {formatCurrency(product?.oldPrice)}
                     </span>
-                    <span className="price text-primary text-[15px] font-[600]">{formatCurrency(product?.price)}</span>
+                    <span className="price text-primary text-[12px] lg:text-[14px] font-[600]">
+                        {formatCurrency(product?.price)}
+                    </span>
                 </div>
-
                 <div className="mt-3">
-                    <Button onClick={() => navigate(`/product/${product?._id}`)} className="btn-org flex gap-2">
-                        <MdOutlineShoppingCart className="text-[20px]" />
-                        Thêm vào giỏ hàng
+                    <Button
+                        className="btn-border flex w-full btn-sm gap-1 !px-1 overflow-hidden text-ellipsis whitespace-nowrap"
+                        size="small"
+                        onClick={() => navigate(`/product/${product?._id}`)}
+                    >
+                        <MdOutlineShoppingCart className="text-[18px]" />
+                        <span className="text-[13px] !normal-case">Thêm vào giỏ hàng</span>
                     </Button>
                 </div>
             </div>

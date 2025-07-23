@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { Button } from '@mui/material';
@@ -19,8 +19,11 @@ import '../SearchResultsPage/SearchResultsPage.scss';
 import ProductLoading from '../../components/ProductLoading/ProductLoading';
 import axiosAuth from '../../apis/axiosAuth';
 import SearchResultsProductListSidebar from '../../components/SearchResultsProductListSidebar/SearchResultsProductListSidebar';
+import { MyContext } from '../../App';
 
 const SearchResultsPage = () => {
+    const context = useContext(MyContext);
+
     const [itemView, setItemView] = useState('grid');
     const [anchorEl, setAnchorEl] = useState(null);
     const [productsList, setProductsList] = useState([]);
@@ -81,7 +84,7 @@ const SearchResultsPage = () => {
     };
     return (
         <section className="py-5 pb-0">
-            <div className="container">
+            <div className="container p-2">
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link underline="hover" color="inherit" to="/" className="link transition">
                         Trang chủ
@@ -94,7 +97,11 @@ const SearchResultsPage = () => {
 
             <div className="bg-white p-2 mt-4">
                 <div className="container flex gap-4">
-                    <div className="sidebarWrapper w-[20%] bg-white">
+                    <div
+                        className={`sidebarWrapper fixed -bottom-[100%] left-0 w-full
+                        lg:h-full lg:static lg:w-[20%] bg-white z-[102] lg:z-[99] p-3 lg:p-0 transition-all 
+                        opacity-0 lg:opacity-100 ${context?.openFilterProducts ? 'open' : ''}`}
+                    >
                         <SearchResultsProductListSidebar
                             productsList={productsList}
                             setProductsList={setProductsList}
@@ -105,7 +112,7 @@ const SearchResultsPage = () => {
                             setTotalPages={setTotalPages}
                         />
                     </div>
-                    <div className="rightContent w-[80%] py-3">
+                    <div className="rightContent w-full lg:w-[80%] py-3">
                         <div
                             className="bg-[#f1f1f1] p-2 w-full mb-4 rounded-md flex items-center justify-between
                             sticky top-[130px] z-[99]"
@@ -125,13 +132,15 @@ const SearchResultsPage = () => {
                                 >
                                     <IoGridSharp className="text-[rgba(0,0,0,0.7)]" />
                                 </Button>
-                                <span className="text-[14px] font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
+                                <span className="text-[12px] lg:text-[14px] hidden sm:block font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
                                     Tổng {productsList?.length !== 0 ? productsList?.length : 0} sản phẩm
                                 </span>
                             </div>
 
                             <div className="col2 ml-auto flex items-center justify-end gap-3 pr-4">
-                                <span className="text-[14px] font-[500] pl-3 text-[rgba(0,0,0,0.7)]">Sắp xếp theo</span>
+                                <span className="text-[12px] lg:text-[14px] font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
+                                    Sắp xếp theo
+                                </span>
 
                                 <Button
                                     id="basic-button"
@@ -160,25 +169,25 @@ const SearchResultsPage = () => {
                                     </MenuItem> */}
                                     <MenuItem
                                         onClick={() => handleSortBy('name', 'asc', productsList, 'Thứ tự A đến Z')}
-                                        className="!text-[14px] !text-[#000] !capitalize"
+                                        className="!text-[12px] !lg:text-[14px] !text-[#000] !capitalize"
                                     >
                                         Thứ tự A đến Z
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => handleSortBy('name', 'desc', productsList, 'Thứ tự Z đến A')}
-                                        className="!text-[14px] !text-[#000] !capitalize"
+                                        className="!text-[12px] !lg:text-[14px] !text-[#000] !capitalize"
                                     >
                                         Thứ tự Z về A
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => handleSortBy('price', 'asc', productsList, 'Giá: thấp đến cao')}
-                                        className="!text-[14px] !text-[#000] !capitalize"
+                                        className="!text-[12px] !lg:text-[14px] !text-[#000] !capitalize"
                                     >
                                         Giá: thấp đến cao
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => handleSortBy('price', 'desc', productsList, 'Giá: cao đến thấp')}
-                                        className="!text-[14px] !text-[#000] !capitalize"
+                                        className="!text-[12px] !lg:text-[14px] !text-[#000] !capitalize"
                                     >
                                         Giá: cao đến thấp
                                     </MenuItem>
@@ -187,7 +196,9 @@ const SearchResultsPage = () => {
                         </div>
                         <div
                             className={`grid ${
-                                itemView === 'grid' ? 'grid-cols-4 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-1'
+                                itemView === 'grid'
+                                    ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5'
+                                    : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1'
                             } gap-4`}
                         >
                             {itemView === 'grid' ? (
