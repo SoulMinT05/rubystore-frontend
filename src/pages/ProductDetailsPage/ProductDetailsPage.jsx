@@ -8,7 +8,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 
 import ProductZoom from '../../components/ProductZoom/ProductZoom';
 
-import '../ProductDetailsPage/ProductDetailsPage.css';
+import './ProductDetailsPage.scss';
 import HomeProductsSlider from '../../components/HomeProductsSlider/HomeProductsSlider';
 import ProductDetailsComponent from '../../components/ProductDetailsComponent/ProductDetailsComponent';
 import axiosAuth from '../../apis/axiosAuth';
@@ -94,16 +94,21 @@ const ProductDetailsPage = () => {
     return (
         <>
             <div className="py-5">
-                <div className="container">
+                <div className="container p-2 lg:p-0">
                     <Breadcrumbs aria-label="breadcrumb">
-                        <Link underline="hover" color="inherit" to="/" className="link transition !text-[14px]s">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            to="/"
+                            className="link transition !text-[14px] !lg:text-[15px]"
+                        >
                             Trang chủ
                         </Link>
                         <Link
                             underline="hover"
                             color="inherit"
                             to={`/product?categoryId=${product?.category?._id}`}
-                            className="link transition !text-[14px]s"
+                            className="link transition !text-[14px] !lg:text-[15px]"
                         >
                             {product?.categoryName}
                         </Link>
@@ -111,11 +116,15 @@ const ProductDetailsPage = () => {
                             underline="hover"
                             color="inherit"
                             to={`/product?subCategoryId=${product?.subCategoryId}`}
-                            className="link transition !text-[14px]s"
+                            className="link transition !text-[14px] !lg:text-[15px]"
                         >
                             {product?.subCategoryName}
                         </Link>
-                        <Link underline="hover" color="inherit" className="link transition !text-[14px]s">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            className="link transition !text-[14px] !lg:text-[15px]"
+                        >
                             {product?.name?.length > 50 ? `${product?.name?.substring(0, 50)}...` : product?.name}
                         </Link>
                     </Breadcrumbs>
@@ -129,20 +138,20 @@ const ProductDetailsPage = () => {
                     </div>
                 ) : (
                     <>
-                        <div className="container flex gap-8 ">
-                            <div className="productZoomContainer w-[40%]">
+                        <div className="container flex flex-col lg:flex-row gap-8">
+                            <div className="productZoomContainer w-full lg:w-[40%]">
                                 <ProductZoom images={product?.images} />
                             </div>
 
-                            <div className="productContent w-[60%] pr-10 pl-10">
+                            <div className="productContent -mt-[24px] lg:mt-0 w-full lg:w-[60%] px-4 lg:px-10">
                                 <ProductDetailsComponent product={product} />
                             </div>
                         </div>
 
-                        <div className="container pt-10">
-                            <div className="flex items-center gap-8 mb-5">
+                        <div className="container pt-7 lg:pt-10 px-4 lg:px-0">
+                            <div className="flex items-center gap-8 mb-3 lg:mb-5">
                                 <span
-                                    className={`link text-[17px] cursor-pointer font-[500] ${
+                                    className={`link text-[16px] lg:text-[17px] cursor-pointer font-[500] ${
                                         activeTab === 0 ? 'text-[#ff5252]' : ''
                                     }`}
                                     onClick={() => setActiveTab(0)}
@@ -150,7 +159,7 @@ const ProductDetailsPage = () => {
                                     Mô tả sản phẩm
                                 </span>
                                 <span
-                                    className={`link text-[17px] cursor-pointer font-[500] ${
+                                    className={`link text-[16px] lg:text-[17px] cursor-pointer font-[500] ${
                                         activeTab === 1 ? 'text-[#ff5252]' : ''
                                     }`}
                                     onClick={() => setActiveTab(1)}

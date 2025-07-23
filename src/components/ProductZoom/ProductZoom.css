@@ -23,3 +23,113 @@
 .inner-image-zoom--icon {
     display: none !important;
 }
+
+.zoomProductSliderThumbs {
+    height: 160px;
+}
+.zoomProductSliderThumbs img {
+    height: 88px;
+}
+
+.zoomContainer img {
+    height: auto;
+    width: 92%;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+/* zoomProductSliderThumbs */
+@media only screen and (max-width: 375px) {
+    .zoomProductSliderThumbs .swiper-wrapper {
+        padding-top: 18px !important;
+    }
+}
+
+@media only screen and (min-width: 450px) and (max-width: 500px) {
+    .zoomProductSliderThumbs img {
+        height: 96px;
+    }
+}
+@media only screen and (min-width: 501px) and (max-width: 600px) {
+    .zoomProductSliderThumbs {
+        height: 160px;
+    }
+    .zoomProductSliderThumbs img {
+        height: 93px;
+    }
+}
+@media only screen and (min-width: 601px) and (max-width: 700px) {
+    .zoomProductSliderThumbs {
+        height: 182px;
+    }
+    .zoomProductSliderThumbs img {
+        height: 115px;
+    }
+}
+@media only screen and (min-width: 701px) and (max-width: 800px) {
+    .zoomProductSliderThumbs {
+        height: 188px;
+    }
+    .zoomProductSliderThumbs img {
+        height: 120px;
+    }
+}
+@media only screen and (min-width: 801px) and (max-width: 900px) {
+    .zoomProductSliderThumbs {
+        height: 198px;
+    }
+    .zoomProductSliderThumbs img {
+        height: 131px;
+    }
+}
+@media only screen and (min-width: 901px) and (max-width: 992px) {
+    .zoomProductSliderThumbs {
+        height: 208px;
+    }
+    .zoomProductSliderThumbs img {
+        height: 140px;
+    }
+}
+
+@media only screen and (min-width: 993px) and (max-width: 1023px) {
+    .zoomProductSliderThumbs {
+        height: 208px;
+    }
+    .zoomProductSliderThumbs img {
+        height: 140px;
+    }
+    .zoomProductSliderThumbs .swiper-button-next:after,
+    .zoomProductSliderThumbs .swiper-button-prev:after {
+        display: none !important;
+    }
+}
+@media only screen and (min-width: 1024px) {
+    .zoomProductSliderThumbs {
+        height: 414px;
+    }
+}
+/* zoomContainer */
+@media only screen and (min-width: 400px) and (max-width: 599px) {
+    .zoomContainer img {
+        width: 90%;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+}
+@media only screen and (min-width: 600px) and (max-width: 799px) {
+    .zoomContainer img {
+        width: 70%;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+}
+@media only screen and (min-width: 800px) and (max-width: 1023px) {
+    .zoomContainer img {
+        width: 60%;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+}

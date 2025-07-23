@@ -83,7 +83,7 @@ const ProductListPage = () => {
     };
     return (
         <section className="py-5 pb-0">
-            <div className="container p-2">
+            <div className="container p-2 lg:p-0">
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link
                         underline="hover"

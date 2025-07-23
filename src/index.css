@@ -195,6 +195,11 @@ button .MuiCircularProgress-root {
 .zoomProductSliderThumbs.space .swiper-wrapper {
     padding-top: 38px !important;
 }
+@media only screen and (max-width: 374px) {
+    .zoomProductSliderThumbs .swiper-wrapper {
+        padding-top: 18px !important;
+    }
+}
 .zoomProductSliderThumbs .swiper-button-next {
     bottom: 0px !important;
     right: inherit !important;

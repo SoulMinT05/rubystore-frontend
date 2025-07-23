@@ -189,7 +189,7 @@ const ReviewComponent = ({ product }) => {
             {!context?.userInfo?._id ||
                 (review?.productId && review?.sizeProduct && (
                     <div className="reviewForm py-4 rounded-none border-gray-250 border-b-[2px]">
-                        <h2 className="text-[18px]">Đánh giá</h2>
+                        <h2 className="text-[16px] lg:text-[17px]">Đánh giá</h2>
                         <form onSubmit={handleAddReview} className="w-full mt-5">
                             <TextField
                                 id="outlined-multiline-flexible"
@@ -223,39 +223,49 @@ const ReviewComponent = ({ product }) => {
                     </div>
                 ))}
 
-            <h2 className="text-[18px] mt-4">Đánh giá từ khách hàng</h2>
+            <h2 className="text-[16px] lg:text-[17px] mt-4">Đánh giá từ khách hàng</h2>
             <div className="">
-                <span className="italic text-[13px] text-gray-700 ">
+                <span className="italic text-[12px] lg:text-[13px] text-gray-700 ">
                     Để đánh giá, quý khách cần đặt hàng thành công và chọn{' '}
                 </span>
-                <span className="text-primary">Mục Đánh giá </span>
-                <span className="italic text-[13px] text-gray-700 ">trong những đơn ở mục </span>
-                <span className="text-primary">Lịch sử đơn hàng </span>
+                <span className="text-[14px] lg:text-[16px] text-primary">Mục Đánh giá </span>
+                <span className="italic text-[12px] lg:text-[13px] text-gray-700 ">trong những đơn ở mục </span>
+                <span className="text-[14px] lg:text-[16px] text-primary">Lịch sử đơn hàng </span>
             </div>
-            <div className="reviewScroll w-full max-h-[1000vh] over-x-hidden mt-2 pr-5">
-                <div className="review pt-5 pb-5 border-b border-[rgba(0,0,0,0.1)] w-full ">
+            <div className="reviewScroll w-full max-h-[1000vh] over-x-hidden mt-2 sm:pr-5">
+                <div className="review py-1 sm:py-5 border-b border-[rgba(0,0,0,0.1)] w-full ">
                     {currentReviews?.length !== 0 &&
                         currentReviews?.map((review) => {
                             return (
                                 <div key={review._id}>
-                                    <div className="flex items-center justify-between mt-4 mb-2">
-                                        <div className="info w-[60%] flex items-center gap-3">
+                                    <div className="flex items-end sm:items-center justify-between mt-7 mb-2">
+                                        <div className="info w-full sm:w-[60%] flex flex-col sm:flex-row items-start sm:items-center gap-3">
                                             <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
                                                 <img src={review?.userId?.avatar} alt="avatar" className="w-full" />
                                             </div>
-                                            <div className="w-[80%]">
-                                                <h4 className="text-[16px]">{review?.userId?.name}</h4>
-                                                <h5 className="text-[13px] mb-0">{formatDate(review?.createdAt)}</h5>
-                                                <p className="mt-0 mb-0">{review?.comment}</p>
+                                            <div className="w-full sm:w-[80%]">
+                                                <h4 className="text-[14px] sm:text-[16px]">{review?.userId?.name}</h4>
+                                                <h5 className="text-[12px] sm:text-[13px] mb-0">
+                                                    {formatDate(review?.createdAt)}
+                                                </h5>
+                                                <p className="text-[12px] sm:text-[14px] my-0">{review?.comment}</p>
                                             </div>
                                         </div>
-                                        <Rating name="size-small" value={Number(review?.rating) || 0} readOnly />
+                                        {context?.windowWidth >= 640 && (
+                                            <Rating name="size-small" value={Number(review?.rating) || 0} readOnly />
+                                        )}
                                     </div>
+                                    {context?.windowWidth < 640 && (
+                                        <div className="">
+                                            <Rating name="size-small" value={Number(review?.rating) || 0} readOnly />
+                                        </div>
+                                    )}
+
                                     {/* Nút trả lời */}
                                     <div className="flex items-center gap-4">
                                         {context?.userInfo?._id === review?.userId?._id && (
                                             <span
-                                                className="text-primary cursor-pointer text-sm mt-2 ml-[90px]"
+                                                className="text-primary cursor-pointer text-[12px] sm:text-[14px] mt-[2px] sm:mt-2 sm:ml-[90px]"
                                                 onClick={() => handleClickOpenReview(review._id)}
                                             >
                                                 Xóa

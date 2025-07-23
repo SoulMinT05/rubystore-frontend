@@ -65,29 +65,33 @@ const ProductDetailsComponent = ({ product }) => {
     };
     return (
         <>
-            <h1 className="text-[24px] font-[600] mb-2">{product?.name}</h1>
-            <div className="flex items-center gap-3">
+            <h1 className="text-[18px] sm:text-[20px] lg:text-[22px] font-[600] mb-2">{product?.name}</h1>
+            <div className="flex items-start sm:items-center gap-3 flex-col sm:flex-row">
                 <span className="text-gray-400 text-[13px]">
                     Thương hiệu : <span className="font-[500] text-black opacity-75">{product?.brand}</span>
                 </span>
                 <Rating name="size-small" value={Number(product?.averageRating) || 0} readOnly size="small" />
-                <span className="text-[13px] cursor-pointer">Đánh giá ({reviews?.length || 0})</span>
+                <span className="text-[13px] sm:text-[13px] cursor-pointer">Đánh giá ({reviews?.length || 0})</span>
             </div>
 
-            <div className="flex items-center gap-4 mt-4">
-                <span className="oldPrice line-through text-gray-500 text-[18px] font-[500]">
-                    {formatCurrency(product?.oldPrice)}
-                </span>
-                <span className="price text-primary text-[18px] font-[600]">{formatCurrency(product?.price)}</span>
-                <span className="text-[14px]">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-4">
+                <div className="flex items-center gap-2">
+                    <span className="oldPrice line-through text-gray-500 text-[13px] sm:text-[15px] md:text-[16px] font-[500]">
+                        {formatCurrency(product?.oldPrice)}
+                    </span>
+                    <span className="price text-primary text-[13px] sm:text-[15px] md:text-[16px] font-[600]">
+                        {formatCurrency(product?.price)}
+                    </span>
+                </div>
+                <span className="text-[13px] sm:text-[14px]">
                     Trạng thái:{' '}
                     {product?.countInStock > 0 && (
-                        <span className="text-green-600 text-[14px] font-bold">
+                        <span className="text-green-600 text-[13px] sm:text-[14px] font-bold">
                             Còn hàng ({product?.countInStock} sản phẩm)
                         </span>
                     )}
                     {product?.countInStock === 0 && (
-                        <span className="text-red-400 text-[14px] font-bold">
+                        <span className="text-red-400 text-[13px] sm:text-[14px] font-bold">
                             Tạm thời hết hàng ({product?.countInStock} sản phẩm)
                         </span>
                     )}
@@ -95,7 +99,7 @@ const ProductDetailsComponent = ({ product }) => {
             </div>
 
             <div className="flex items-center gap-3 mt-4">
-                <span className="text-[16px]">Kích cỡ: </span>
+                <span className="text-[13px] sm:text-[14px]">Kích cỡ: </span>
                 <div className="flex items-center gap-2 actions">
                     {product?.productSize?.length !== 0 &&
                         product?.productSize.map((item, index) => {
@@ -112,7 +116,9 @@ const ProductDetailsComponent = ({ product }) => {
                 </div>
             </div>
 
-            <p className="text-[14px] mt-5 mb-2 text-[#000]">Miễn phí giao hàng cho đơn trên 700k (Giao từ 2-4 ngày)</p>
+            <p className="text-[13px] sm:text-[14px] mt-5 mb-2 text-[#000]">
+                Miễn phí giao hàng cho đơn trên 700k (Giao từ 2-4 ngày)
+            </p>
 
             <div className="flex items-center gap-4 py-4">
                 <div className="quantityBoxWrapper w-[70px]">
@@ -120,19 +126,19 @@ const ProductDetailsComponent = ({ product }) => {
                 </div>
 
                 <Button onClick={handleAddToCart} className="btn-org flex gap-2">
-                    <MdOutlineShoppingCart className="text-[22px]" />
-                    Thêm vào giỏ hàng{' '}
+                    <MdOutlineShoppingCart className="text-[16px] sm:text-[18px]" />
+                    <span className="text-[13px] sm:text-[14px]">Thêm vào giỏ hàng </span>
                 </Button>
             </div>
 
             <div className="flex items-center gap-4 mt-4">
                 <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
                     <FaRegHeart className="text-[18px]" />
-                    Yêu thích
+                    <span className="text-[13px] sm:text-[14px]">Yêu thích</span>
                 </span>
                 <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
                     <IoGitCompareOutline className="text-[18px]" />
-                    So sánh
+                    <span className="text-[13px] sm:text-[14px]">So sánh</span>
                 </span>
             </div>
         </>
