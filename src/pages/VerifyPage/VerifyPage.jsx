@@ -48,13 +48,13 @@ const VerifyPage = () => {
     };
 
     return (
-        <section className="section py-10">
+        <section className="section py-6 sm:py-10">
             <div className="container">
-                <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-10">
+                <div className="card shadow-md w-full sm:w-[500px] m-auto rounded-md bg-white p-5 px-10">
                     <div className="text-center flex items-center justify-center">
                         <img src="src/assets/verify.png" alt="" width="80" />
                     </div>
-                    <h3 className="text-center text-[18px] text-black mt-4 mb-1">Xác minh OTP</h3>
+                    <h3 className="text-center text-[17px] sm:text-[18px] text-black mt-4 mb-1">Xác minh OTP</h3>
 
                     <p className="text-center mt-0 mb-4">
                         OTP đã được gửi đến {'  '}
@@ -66,7 +66,11 @@ const VerifyPage = () => {
 
                         <div className="flex items-center justify-center mt-5 px-5">
                             <Button type="submit" className="w-full btn-org btn-lg flex gap-3">
-                                {isLoading === true ? <CircularProgress color="inherit" /> : 'Gửi OTP'}
+                                {isLoading === true ? (
+                                    <CircularProgress color="inherit" />
+                                ) : (
+                                    <span className="text-[13px] sm:text-[14px]">Gửi OTP</span>
+                                )}
                             </Button>
                         </div>
                     </form>

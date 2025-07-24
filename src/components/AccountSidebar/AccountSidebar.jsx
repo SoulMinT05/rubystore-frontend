@@ -92,10 +92,10 @@ const AccountSidebar = () => {
                         />
                     </div>
                 </div>
-                <h3>{context?.userInfo?.name}</h3>
-                <h6 className="text-[13px] font-[500]">{context?.userInfo?.email}</h6>
+                <h3 className="text-[15px] lg:text-[16px]">{context?.userInfo?.name}</h3>
+                <h6 className="text-[13px] lg:text-[13px] font-[500]">{context?.userInfo?.email}</h6>
             </div>
-            <ul className="list-none pb-5 bg-[#f1f1f1] myAccountTabs">
+            <ul className="list-none pb-0 lg:pb-5 bg-[#f1f1f1] myAccountTabs">
                 <li className="w-full">
                     <NavLink
                         to="/my-account"
@@ -105,9 +105,9 @@ const AccountSidebar = () => {
                                 : 'w-full'
                         }
                     >
-                        <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
+                        <Button className="w-full !text-left !py-2 !px-3 !xl:!px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <FaRegUser className="text-[17px]" />
-                            <span>Trang cá nhân</span>
+                            <span className="text-[14px]">Trang cá nhân</span>
                         </Button>
                     </NavLink>
                 </li>
@@ -120,9 +120,9 @@ const AccountSidebar = () => {
                                 : 'w-full'
                         }
                     >
-                        <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
+                        <Button className="w-full !text-left !py-2 !px-3 !xl:!px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoBagCheckOutline className="text-[17px]" />
-                            <span>Lịch sử đơn hàng</span>
+                            <span className="text-[14px]">Lịch sử đơn hàng</span>
                         </Button>
                     </NavLink>
                 </li>
@@ -135,9 +135,9 @@ const AccountSidebar = () => {
                                 : 'w-full'
                         }
                     >
-                        <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
+                        <Button className="w-full !text-left !py-2 !px-3 !xl:px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoMdHeartEmpty className="text-[17px]" />
-                            <span>Danh sách yêu thích</span>
+                            <span className="text-[14px]">Sản phẩm yêu thích</span>
                         </Button>
                     </NavLink>
                 </li>
@@ -150,9 +150,9 @@ const AccountSidebar = () => {
                                 : 'w-full'
                         }
                     >
-                        <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
+                        <Button className="w-full !text-left !py-2 !px-3 !xl:!px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoKeyOutline className="text-[17px]" />
-                            <span>Đổi mật khẩu</span>
+                            <span className="text-[14px]">Đổi mật khẩu</span>
                         </Button>
                     </NavLink>
                 </li>
@@ -166,7 +166,7 @@ const AccountSidebar = () => {
                                 : 'w-full'
                         }
                     >
-                        <Button className="w-full !text-left !py-2 !px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
+                        <Button className="w-full !text-left !py-2 !px-3 !xl:!px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoIosLogOut className="text-[18px] text-[#ff5252]" />
                             <span className="text-[#ff5252]">Đăng xuất</span>
                         </Button>

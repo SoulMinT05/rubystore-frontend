@@ -134,10 +134,10 @@ const LoginPage = () => {
         }
     };
     return (
-        <section className="section py-10">
+        <section className="section py-6 sm:py-10">
             <div className="container">
-                <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-10">
-                    <h3 className="text-center text-[18px] text-black">Đăng nhập</h3>
+                <div className="card shadow-md w-full sm:w-[500px] m-auto rounded-md bg-white p-5 px-10">
+                    <h3 className="text-center text-[17px] sm:text-[18px] text-black">Đăng nhập</h3>
                     <form className="w-full mt-5" onSubmit={handleLogin}>
                         <div className="form-group w-full mb-5">
                             <TextField
@@ -178,7 +178,7 @@ const LoginPage = () => {
                         <div className="flex justify-end">
                             <Link
                                 to="/forgot-password"
-                                className="link cursor-pointer text-[14px] font-[600] text-right"
+                                className="link cursor-pointer text-[13px] sm:text-[14px] font-[600] text-right"
                                 onClick={forgotPassword}
                             >
                                 Quên mật khẩu
@@ -186,29 +186,33 @@ const LoginPage = () => {
                         </div>
                         <div className="flex items-center w-full mt-3 mb-3">
                             <Button type="submit" className="btn-org btn-login w-full flex gap-3">
-                                {isLoading === true ? <CircularProgress color="inherit" /> : 'Đăng nhập'}
+                                {isLoading === true ? (
+                                    <CircularProgress color="inherit" />
+                                ) : (
+                                    <span className="text-[13px] sm:text-[14px]">Đăng nhập</span>
+                                )}
                             </Button>
                         </div>
                         <p className="text-center">
                             Chưa có tài khoản?{'   '}
-                            <Link to="/register" className="link text-[14px] font-[600] ">
+                            <Link to="/register" className="link text-[13px] sm:text-[14px] font-[600] ">
                                 Đăng ký
                             </Link>
                         </p>
-                        <p className="text-center font-[500]">Hoặc đăng nhập bằng</p>
+                        <p className="text-[13px] sm:text-[14px] text-center font-[500]">Hoặc đăng nhập bằng</p>
                         <Button
                             onClick={handleAuthWithGoogle}
-                            className=" btn-login flex gap-3 !bg-[#f1f1f1] w-full !text-black"
+                            className="btn-login flex gap-3 !bg-[#f1f1f1] w-full !text-black"
                         >
                             <FcGoogle className="icon-google text-[20px]" />
-                            Đăng nhập bằng Google
+                            <span className="text-[13px] sm:text-[14px]">Đăng nhập bằng Google</span>
                         </Button>
                         <Button
                             onClick={handleAuthWithFacebook}
                             className="btn-login !mt-4 flex gap-3 !bg-[#f1f1f1] w-full !text-black"
                         >
                             <BsFacebook className="icon-facebook text-[20px]" />
-                            Đăng nhập bằng Facebook
+                            <span className="text-[13px] sm:text-[14px]">Đăng nhập bằng Facebook</span>
                         </Button>
                     </form>
                 </div>

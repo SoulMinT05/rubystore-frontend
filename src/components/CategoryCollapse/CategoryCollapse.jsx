@@ -9,7 +9,7 @@ import { FiMinusSquare } from 'react-icons/fi';
 
 import '../CategoryCollapse/CategoryCollapse.css';
 
-const CategoryCollapse = ({ categories }) => {
+const CategoryCollapse = ({ categories, toggleDrawer }) => {
     const [submenuIndex, setSubmenuIndex] = useState(null);
     const [innerSubmenuIndex, setInnerSubmenuIndex] = useState(null);
 
@@ -27,6 +27,7 @@ const CategoryCollapse = ({ categories }) => {
             setInnerSubmenuIndex(index);
         }
     };
+
     return (
         <>
             <div className="scroll">
@@ -35,8 +36,12 @@ const CategoryCollapse = ({ categories }) => {
                         categories?.map((category, index) => {
                             return (
                                 <li key={index} className="list-none flex items-center relative flex-col">
-                                    <Link to="/" className="w-full">
-                                        <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+                                    <Link
+                                        to={`/product?categoryId=${category?._id}`}
+                                        onClick={toggleDrawer(false)}
+                                        className="w-full "
+                                    >
+                                        <Button className="w-full !text-[13px] !lg:text-[14px] !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
                                             {category?.name}
                                         </Button>
                                     </Link>
@@ -58,8 +63,12 @@ const CategoryCollapse = ({ categories }) => {
                                                 category?.children?.map((subCategory, index_) => {
                                                     return (
                                                         <li key={index_} className="list-none relative">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+                                                            <Link
+                                                                to={`/product?subCategoryId=${subCategory?._id}`}
+                                                                onClick={toggleDrawer(false)}
+                                                                className="w-full"
+                                                            >
+                                                                <Button className="w-full !text-[13px] !lg:text-[14px] !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
                                                                     {subCategory?.name}
                                                                 </Button>
                                                             </Link>
@@ -83,17 +92,18 @@ const CategoryCollapse = ({ categories }) => {
                                                                                 return (
                                                                                     <li
                                                                                         key={index_}
+                                                                                        onClick={toggleDrawer(false)}
                                                                                         className="list-none relative mb-1"
                                                                                     >
                                                                                         <Link
-                                                                                            to="/"
-                                                                                            className="link w-full !text-left !justify-start !px-3 transition text-[14px]"
+                                                                                            to={`/product?thirdSubCategoryId=${thirdSubCategory?._id}`}
+                                                                                            className="link w-full !text-[12px] !lg:text-[13px] !text-left !justify-start !px-3 transition"
                                                                                         >
                                                                                             {thirdSubCategory?.name}
                                                                                         </Link>
                                                                                     </li>
                                                                                 );
-                                                                            },
+                                                                            }
                                                                         )}
                                                                 </ul>
                                                             )}

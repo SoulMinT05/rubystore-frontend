@@ -71,10 +71,10 @@ const RegisterPage = () => {
     };
 
     return (
-        <section className="section py-10">
+        <section className="section py-6 sm:py-10">
             <div className="container">
-                <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-10">
-                    <h3 className="text-center text-[18px] text-black">Đăng ký</h3>
+                <div className="card shadow-md w-full sm:w-[500px] m-auto rounded-md bg-white p-5 px-10">
+                    <h3 className="text-center text-[17px] sm:text-[18px] text-black">Đăng ký</h3>
                     <form className="w-full mt-5" onSubmit={handleSubmit}>
                         <div className="form-group w-full mb-5">
                             <TextField
@@ -128,12 +128,16 @@ const RegisterPage = () => {
                         </div>
                         <div className="flex items-center w-full mt-3 mb-3">
                             <Button type="submit" className="btn-org btn-login w-full flex gap-3">
-                                {isLoading === true ? <CircularProgress color="inherit" /> : 'Đăng ký'}
+                                {isLoading === true ? (
+                                    <CircularProgress color="inherit" />
+                                ) : (
+                                    <span className="text-[13px] sm:text-[14px]">Đăng ký</span>
+                                )}
                             </Button>
                         </div>
                         <p className="text-center">
                             Đã có tài khoản?{'   '}
-                            <Link to="/login" className="link text-[14px] font-[600] ">
+                            <Link to="/login" className="link text-[13px] sm:text-[14px] font-[600] ">
                                 Đăng nhập
                             </Link>
                         </p>

@@ -310,11 +310,11 @@ const Header = () => {
                     <div className="col2 fixed top-0 left-0 w-full h-full lg:w-[40%] lg:static p-2 lg:p-0 bg-white z-50 hidden lg:block ">
                         <SearchBox />
                     </div>
-                    <div className="col3 w-[10%] lg:w-[35%] flex items-center pl-7">
+                    <div className="col3 sm:w-[17%] lg:w-[35%] flex items-center pl-7">
                         <ul className="flex items-center justify-end gap-0 lg:gap-3 w-full">
                             {context.isLogin === false ? (
                                 <li className="list-none">
-                                    <Link to="/login" className="link transition text-[15px] font-[500]">
+                                    <Link to="/login" className="link transition text-[13px] lg:text-[15px] font-[500]">
                                         Đăng nhập
                                     </Link>
                                 </li>
@@ -402,7 +402,7 @@ const Header = () => {
                                                 <Link to="/wishlist" className="w-full block">
                                                     <MenuItem onClick={handleClose} className="flex gap-2 !py-2">
                                                         <IoMdHeartEmpty className="text-[18px]" />
-                                                        <span className="text-[14px]">Danh sách yêu thích</span>
+                                                        <span className="text-[14px]">Sản phẩm yêu thích</span>
                                                     </MenuItem>
                                                 </Link>
                                                 <Link to="/change-password" className="w-full block">

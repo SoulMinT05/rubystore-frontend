@@ -38,17 +38,17 @@ const ChangePasswordPage = () => {
         }
     };
     return (
-        <section className="py-10 w-full">
-            <div className="container flex gap-5">
-                <div className="col1 w-[20%]">
+        <section className="py-3 lg:py-10 w-full">
+            <div className="container flex flex-col lg:flex-row gap-5">
+                <div className="w-full lg:w-[20%]">
                     <AccountSidebar />
                 </div>
-                <div className="col2 w-[80%]">
+                <div className="w-full lg:w-[80%]">
                     <div className="card bg-white p-5 shadow-md rounded-md">
-                        <h2 className="pb-3">Cập nhật mật khẩu</h2>
+                        <h2 className="pb-3 text-[15px] lg:text-[16px]">Cập nhật mật khẩu</h2>
                         <hr />
 
-                        <form className="mt-5" onSubmit={changePassword}>
+                        <form className="mt-0" onSubmit={changePassword}>
                             <div className="flex items-center gap-5">
                                 {context?.userInfo?.signInWithGoogle === false && (
                                     <div className="w-[100%]">
@@ -85,14 +85,17 @@ const ChangePasswordPage = () => {
                                 </div>
                             </div>
 
-                            <p className="italic text-left text-[13px]">
+                            <p className="italic text-left text-[12px] sm:text-[13px] md:text-[14px] lg:text-[14px]">
                                 Mật khẩu và xác nhận mật khẩu phải giống nhau
                             </p>
 
-                            <br />
                             <div className="flex items-center justify-end gap-4">
                                 <Button type="submit" className="btn-org btn-login w-full flex gap-3">
-                                    {isLoading === true ? <CircularProgress color="inherit" /> : 'Đổi mật khẩu'}
+                                    {isLoading === true ? (
+                                        <CircularProgress color="inherit" />
+                                    ) : (
+                                        <span className="text-[14px] lg:text-[15px] ">Đổi mật khẩu</span>
+                                    )}
                                 </Button>
                             </div>
                         </form>

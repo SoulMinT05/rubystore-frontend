@@ -66,14 +66,14 @@ const MyAccountPage = () => {
     };
     return (
         <>
-            <section className="py-10 w-full">
-                <div className="container flex gap-5">
-                    <div className="col1 w-[20%]">
+            <section className="py-3 lg:py-10 w-full">
+                <div className="container flex flex-col lg:flex-row gap-5">
+                    <div className="w-full lg:w-[20%]">
                         <AccountSidebar />
                     </div>
-                    <div className="col2 w-[80%]">
+                    <div className="cw-full lg:w-[80%]">
                         <div className="card bg-white p-5 shadow-md rounded-md">
-                            <h2 className="pb-3">Trang cá nhân</h2>
+                            <h2 className="pb-3 text-[15px] lg:text-[16px]">Trang cá nhân</h2>
                             <hr />
 
                             <form className="mt-5" onSubmit={updateInfo}>
@@ -89,8 +89,8 @@ const MyAccountPage = () => {
                                     </div>
                                 </div>
                                 <p className="italic text-left text-[13px]">Bạn không thể thay đổi email.</p>
-                                <div className="flex items-center gap-5 mt-4">
-                                    <div className="w-[50%]">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-4">
+                                    <div className="col">
                                         <TextField
                                             onChange={(e) => setName(e.target.value)}
                                             value={name || ''}
@@ -100,7 +100,7 @@ const MyAccountPage = () => {
                                             className="w-full"
                                         />
                                     </div>
-                                    <div className="w-[50%]">
+                                    <div className="col">
                                         <TextField
                                             onChange={(e) => setPhoneNumber(e.target.value)}
                                             value={phoneNumber || ''}
@@ -115,7 +115,7 @@ const MyAccountPage = () => {
                                 <br />
 
                                 <div
-                                    className="flex items-center justify-center p-3  mt-4 mb-5 border border-dashed border-[rgba(0,0,0,0.2)] bg-[#f1faff] hover:bg-[#e7f3f9] cursor-pointer"
+                                    className="flex items-center justify-center p-3 mt-2 sm:mt-3 mb-5 border border-dashed border-[rgba(0,0,0,0.2)] bg-[#f1faff] hover:bg-[#e7f3f9] cursor-pointer"
                                     onClick={() =>
                                         context.setIsOpenFullScreenPanel({
                                             open: true,

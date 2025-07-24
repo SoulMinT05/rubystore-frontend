@@ -5,7 +5,7 @@ import Drawer from '@mui/material/Drawer';
 
 import { IoCloseSharp } from 'react-icons/io5';
 
-import '../CategoryPanel/CategoryPanel.css';
+import './CategoryPanel.scss';
 import CategoryCollapse from '../CategoryCollapse/CategoryCollapse';
 
 const CategoryPanel = ({ categories, isOpenCatPanel, setIsOpenCatPanel }) => {
@@ -14,12 +14,12 @@ const CategoryPanel = ({ categories, isOpenCatPanel, setIsOpenCatPanel }) => {
     };
     const DrawerList = (
         <Box className="categoryPanel" sx={{ width: 250 }} role="presentation">
-            <h3 className="p-3 text-[16px] font-[500] flex items-center justify-between">
+            <h3 className="p-3 text-[14px] lg:text-[16px] font-[500] flex items-center justify-between">
                 Danh mục sản phẩm
-                <IoCloseSharp onClick={toggleDrawer(false)} className="cursor-pointer text-[20px]" />
+                <IoCloseSharp onClick={toggleDrawer(false)} className="cursor-pointer text-[18px] lg:text-[20px]" />
             </h3>
 
-            {categories?.length !== 0 && <CategoryCollapse categories={categories} />}
+            {categories?.length !== 0 && <CategoryCollapse categories={categories} toggleDrawer={toggleDrawer} />}
         </Box>
     );
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import './OrderHistoryPage.css';
+import './OrderHistoryPage.scss';
 import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
 import { Button, CircularProgress, Divider } from '@mui/material';
 import BadgeOrderStatus from '../../components/BadgeOrderStatus/BadgeOrderStatus';
@@ -149,12 +149,12 @@ const OrderHistoryPage = () => {
     };
 
     return (
-        <section className="py-10 w-full">
-            <div className="container flex gap-5">
-                <div className="col1 w-[20%]">
+        <section className="py-3 lg:py-10 w-full">
+            <div className="container flex flex-col lg:flex-row gap-5">
+                <div className="w-full lg:w-[20%]">
                     <AccountSidebar />
                 </div>
-                <div className="col2 w-[80%]">
+                <div className="w-full lg:w-[80%]">
                     <div className="bg-white p-5 shadow-md rounded-md">
                         <div className="py-2 px-3">
                             <h2 className="pb-3">Lịch sử đơn hàng</h2>
