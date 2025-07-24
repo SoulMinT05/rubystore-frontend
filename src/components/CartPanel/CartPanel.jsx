@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 
-import '../CartPanel/CartPanel.css';
+import './CartPanel.scss';
 import { Button } from '@mui/material';
 import { MyContext } from '../../App';
 
@@ -38,17 +38,17 @@ const CartPanel = ({ cart }) => {
                                         </Link>
                                     </div>
                                     <div className="info w-[75%] pr-4 relative">
-                                        <h4 className="text-[14px] font-[500]">
+                                        <h4 className="text-[13px] lg:text-[14px] font-[500]">
                                             <Link className="link transition-all" to={`/product/${item?.product?._id}`}>
                                                 {item?.name}
                                             </Link>
                                         </h4>
                                         <p className="flex items-center gap-5 mt-2 mb-2">
-                                            <span>
+                                            <span className="text-[13px] lg:text-[14px]">
                                                 Số lượng: {'    '}
                                                 <span>{item?.quantityProduct}</span>
                                             </span>
-                                            <span className="text-primary font-bold">
+                                            <span className="text-primary text-[13px] lg:text-[14px] font-bold">
                                                 Giá: <span>{formatCurrency(item?.price)}</span>
                                             </span>
                                         </p>

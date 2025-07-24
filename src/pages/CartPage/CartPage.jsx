@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import '../CartPage/CartPage.css';
+import './CartPage.scss';
 
 import { BsFillBagCheckFill } from 'react-icons/bs';
 import { Breadcrumbs, Button, Checkbox, CircularProgress } from '@mui/material';
@@ -193,8 +193,8 @@ const CartPage = () => {
     };
 
     return (
-        <section ref={sectionRef} className="section py-10 pb-10">
-            <div className="pb-2 pt-0  container w-[80%] max-w-[80%] flex items-center justify-between">
+        <section ref={sectionRef} className="section py-6 xl:py-10">
+            <div className="pb-2 pt-0  container xl:w-[96%] xl:max-w-[96%] 2xl:w-[80%] 2xl:max-w-[80%] flex items-center justify-between">
                 <div className="">
                     <Breadcrumbs aria-label="breadcrumb">
                         <Link underline="hover" color="inherit" to="/" className="link transition !text-[16px]">
@@ -213,43 +213,63 @@ const CartPage = () => {
                     </div>
                 )}
             </div>
-            <div className="container w-[80%] max-w-[80%] mx-auto flex gap-5">
+            <div className="container xl:w-[96%] xl:max-w-[96%] 2xl:w-[80%] 2xl:max-w-[80%] mx-auto flex gap-5">
                 <div className="relative overflow-x-auto mt-1 pb-5">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-700">
-                        {!isLoadingCarts && cart?.products?.length > 0 && (
-                            <thead className="text-xs text-gray-700 uppercase bg-white">
-                                <tr>
-                                    <th scope="col" className="px-6 pr-0 py-2 ">
-                                        <div className="w-[60px]">
-                                            <Checkbox
-                                                {...label}
-                                                checked={isCheckedAll}
-                                                onChange={handleSelectAll}
-                                                size="small"
-                                            />
-                                        </div>
-                                    </th>
-                                    <th scope="col" className="px-0 py-3 whitespace-nowrap">
-                                        Sản phẩm
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                        Size
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                        Đơn giá
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                        Số lượng
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                        Số tiền
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                                        Thao tác
-                                    </th>
-                                </tr>
-                            </thead>
-                        )}
+                        {!isLoadingCarts &&
+                            cart?.products?.length > 0 &&
+                            (context?.windowWidth >= 1280 ? (
+                                <thead className="text-xs text-gray-700 uppercase bg-white">
+                                    <tr>
+                                        <th scope="col" className="px-6 pr-0 py-2 ">
+                                            <div className="w-[60px]">
+                                                <Checkbox
+                                                    {...label}
+                                                    checked={isCheckedAll}
+                                                    onChange={handleSelectAll}
+                                                    size="small"
+                                                />
+                                            </div>
+                                        </th>
+                                        <th scope="col" className="px-0 py-3 whitespace-nowrap">
+                                            Sản phẩm
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                            Size
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                            Đơn giá
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                            Số lượng
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                            Số tiền
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                                            Thao tác
+                                        </th>
+                                    </tr>
+                                </thead>
+                            ) : (
+                                <thead className="text-xs text-gray-700 uppercase bg-white">
+                                    <tr>
+                                        <th scope="col" className="px-2 pr-0 py-2 ">
+                                            <div className="w-[50px]">
+                                                <Checkbox
+                                                    {...label}
+                                                    checked={isCheckedAll}
+                                                    onChange={handleSelectAll}
+                                                    size="small"
+                                                />
+                                            </div>
+                                        </th>
+                                        <th scope="col" className="px-0 py-3 whitespace-nowrap">
+                                            Sản phẩm
+                                        </th>
+                                    </tr>
+                                </thead>
+                            ))}
 
                         <tbody>
                             {isLoadingCarts === false ? (
@@ -290,10 +310,13 @@ const CartPage = () => {
                     </table>
                 </div>
             </div>
-            <div className="container w-[80%] max-w-[80%] mx-auto flex gap-5">
-                <div className="leftPart w-[70%]">
+            <div
+                className="container w-full xl:w-[96%] xl:max-w-[96%] 2xl:w-[80%] 2xl:max-w-[80%] flex 
+                flex-col lg:flex-row mx-auto  gap-5"
+            >
+                <div className="leftPart w-full lg:w-[70%]">
                     <Dialog open={openVoucher} onClose={handleCloseVoucher}>
-                        <DialogTitle>Nhập Mã Voucher </DialogTitle>
+                        <DialogTitle>Nhập Mã Voucher</DialogTitle>
                         <DialogContent sx={{ paddingBottom: 0 }}>
                             <DialogContentText>
                                 Để áp dụng Voucher khi thanh toán, người dùng cần nhập chính xác Voucher đã được cung
@@ -327,49 +350,57 @@ const CartPage = () => {
                         </DialogContent>
                     </Dialog>
                     <div className="shadow-md rounded-md bg-white p-5 flex items-center justify-between ">
-                        <span className="text-[14px] font-[500]">Mã Voucher</span>
+                        <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Mã Voucher</span>
                         <span
-                            className="text-[14px] text-primary font-[500] cursor-pointer"
+                            className="text-[13px] sm:text-[14px] lg:text-[16px] text-primary font-[500] cursor-pointer"
                             onClick={handleClickOpenVoucher}
                         >
                             Nhập mã
                         </span>
                     </div>
                     <div className="shadow-md rounded-md bg-white p-5 mt-4 flex items-center justify-between ">
-                        <span className="text-[14px] font-[500]">
+                        <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">
                             Giảm {formatCurrency(500000)} phí vận chuyển đơn tối thiểu {formatCurrency(0)}
                         </span>
-                        <span className="text-[14px] text-[#0055aa] font-[500] ">Tìm hiểu thêm</span>
+                        {context?.windowWidth >= 640 && (
+                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] text-[#0055aa] font-[500] ">
+                                Tìm hiểu thêm
+                            </span>
+                        )}
                     </div>
                 </div>
-                <div className="rightPart w-[30%]">
+                <div className="rightPart w-full lg:w-[30%]">
                     <div className="shadow-md rounded-md bg-white p-5 ">
                         <h3 className="py-3">Chi tiết</h3>
                         <hr />
                         <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Số lượng</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Số lượng</span>
                             <span className="text-primary font-bold">{totalQuantity}</span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Giá sản phẩm</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Giá sản phẩm</span>
                             <span className="text-primary font-bold">{formatCurrency(totalPrice)}</span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Phí vận chuyển</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Phí vận chuyển</span>
                             <span className="text-primary font-bold">{formatCurrency(0)}</span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Voucher</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Voucher</span>
                             <span className="text-primary font-bold">
-                                {cart?.voucher
-                                    ? cart?.voucher?.discountType === 'percent'
-                                        ? `${cart?.voucher?.discountValue}%`
-                                        : `${formatCurrency(cart?.voucher?.discountValue)}`
-                                    : 'Chưa áp dụng'}
+                                {cart?.voucher ? (
+                                    cart?.voucher?.discountType === 'percent' ? (
+                                        `${cart?.voucher?.discountValue}%`
+                                    ) : (
+                                        `${formatCurrency(cart?.voucher?.discountValue)}`
+                                    )
+                                ) : (
+                                    <span className="text-[13px] sm:text-[14px] lg:text-[16px]">Chưa áp dụng</span>
+                                )}
                             </span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[14px] font-[500]">Tổng tiền</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Tổng tiền</span>
                             <span className="text-primary font-bold">{formatCurrency(finalPrice)}</span>
                         </p>
 
