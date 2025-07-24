@@ -11,3 +11,75 @@ button .MuiCircularProgress-root {
 .circ-white .MuiCircularProgress-circle {
     stroke: white !important;
 }
+.css-si86to-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select {
+    font-size: 12px;
+}
+@media only screen and (max-width: 639px) {
+    .css-1kfabtt-MuiFormLabel-root-MuiInputLabel-root {
+        font-size: 13px !important;
+    }
+}
+@media only screen and (min-width: 640px) and (max-width: 767px) {
+    .css-si86to-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select,
+    .css-1kfabtt-MuiFormLabel-root-MuiInputLabel-root {
+        font-size: 13px !important;
+    }
+}
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+    .css-si86to-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select,
+    .css-1kfabtt-MuiFormLabel-root-MuiInputLabel-root {
+        font-size: 14px !important;
+    }
+}
+@media only screen and (min-width: 1024px) {
+    .css-si86to-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select,
+    .css-1kfabtt-MuiFormLabel-root-MuiInputLabel-root {
+        font-size: 15px !important;
+    }
+}
+
+@media only screen and (min-width: 380px) and (max-width: 455px) {
+    .priceDetails {
+        div {
+            margin-left: 0;
+            gap: 0px;
+
+            span:nth-child(1) {
+                text-align: left;
+                width: 150px;
+            }
+
+            span:nth-child(2) {
+                text-align: right;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 379px) {
+    .priceDetails {
+        div {
+            margin-left: 0;
+            gap: 0px;
+
+            span:nth-child(1) {
+                text-align: left;
+                width: 107px;
+            }
+
+            span:nth-child(2) {
+                text-align: right;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 399px) {
+    .paymentMethods {
+        flex-wrap: wrap;
+
+        .select {
+            margin-left: 0;
+        }
+    }
+}

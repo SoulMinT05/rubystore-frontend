@@ -71,43 +71,51 @@ const UpdateAddressComponent = () => {
         <section className="p-5 bg-gray-50">
             <form onSubmit={updateAddress} className="form p-8 py-3 max-h-[800px] ">
                 <div className="scroll overflow-y-scroll">
-                    <div className="grid grid-cols-2 mb-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 mb-3 gap-4">
                         <div className="col w-[100%]">
-                            <h3 className="text-[14px] font-[500] mb-1 text-black">Tên đường</h3>
+                            <h3 className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-[500] mb-1 text-black">
+                                Tên đường
+                            </h3>
                             <input
                                 value={streetLine || ''}
                                 onChange={(e) => setStreetLine(e.target.value)}
                                 type="text"
-                                className="w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
+                                className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
                             />
                         </div>
                         <div className="col w-[100%]">
-                            <h3 className="text-[14px] font-[500] mb-1 text-black">Phường</h3>
+                            <h3 className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-[500] mb-1 text-black">
+                                Phường
+                            </h3>
                             <input
                                 value={ward || ''}
                                 onChange={(e) => setWard(e.target.value)}
                                 type="text"
-                                className="w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
+                                className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
                             />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 mb-3 gap-4">
                         <div className="col w-[100%]">
-                            <h3 className="text-[14px] font-[500] mb-1 text-black">Quận / Huyện</h3>
+                            <h3 className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-[500] mb-1 text-black">
+                                Quận / Huyện
+                            </h3>
                             <input
                                 value={district || ''}
                                 onChange={(e) => setDistrict(e.target.value)}
                                 type="text"
-                                className="w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
+                                className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
                             />
                         </div>
                         <div className="col w-[100%]">
-                            <h3 className="text-[14px] font-[500] mb-1 text-black">Thành phố</h3>
+                            <h3 className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-[500] mb-1 text-black">
+                                Thành phố
+                            </h3>
                             <input
                                 value={city || ''}
                                 onChange={(e) => setCity(e.target.value)}
                                 type="text"
-                                className="w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
+                                className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] w-full h-[40px] border border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm p-3 text-sm"
                             />
                         </div>
                     </div>
@@ -117,7 +125,7 @@ const UpdateAddressComponent = () => {
                         {isLoading === true ? (
                             <CircularProgress color="inherit" />
                         ) : (
-                            <span className="text-[16px]">Cập nhật địa chỉ</span>
+                            <span className="text-[14px] sm:text-[16px]">Cập nhật địa chỉ</span>
                         )}
                     </Button>
                 </div>
