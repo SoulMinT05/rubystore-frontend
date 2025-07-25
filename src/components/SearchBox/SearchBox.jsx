@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import '../SearchBox/SearchBox.scss';
 import { Button, CircularProgress } from '@mui/material';
 import { IoSearch } from 'react-icons/io5';
@@ -13,9 +13,12 @@ import axiosAuth from '../../apis/axiosAuth';
 import axiosClient from '../../apis/axiosClient';
 
 import { Link, useNavigate } from 'react-router-dom';
+import { MyContext } from '../../App';
 
 const SearchBox = () => {
     const navigate = useNavigate();
+    const context = useContext(MyContext);
+
     const [openSearchBox, setOpenSearchBox] = useState(false);
     const searchRef = useRef(null);
     const [searchText, setSearchText] = useState('');
@@ -79,6 +82,7 @@ const SearchBox = () => {
         navigate(`/search?keyword=${encodeURIComponent(keyword)}`);
         setSearchText('');
         setOpenSearchBox(false);
+        context?.setOpenSearchPanel(false);
     };
 
     const saveSearchKeyword = async (keyword) => {
@@ -115,6 +119,7 @@ const SearchBox = () => {
             await saveSearchKeyword(keyword); // ✅ Lưu lịch sử
             setSearchText('');
             setOpenSearchBox(false);
+            context?.setOpenSearchPanel(false);
         }
     };
 

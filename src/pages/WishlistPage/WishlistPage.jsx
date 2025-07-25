@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import './WishlistPage.scss';
 
@@ -7,10 +7,20 @@ import { Button } from '@mui/material';
 import CartItems from '../../components/CartItems/CartItems';
 import WishlistItems from '../../components/WishlistItems/WishlistItems';
 import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
+import { useSelector } from 'react-redux';
+
+import useWishlist from '../../hooks/useWishlist';
 
 const WishlistPage = () => {
+    const { wishlists } = useSelector((state) => state.wishlist);
+
+    const { getWishlists } = useWishlist();
+    useEffect(() => {
+        getWishlists();
+    }, []);
+
     return (
-        <section className="py-10 w-full">
+        <section className="py-3 lg:py-10 w-full">
             <div className="container flex flex-col lg:flex-row gap-5">
                 <div className="col1 w-full lg:w-[20%]">
                     <AccountSidebar />
@@ -22,16 +32,14 @@ const WishlistPage = () => {
                             <p className="mt-0 text-[13px] lg:text-[14px]">
                                 Tổng {'  '}
                                 <span className="font-bold text-primary">
-                                    3<span> sản phẩm yêu thích</span>
+                                    {wishlists?.length} <span> sản phẩm yêu thích</span>
                                 </span>
                             </p>
                         </div>
 
                         <hr />
 
-                        <WishlistItems />
-                        <WishlistItems />
-                        <WishlistItems />
+                        <WishlistItems wishlists={wishlists} />
                     </div>
                 </div>
             </div>

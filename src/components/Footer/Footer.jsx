@@ -88,7 +88,7 @@ const Footer = () => {
                     <div className="footer flex px-3 lg:px-0 flex-col lg:flex-row py-8 ">
                         <div
                             className={`part1 w-full lg:w-[25%] ${
-                                context?.windowWidth >= 992 ? 'border-r' : ''
+                                context?.windowWidth > 992 ? 'border-r' : ''
                             } border-[rgba(0,0,0,0.2)]`}
                         >
                             <h2 className="text-[18px] font-[600] mb-4">Liên hệ chúng tôi</h2>

@@ -122,7 +122,7 @@ const ProductListPage = () => {
                         />
                     </div>
 
-                    {context?.windowWidth < 992 && (
+                    {context?.windowWidth <= 992 && (
                         <div
                             onClick={() => context.setOpenFilterProducts(false)}
                             className={`filter_overlay top-0 left-0 fixed h-full w-full bg-[rgba(0,0,0,0.5)] z-[101] ${

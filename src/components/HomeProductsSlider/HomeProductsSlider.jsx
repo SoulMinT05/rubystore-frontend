@@ -9,7 +9,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
 import HomeProductsItem from '../HomeProductsItem/HomeProductsItem';
 
-import '../HomeProductsSlider/HomeProductsSlider.css';
+import '../HomeProductsSlider/HomeProductsSlider.scss';
 import { MyContext } from '../../App';
 
 const HomeProductsSlider = ({ items, products }) => {

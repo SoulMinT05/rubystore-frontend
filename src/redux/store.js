@@ -4,6 +4,7 @@ import orderReducer from './orderSlice';
 import reviewReducer from './reviewSlice';
 import notificationReducer from './notificationSlice';
 import messageReducer from './messageSlice';
+import wishlistReducer from './wishlistSlice';
 // import userReducer from './userSlice';
 
 const store = configureStore({
@@ -13,6 +14,7 @@ const store = configureStore({
         review: reviewReducer,
         notification: notificationReducer,
         message: messageReducer,
+        wishlist: wishlistReducer,
     },
 });
 

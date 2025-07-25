@@ -56,6 +56,7 @@ function App() {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [openFilterProducts, setOpenFilterProducts] = useState(false);
     const [isFilterProductsBtnShow, setIsFilterProductsBtnShow] = useState(false);
+    const [openSearchPanel, setOpenSearchPanel] = useState(false);
 
     const [isAuthChecking, setIsAuthChecking] = useState(true);
     const [isLogin, setIsLogin] = useState(false);
@@ -195,6 +196,8 @@ function App() {
         setOpenFilterProducts,
         isFilterProductsBtnShow,
         setIsFilterProductsBtnShow,
+        openSearchPanel,
+        setOpenSearchPanel,
     };
     return (
         <>

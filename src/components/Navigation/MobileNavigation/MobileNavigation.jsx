@@ -40,7 +40,10 @@ const MobileNavigation = () => {
                         : 'w-full'
                 }
             >
-                <Button className="flex-col !w-[80px] !min-w-[80px] !text-gray-700">
+                <Button
+                    onClick={() => context?.setOpenSearchPanel(false)}
+                    className="flex-col !w-[80px] !min-w-[80px] !text-gray-700"
+                >
                     <IoHomeOutline size={18} />
                     <span className="text-[12px]">Trang chủ</span>
                 </Button>
@@ -56,7 +59,10 @@ const MobileNavigation = () => {
             )}
 
             <div className="w-full">
-                <Button className="flex-col !w-[80px] !min-w-[80px] !text-gray-700">
+                <Button
+                    onClick={() => context?.setOpenSearchPanel(true)}
+                    className="flex-col !w-[80px] !min-w-[80px] !text-gray-700"
+                >
                     <IoSearch size={18} />
                     <span className="text-[12px]">Tìm kiếm</span>
                 </Button>
@@ -70,7 +76,10 @@ const MobileNavigation = () => {
                         : 'w-full'
                 }
             >
-                <Button className="flex-col !w-[80px] !min-w-[80px] !text-gray-700">
+                <Button
+                    onClick={() => context?.setOpenSearchPanel(false)}
+                    className="flex-col !w-[80px] !min-w-[80px] !text-gray-700"
+                >
                     <IoMdNotificationsOutline size={18} />
                     <span className="text-[12px]">Thông báo</span>
                 </Button>
@@ -96,7 +105,10 @@ const MobileNavigation = () => {
                         : 'w-full'
                 }
             >
-                <Button className="flex-col !w-[80px] !min-w-[80px] !text-gray-700">
+                <Button
+                    onClick={() => context?.setOpenSearchPanel(false)}
+                    className="flex-col !w-[80px] !min-w-[80px] !text-gray-700"
+                >
                     <FiUser size={18} />
                     <span className="text-[12px]">Tài khoản</span>
                 </Button>

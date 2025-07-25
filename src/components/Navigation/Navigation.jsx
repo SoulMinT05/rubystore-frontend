@@ -6,7 +6,7 @@ import { GoRocket } from 'react-icons/go';
 import { Link } from 'react-router-dom';
 import CategoryPanel from '../CategoryPanel/CategoryPanel';
 
-import '../Navigation/Navigation.css';
+import './Navigation.scss';
 import axiosAuth from '../../apis/axiosAuth';
 import { MyContext } from '../../App';
 import MobileNavigation from './MobileNavigation/MobileNavigation';
@@ -38,10 +38,10 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
 
     return (
         <>
-            <nav className="navigation py-4 lg:py-2">
-                <div className="container flex items-center justify-start lg:justify-end gap-2 !mx-4 lg:mx-0">
-                    {context?.windowWidth > 992 && (
-                        <div className="col_1 w-[14%]">
+            <nav className="navigation py-4 xl:py-2">
+                <div className="container flex items-center justify-start gap-2 !mx-4 xl:mx-0">
+                    {context?.windowWidth > 1279 && (
+                        <div className="col_1 w-[14%] xl:w-[14%]">
                             <Button className="!text-black gap-2 w-full" onClick={openCategoryPanel}>
                                 <RiMenu2Fill className="!text-[18px]" />
                                 Danh mục
@@ -49,8 +49,8 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                             </Button>
                         </div>
                     )}
-                    <div className="col_2 w-full lg:w-[67%]">
-                        <ul className="flex items-center gap-3 lg:gap-8 nav">
+                    <div className="col_2 w-full xl:w-[86%]">
+                        <ul className="flex items-center gap-3 xl:gap-8 nav">
                             <li className="list-none">
                                 <Link
                                     to="/"
@@ -125,8 +125,8 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                                 })}
                         </ul>
                     </div>
-                    <div className="col_3 w-[19%] hidden lg:block">
-                        <p className="text-[14px] font-[500] flex items-center gap-3 mb-0 mt-0">
+                    <div className="col_3 hidden lg:block lg:w-[30%] xl:hidden ">
+                        <p className="text-[12px] md:text-[13px] lg:text-[14px] font-[500] flex items-center gap-3 mb-0 mt-0">
                             <GoRocket className="text-[18px]" />
                             Giao hàng quốc tế miễn phí
                         </p>
@@ -142,7 +142,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                 />
             )}
 
-            {context.userInfo?._id && context.windowWidth < 992 && <MobileNavigation />}
+            {context.userInfo?._id && context.windowWidth <= 1023 && <MobileNavigation />}
         </>
     );
 };

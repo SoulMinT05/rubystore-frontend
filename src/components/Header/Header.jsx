@@ -269,20 +269,20 @@ const Header = () => {
             <div className="top-strip py-2 border-t-[1px] border-gray-250 border-b-[1px] ">
                 <div className="container">
                     <div className="flex items-center justify-between">
-                        <div className="col1 w-[50%] hidden lg:block ">
+                        <div className="col1 w-[50%] hidden xl:block ">
                             <p className="text-[13px] !lg:text-[13px] font-[500]">
                                 Sale to 50% off new season styles, limited time
                             </p>
                         </div>
-                        <div className="col2 flex items-center justify-between w-full lg:w-[50%] lg:justify-end ">
-                            <ul className="flex items-center gap-3 w-full justify-between lg:w-[280px]   ">
+                        <div className="col2 flex items-center justify-between w-full xl:w-[50%] xl:justify-end ">
+                            <ul className="flex items-center gap-3 w-full justify-between xl:w-[280px]   ">
                                 <li className="list-none">
-                                    <Link to="/help-center" className="text-[12px] lg:text-[13px] link font-[500]">
+                                    <Link to="/help-center" className="text-[12px] xl:text-[13px] link font-[500]">
                                         Trung tâm trợ giúp
                                     </Link>
                                 </li>
                                 <li className="list-none">
-                                    <Link to="/order-tracking" className="text-[12px] lg:text-[13px] link font-[500]">
+                                    <Link to="/order-tracking" className="text-[12px] xl:text-[13px] link font-[500]">
                                         Tra cứu đơn hàng
                                     </Link>
                                 </li>
@@ -292,9 +292,9 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className="header py-2 lg:py-4 border-b-[1px] border-gray-250">
+            <div className="header py-2 xl:py-4 border-b-[1px] border-gray-250">
                 <div className="container flex items-center justify-between">
-                    {context?.windowWidth < 992 && (
+                    {context?.windowWidth <= 1279 && (
                         <Button
                             onClick={() => setIsOpenCatPanel(true)}
                             className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !text-gray-800"
@@ -302,25 +302,29 @@ const Header = () => {
                             <HiOutlineMenu size={22} />
                         </Button>
                     )}
-                    <div className="col1 w-[40%] lg:w-[25%]">
+                    <div className="col1 w-[40%] md:w-[26%] lg:w-[25%]">
                         <Link to="/">
-                            <img src={logo} alt="" className="h-[38px] lg:h-[44px]" />
+                            <img src={logo} alt="" className="h-[38px] xl:h-[44px]" />
                         </Link>
                     </div>
-                    <div className="col2 fixed top-0 left-0 w-full h-full lg:w-[40%] lg:static p-2 lg:p-0 bg-white z-50 hidden lg:block ">
+                    <div
+                        className={`col2 fixed top-0 left-0 w-full h-full lg:w-[40%] xl:static p-2 xl:p-0 bg-white z-50 
+                        ${context?.openSearchPanel === true ? 'block' : 'hidden'} xl:block
+                        `}
+                    >
                         <SearchBox />
                     </div>
-                    <div className="col3 sm:w-[17%] lg:w-[35%] flex items-center pl-7">
-                        <ul className="flex items-center justify-end gap-0 lg:gap-3 w-full">
+                    <div className="col3 sm:w-[7%] md:w-[31%] lg:w-[35%] flex items-center pl-7">
+                        <ul className="flex items-center justify-end gap-0 xl:gap-3 w-full">
                             {context.isLogin === false ? (
                                 <li className="list-none">
-                                    <Link to="/login" className="link transition text-[13px] lg:text-[15px] font-[500]">
+                                    <Link to="/login" className="link transition text-[13px] xl:text-[15px] font-[500]">
                                         Đăng nhập
                                     </Link>
                                 </li>
                             ) : (
                                 <>
-                                    {context?.windowWidth > 992 && (
+                                    {context?.windowWidth > 1279 && (
                                         <>
                                             <Button
                                                 className="!text-[#000] myAccountWrap flex items-center gap-3 cursor-pointer"
@@ -331,7 +335,7 @@ const Header = () => {
                                                     alt=""
                                                     className="!w-[52px] !h-[52px] !min-w-[52px] rounded-full object-cover"
                                                 />
-                                                {context?.windowWidth > 992 && (
+                                                {context?.windowWidth > 1279 && (
                                                     <div className="info flex flex-col gap-1">
                                                         <h4 className="leading-3 text-[14px] text-[rgba(0,0,0,0.7)] mb-0 font-[500] capitalize text-left justify-start">
                                                             {context.userInfo?.name}
@@ -432,7 +436,7 @@ const Header = () => {
                             )}
                             {context?.userInfo?._id && (
                                 <>
-                                    {context?.windowWidth > 992 && (
+                                    {context?.windowWidth > 1279 && (
                                         <>
                                             <li
                                                 onMouseEnter={() => setOpenNotifications(true)}

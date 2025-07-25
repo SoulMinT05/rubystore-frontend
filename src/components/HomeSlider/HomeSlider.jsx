@@ -19,7 +19,7 @@ const HomeSlider = ({ homeSlides }) => {
                         delay: 25500,
                         disableOnInteraction: false,
                     }}
-                    navigation={context?.windowWidth < 992 ? false : true}
+                    navigation={context?.windowWidth <= 992 ? false : true}
                     modules={[Autoplay, Navigation]}
                     className="homeSwiper"
                 >

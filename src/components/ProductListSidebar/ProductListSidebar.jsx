@@ -358,7 +358,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                 </div>
             </div>
 
-            {context?.windowWidth < 992 && (
+            {context?.windowWidth <= 992 && (
                 <Button
                     variant="contained"
                     color="primary"

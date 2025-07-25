@@ -20,7 +20,7 @@ const HomeCatSlider = ({ categories }) => {
                 <Swiper
                     slidesPerView={8}
                     spaceBetween={10}
-                    navigation={context?.windowWidth < 992 ? false : true}
+                    navigation={context?.windowWidth <= 992 ? false : true}
                     modules={[Navigation, FreeMode]}
                     freeMode={true}
                     breakpoints={{

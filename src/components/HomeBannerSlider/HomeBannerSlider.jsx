@@ -21,7 +21,7 @@ const HomeBannerSlider = () => {
             loop={true}
             spaceBetween={30}
             effect={'fade'}
-            navigation={context?.windowWidth < 992 ? false : true}
+            navigation={context?.windowWidth <= 992 ? false : true}
             modules={[EffectFade, Navigation, Pagination, Autoplay]}
             pagination={{
                 clickable: true,
