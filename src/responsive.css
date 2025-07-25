@@ -5,6 +5,13 @@
     }
 }
 
+@media only screen and (min-width: 320px) and (max-width: 1023px) {
+    .zoomProductSliderThumbs .swiper-button-next:after,
+    .zoomProductSliderThumbs .swiper-button-prev:after {
+        display: none !important;
+    }
+}
+
 @media only screen and (min-width: 320px) and (max-width: 1279px) {
     html,
     body {
@@ -76,10 +83,6 @@
     .sidebarWrapper.open {
         bottom: 0px !important;
         opacity: 1 !important;
-    }
-    .zoomProductSliderThumbs .swiper-button-next:after,
-    .zoomProductSliderThumbs .swiper-button-prev:after {
-        display: none !important;
     }
 }
 @media only screen and (min-width: 320px) and (max-width: 767px) {

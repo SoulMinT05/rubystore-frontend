@@ -26,13 +26,13 @@ const ProductZoom = ({ images }) => {
     };
     return (
         <>
-            <div className="flex flex-col lg:flex-row gap-3">
+            <div className="flex flex-col lg:flex-row lg:items-center gap-3">
                 <div className="slider w-full lg:w-[15%] order-2 lg:order-1">
                     <Swiper
                         ref={zoomSliderSml}
                         direction={context?.windowWidth > 1023 ? 'vertical' : 'horizontal'}
                         slidesPerView={5}
-                        spaceBetween={context?.windowWidth > 1023 ? 0 : 10}
+                        spaceBetween={context?.windowWidth > 1023 ? 10 : 10}
                         navigation={true}
                         modules={[Navigation]}
                         className={`zoomProductSliderThumbs  lg:h-[420px] overflow-hidden ${
