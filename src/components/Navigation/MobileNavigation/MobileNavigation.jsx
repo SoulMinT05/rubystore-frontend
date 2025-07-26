@@ -69,7 +69,7 @@ const MobileNavigation = () => {
             </div>
 
             <NavLink
-                to="/wishlist"
+                to="/notification"
                 className={({ isActive }) =>
                     isActive
                         ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
@@ -84,19 +84,6 @@ const MobileNavigation = () => {
                     <span className="text-[12px]">Thông báo</span>
                 </Button>
             </NavLink>
-            {/* <NavLink
-                    to="/order-history"
-                    className={({ isActive }) =>
-                        isActive
-                            ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
-                            : 'w-full'
-                    }
-                >
-                    <Button className="flex-col !w-[80px] !min-w-[80px] !text-gray-700">
-                        <BsBagCheck size={18} />
-                        <span className="text-[12px]">Đơn hàng</span>
-                    </Button>
-                </NavLink> */}
             <NavLink
                 to="/my-account"
                 className={({ isActive }) =>

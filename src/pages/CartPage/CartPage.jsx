@@ -178,7 +178,6 @@ const CartPage = () => {
                 discountValue: cart?.voucher?.discountValue || 0,
                 voucher: cart?.voucher || null,
             });
-            console.log('dataCheckout: ', data);
             if (data?.success) {
                 navigate(data.redirectUrl);
             } else {
@@ -350,20 +349,20 @@ const CartPage = () => {
                         </DialogContent>
                     </Dialog>
                     <div className="shadow-md rounded-md bg-white p-5 flex items-center justify-between ">
-                        <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Mã Voucher</span>
+                        <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-[500]">Mã Voucher</span>
                         <span
-                            className="text-[13px] sm:text-[14px] lg:text-[16px] text-primary font-[500] cursor-pointer"
+                            className="text-[13px] sm:text-[14px] lg:text-[15px] text-primary font-[500] cursor-pointer"
                             onClick={handleClickOpenVoucher}
                         >
                             Nhập mã
                         </span>
                     </div>
                     <div className="shadow-md rounded-md bg-white p-5 mt-4 flex items-center justify-between ">
-                        <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">
+                        <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-[500]">
                             Giảm {formatCurrency(500000)} phí vận chuyển đơn tối thiểu {formatCurrency(0)}
                         </span>
                         {context?.windowWidth >= 640 && (
-                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] text-[#0055aa] font-[500] ">
+                            <span className="text-[13px] sm:text-[14px] lg:text-[15px] text-[#0055aa] font-[500] ">
                                 Tìm hiểu thêm
                             </span>
                         )}
@@ -374,19 +373,19 @@ const CartPage = () => {
                         <h3 className="py-3">Chi tiết</h3>
                         <hr />
                         <p className="flex items-center justify-between">
-                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Số lượng</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-[500]">Số lượng</span>
                             <span className="text-primary font-bold">{totalQuantity}</span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Giá sản phẩm</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-[500]">Giá sản phẩm</span>
                             <span className="text-primary font-bold">{formatCurrency(totalPrice)}</span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Phí vận chuyển</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-[500]">Phí vận chuyển</span>
                             <span className="text-primary font-bold">{formatCurrency(0)}</span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Voucher</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-[500]">Voucher</span>
                             <span className="text-primary font-bold">
                                 {cart?.voucher ? (
                                     cart?.voucher?.discountType === 'percent' ? (
@@ -395,12 +394,12 @@ const CartPage = () => {
                                         `${formatCurrency(cart?.voucher?.discountValue)}`
                                     )
                                 ) : (
-                                    <span className="text-[13px] sm:text-[14px] lg:text-[16px]">Chưa áp dụng</span>
+                                    <span className="text-[13px] sm:text-[14px] lg:text-[15px]">Chưa áp dụng</span>
                                 )}
                             </span>
                         </p>
                         <p className="flex items-center justify-between">
-                            <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[500]">Tổng tiền</span>
+                            <span className="text-[13px] sm:text-[14px] lg:text-[15px] font-[500]">Tổng tiền</span>
                             <span className="text-primary font-bold">{formatCurrency(finalPrice)}</span>
                         </p>
 

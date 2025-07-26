@@ -39,9 +39,11 @@ import {
     addNotification,
     fetchNotifications,
     getUnreadCountNotifications,
+    markAllNotificationsAsRead,
     markNotificationRead,
 } from '../../redux/notificationSlice';
 import { socket } from '../../config/socket';
+import { fetchWishlists } from '../../redux/wishlistSlice';
 
 const tailwindColorMap = {
     'bg-blue-500': '#3b82f6',
@@ -86,6 +88,8 @@ const Header = () => {
     const { cart } = useSelector((state) => state.cart);
     const { notifications } = useSelector((state) => state.notification);
     const { unreadCountNotifications } = useSelector((state) => state.notification);
+
+    const { wishlists } = useSelector((state) => state.wishlist);
 
     const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
 
@@ -137,7 +141,17 @@ const Header = () => {
             }
         };
         getNotification();
-    }, []);
+    }, [context?.isLogin, dispatch]);
+
+    useEffect(() => {
+        const getWishlists = async () => {
+            const { data } = await axiosClient.get('/api/user/getAllWishlists');
+            if (data?.success) {
+                dispatch(fetchWishlists(data?.wishlists));
+            }
+        };
+        getWishlists();
+    }, [context?.isLogin, dispatch]);
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -249,6 +263,20 @@ const Header = () => {
         }
     };
 
+    const handleMarkAllNotificationsAsRead = async () => {
+        if (unreadCountNotifications === 0) return;
+        try {
+            const { data } = await axiosClient.post(`/api/notification/markAllNotificationsAsRead`);
+            if (data.success) {
+                context.openAlertBox('success', data.message);
+                dispatch(markAllNotificationsAsRead());
+            }
+        } catch (error) {
+            console.log(error);
+            context.openAlertBox('error', error?.response?.data?.message || 'Đã xảy ra lỗi!');
+        }
+    };
+
     const handleMarkAsReadAndNavigate = async (notificationId) => {
         try {
             const { data } = await axiosClient.post(`/api/notification/markNotificationAsRead/${notificationId}`);
@@ -269,13 +297,13 @@ const Header = () => {
             <div className="top-strip py-2 border-t-[1px] border-gray-250 border-b-[1px] ">
                 <div className="container">
                     <div className="flex items-center justify-between">
-                        <div className="col1 w-[50%] hidden xl:block ">
-                            <p className="text-[13px] !lg:text-[13px] font-[500]">
-                                Sale to 50% off new season styles, limited time
+                        <div className="col1 lg:w-[50%] hidden xl:block ">
+                            <p className="text-[13px] !xl:text-[13px] font-[500]">
+                                Ưu đãi lên đến 50% – Mùa mới, diện mạo mới!
                             </p>
                         </div>
                         <div className="col2 flex items-center justify-between w-full xl:w-[50%] xl:justify-end ">
-                            <ul className="flex items-center gap-3 w-full justify-between xl:w-[280px]   ">
+                            <ul className="flex items-center gap-3 w-full justify-between xl:w-[280px]">
                                 <li className="list-none">
                                     <Link to="/help-center" className="text-[12px] xl:text-[13px] link font-[500]">
                                         Trung tâm trợ giúp
@@ -490,6 +518,26 @@ const Header = () => {
                                                         }}
                                                         tabIndex={-1} // ✅ Tránh lỗi focus gây aria-hidden
                                                     >
+                                                        <Box className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+                                                            <Typography
+                                                                className="!text-[16px]"
+                                                                variant="h6"
+                                                                fontWeight={500}
+                                                            >
+                                                                Thông báo ({unreadCountNotifications || 0})
+                                                            </Typography>
+                                                            <Typography
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleMarkAllNotificationsAsRead();
+                                                                }}
+                                                                variant="caption"
+                                                                className="!text-[14px] italic text-blue-500  hover:underline cursor-pointer"
+                                                            >
+                                                                Đánh dấu tất cả đã đọc
+                                                            </Typography>
+                                                        </Box>
+
                                                         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                                                             {notifications?.length > 0 &&
                                                                 notifications?.map((notification) => {
@@ -566,11 +614,6 @@ const Header = () => {
                                                                                                 : 'text-blue-500 hover:underline cursor-pointer'
                                                                                         }`}
                                                                                     >
-                                                                                        {/* {isNotificationAsRead
-                                                                                    ? 'Đang đánh dấu'
-                                                                                    : notification?.isRead
-                                                                                    ? 'Đã đọc'
-                                                                                    : 'Đánh dấu là đã đọc'} */}
                                                                                         {notification?.isRead
                                                                                             ? 'Đã đọc'
                                                                                             : 'Đánh dấu là đã đọc'}
@@ -588,7 +631,10 @@ const Header = () => {
 
                                                             <ListItem
                                                                 className="justify-center hover:underline text-blue-600 cursor-pointer py-2"
-                                                                onClick={() => navigate('/notifications')} // Hoặc gọi hàm gì đó nếu có
+                                                                onClick={() => {
+                                                                    setOpenNotifications(false);
+                                                                    navigate('/notification');
+                                                                }} // Hoặc gọi hàm gì đó nếu có
                                                             >
                                                                 <Typography
                                                                     variant="body2"
@@ -601,9 +647,13 @@ const Header = () => {
                                                     </Paper>
                                                 </Popper>
                                             </li>
-                                            <li className="mx-2">
+                                            <li onClick={() => navigate('/wishlist')} className="mx-2">
                                                 <Tooltip title="Yêu thích" placement="top">
-                                                    <Badge className="icon-header" badgeContent={4} color="primary">
+                                                    <Badge
+                                                        className="icon-header"
+                                                        badgeContent={wishlists?.length}
+                                                        color="primary"
+                                                    >
                                                         <FaRegHeart className="text-2xl" />
                                                     </Badge>
                                                 </Tooltip>

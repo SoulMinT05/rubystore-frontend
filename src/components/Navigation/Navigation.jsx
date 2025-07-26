@@ -54,7 +54,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                             <li className="list-none">
                                 <Link
                                     to="/"
-                                    className="link transition text-black text-[12px] lg:text-[14px] font-[500]"
+                                    className="link transition text-black text-[12px] lg:text-[13px] xl:text-[14px] font-[500]"
                                 >
                                     Trang chủ
                                 </Link>
@@ -65,7 +65,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                                         <li key={index} className="list-none relative">
                                             <Link
                                                 to={`/product?categoryId=${category?._id}`}
-                                                className="link transition text-black text-[12px] lg:text-[14px] font-[500]"
+                                                className="link transition text-black text-[12px] lg:text-[13px] xl:text-[14px] font-[500]"
                                             >
                                                 {category?.name}
                                             </Link>
@@ -126,7 +126,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                         </ul>
                     </div>
                     <div className="col_3 hidden lg:block lg:w-[30%] xl:hidden ">
-                        <p className="text-[12px] md:text-[13px] lg:text-[14px] font-[500] flex items-center gap-3 mb-0 mt-0">
+                        <p className="text-[12px] md:text-[13px] lg:text-[13px] xl:text-[14px] font-[500] flex items-center gap-3 mb-0 mt-0">
                             <GoRocket className="text-[18px]" />
                             Giao hàng quốc tế miễn phí
                         </p>

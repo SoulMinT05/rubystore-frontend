@@ -5,6 +5,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
 import DOMPurify from 'dompurify';
+import { useNavigate } from 'react-router-dom';
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -18,9 +19,15 @@ const HomeBlogsItem = ({ blog }) => {
     const sanitizedDescription = DOMPurify.sanitize(blog.description, {
         ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'span'],
     });
+
+    const navigate = useNavigate();
+
     return (
         <div className="blogItem group">
-            <div className="imgWrapper w-full overflow-hidden rounded-md cursor-pointer relative">
+            <div
+                onClick={() => navigate(`/blog/${blog?._id}`)}
+                className="imgWrapper w-full overflow-hidden rounded-md cursor-pointer relative"
+            >
                 <img
                     src={blog?.images[0]}
                     alt="Blog Image"

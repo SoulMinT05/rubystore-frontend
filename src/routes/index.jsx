@@ -19,6 +19,8 @@ import ScrollToTopComponent from '../components/ScrollToTopComponent/ScrollToTop
 import SearchResultsPage from '../pages/SearchResultsPage/SearchResultsPage';
 import MessagePage from '../pages/MessagePage/MessagePage';
 import MessagePageDetails from '../pages/MessagePageDetails/MessagePageDetails';
+import BlogDetailsPage from '../pages/BlogDetailsPage/BlogDetailsPage';
+import NotificationPage from '../pages/NotificationPage/NotificationPage';
 
 const AppRoutes = () => (
     <>
@@ -69,6 +71,14 @@ const AppRoutes = () => (
                 }
             />
             <Route
+                path="/notification"
+                element={
+                    <PrivateRoute>
+                        <NotificationPage />
+                    </PrivateRoute>
+                }
+            />
+            <Route
                 path="/change-password"
                 element={
                     <PrivateRoute>
@@ -89,6 +99,14 @@ const AppRoutes = () => (
                 element={
                     <PrivateRoute>
                         <MessagePageDetails />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/blog/:id"
+                element={
+                    <PrivateRoute>
+                        <BlogDetailsPage />
                     </PrivateRoute>
                 }
             />
