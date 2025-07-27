@@ -86,7 +86,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
     }, []);
 
     useEffect(() => {
-        // const url = window.location.href; // http://localhost:5173/product?categoryId=681751c5db78565c8d98e823
+        // const url = window.location.href; // http://localhost:30213/product?categoryId=681751c5db78565c8d98e823
         const queryParameters = new URLSearchParams(location.search); // ?categoryId=681751c5db78565c8d98e823
         const keyword = queryParameters.get('keyword');
 

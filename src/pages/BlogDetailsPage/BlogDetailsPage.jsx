@@ -47,14 +47,19 @@ const BlogDetailsPage = () => {
         <section className="py-3 lg:py-8 w-full">
             <div className="pb-2 pt-0 container  flex items-center justify-between">
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link underline="hover" color="inherit" to="/" className="link transition !text-[16px]">
+                    <Link
+                        underline="hover"
+                        color="inherit"
+                        to="/"
+                        className="link transition !text-[14px] !lg:!text-[16px]"
+                    >
                         Trang chủ
                     </Link>
                     <Link
                         underline="hover"
                         color="inherit"
                         to={`/blog/${blogDetails?._id}`}
-                        className="link transition !text-[16px]"
+                        className="link transition !text-[14px] !lg:!text-[16px]"
                     >
                         Chi tiết bài viết
                     </Link>
@@ -67,7 +72,7 @@ const BlogDetailsPage = () => {
                             <img
                                 src={blogDetails?.images[0]}
                                 alt=""
-                                className="w-full h-[400px] lg:h-[780px] xl:h-[900px] object-cover rounded-md mb-4"
+                                className="w-full image_banner h-[400px] lg:h-[780px] xl:h-[900px] object-cover rounded-md mb-4"
                             />
                         )}
                         <h1 className="text-[18px] lg:text-[20px] mb-3">{blogDetails?.name}</h1>
@@ -90,7 +95,7 @@ const BlogDetailsPage = () => {
                                         <img
                                             src={blog?.images[0]}
                                             alt=""
-                                            className="w-full h-[140px] xl:h-[124px] object-cover group-hover:scale-105 transition-all"
+                                            className="w-full h-[170px] sm:h-[220px] md:h-[280px] lg:h-[128px] xl:h-[150px] object-cover group-hover:scale-105 transition-all"
                                         />
                                     </div>
                                     <h3 className="text-[14px] w-[60%] line-clamp-2 link transition-all">

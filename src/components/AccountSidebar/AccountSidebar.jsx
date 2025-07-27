@@ -13,6 +13,7 @@ import { IoKeyOutline } from 'react-icons/io5';
 import './AccountSidebar.css';
 import axiosClient from '../../apis/axiosClient';
 import { MyContext } from '../../App';
+import { LuSend } from 'react-icons/lu';
 
 const AccountSidebar = () => {
     const context = useContext(MyContext);
@@ -153,6 +154,21 @@ const AccountSidebar = () => {
                         <Button className="w-full !text-left !py-2 !px-3 !xl:px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
                             <IoMdNotificationsOutline className="text-[17px]" />
                             <span className="text-[13px] xl:text-[14px]">Thông báo</span>
+                        </Button>
+                    </NavLink>
+                </li>
+                <li className="w-full">
+                    <NavLink
+                        to="/message"
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'active w-full' // hoặc bất kỳ class nào bạn muốn thêm
+                                : 'w-full'
+                        }
+                    >
+                        <Button className="w-full !text-left !py-2 !px-3 !xl:px-5 !justify-start !capitalize !text-[rgba(0,0,0,0.8)] !rounded-none flex items-center gap-2">
+                            <LuSend className="text-[17px]" />
+                            <span className="text-[13px] xl:text-[14px]">Tin nhắn</span>
                         </Button>
                     </NavLink>
                 </li>

@@ -86,10 +86,15 @@ const SearchResultsPage = () => {
         <section className="py-5 pb-0">
             <div className="container p-2 lg:p-0">
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link underline="hover" color="inherit" to="/" className="link transition">
+                    <Link
+                        underline="hover"
+                        color="inherit"
+                        to="/"
+                        className="link transition !text-[14px] !lg:!text-[16px]"
+                    >
                         Trang chủ
                     </Link>
-                    <Link underline="hover" color="inherit" className="link transition">
+                    <Link underline="hover" color="inherit" className="link transition !text-[14px] !lg:!text-[16px]">
                         Kết quả tìm kiếm
                     </Link>
                 </Breadcrumbs>

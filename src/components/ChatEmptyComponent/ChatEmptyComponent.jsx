@@ -3,7 +3,7 @@ import noMessage from '../../assets/no-message.png';
 
 const ChatEmptyComponent = () => {
     return (
-        <div className="relative flex flex-col flex-[3] h-full bg-white">
+        <div className="relative hidden lg:flex flex-col flex-[3] h-full bg-white">
             {/* Left Divider */}
             <div className="absolute top-0 left-0 w-[1px] h-full bg-[rgba(0,0,0,0.12)] z-10"></div>
 

@@ -57,6 +57,7 @@ function App() {
     const [openFilterProducts, setOpenFilterProducts] = useState(false);
     const [isFilterProductsBtnShow, setIsFilterProductsBtnShow] = useState(false);
     const [openSearchPanel, setOpenSearchPanel] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     const [isAuthChecking, setIsAuthChecking] = useState(true);
     const [isLogin, setIsLogin] = useState(false);
@@ -198,6 +199,8 @@ function App() {
         setIsFilterProductsBtnShow,
         openSearchPanel,
         setOpenSearchPanel,
+        isChatOpen,
+        setIsChatOpen,
     };
     return (
         <>

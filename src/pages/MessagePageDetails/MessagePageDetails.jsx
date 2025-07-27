@@ -19,7 +19,6 @@ const MessagePageDetails = () => {
     useEffect(() => {
         const getMessageDetailsForUsers = async () => {
             const { data } = await axiosClient.get(`/api/message/getMessagesForUsers/${id}`);
-            console.log('dataMessageForUsers: ', data);
             if (data?.success) {
                 dispatch(fetchMessagesDetails(data?.messages));
             }
@@ -42,10 +41,20 @@ const MessagePageDetails = () => {
             <div className="pb-4 pt-0  container flex items-center justify-between">
                 <div className="">
                     <Breadcrumbs aria-label="breadcrumb">
-                        <Link underline="hover" color="inherit" to="/" className="link transition !text-[16px]">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            to="/"
+                            className="link transition !text-[14px] !lg:!text-[16px]"
+                        >
                             Trang chủ
                         </Link>
-                        <Link underline="hover" color="inherit" to="/message" className="link transition !text-[16px]">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            to="/message"
+                            className="link transition !text-[14px] !lg:!text-[16px]"
+                        >
                             Tin nhắn
                         </Link>
                     </Breadcrumbs>
@@ -55,9 +64,15 @@ const MessagePageDetails = () => {
                 className="container flex  h-[80vh] rounded-xl border"
                 style={{ borderColor: 'rgba(255, 255, 255, 0.125)' }}
             >
-                <MessageListSidebar />
-                <ChatComponent messagesDetails={messagesDetails} receiverId={id} />
-                {/* <MessageDetails /> */}
+                <MessageListSidebar
+                // isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen}
+                />
+                <ChatComponent
+                    // isChatOpen={isChatOpen}
+                    // setIsChatOpen={setIsChatOpen}
+                    messagesDetails={messagesDetails}
+                    receiverId={id}
+                />
             </div>
         </div>
     );

@@ -80,10 +80,19 @@ const CheckoutPage = () => {
             <div className="pb-2 pt-0  container w-[80%] max-w-[80%] flex items-center justify-between">
                 <div className="">
                     <Breadcrumbs aria-label="breadcrumb">
-                        <Link underline="hover" color="inherit" to="/" className="link transition !text-[16px]">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            to="/"
+                            className="link transition !text-[14px] !lg:!text-[16px]"
+                        >
                             Trang chủ
                         </Link>
-                        <Link underline="hover" color="inherit" className="link transition !text-[16px]">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            className="link transition !text-[14px] !lg:!text-[16px]"
+                        >
                             Thanh toán
                         </Link>
                     </Breadcrumbs>

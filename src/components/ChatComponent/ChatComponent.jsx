@@ -12,6 +12,7 @@ import { MdOutlineCameraAlt } from 'react-icons/md';
 import { HiMicrophone } from 'react-icons/hi2';
 import { MdOutlineEmojiEmotions } from 'react-icons/md';
 import { LuSend } from 'react-icons/lu';
+import { IoChevronBack } from 'react-icons/io5';
 
 import EmojiPicker from 'emoji-picker-react';
 import axiosClient from '../../apis/axiosClient';
@@ -20,7 +21,11 @@ import { formatDisplayTime } from '../../utils/formatTimeChat';
 import { useDispatch } from 'react-redux';
 import { sendMessage } from '../../redux/messageSlice';
 
-const ChatComponent = ({ messagesDetails, receiverId }) => {
+const ChatComponent = ({
+    // isChatOpen, setIsChatOpen,
+    messagesDetails,
+    receiverId,
+}) => {
     const { id } = useParams();
     const context = useContext(MyContext);
     const dispatch = useDispatch();
@@ -131,7 +136,9 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
         }
     };
     return (
-        <div className="relative flex flex-col flex-[3] h-full bg-white">
+        <div
+            className={`relative ${context?.isChatOpen ? 'flex' : 'hidden'} lg:flex flex-col flex-[3] h-full bg-white`}
+        >
             {/* Left Divider */}
             <div className="absolute top-0 left-0 w-[1px] h-full bg-[rgba(0,0,0,0.12)] z-10"></div>
 
@@ -141,10 +148,15 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
             {/* TOP */}
             <div className="top p-5 flex items-center justify-between">
                 <div className="user flex items-center gap-3">
+                    {context?.windowWidth < 1024 && (
+                        <div onClick={() => context?.setIsChatOpen(false)} className="">
+                            <IoChevronBack className="text-[22px]" />
+                        </div>
+                    )}
                     <img className="w-[40px] h-[40px] object-cover rounded-full" src={staffInfo?.avatar} alt="" />
                     <div className="texts gap-1">
-                        <span className="text-[17px] font-[600]"> {staffInfo?.name}</span>
-                        <p className="text-gray-500 text-[13px] font-[300] mt-0">Online 7 phút trước</p>
+                        <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[600]"> {staffInfo?.name}</span>
+                        <p className="text-gray-500 text-[12px] lg:text-[13px] font-[300] mt-0">Online 7 phút trước</p>
                     </div>
                 </div>
                 <div className="icons flex items-center gap-0">
@@ -154,15 +166,15 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
                     <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
                         <IoVideocamOutline className="text-[20px] text-gray-800" />
                     </Button>
-                    <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
+                    {/* <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
                         <BiInfoCircle className="text-[20px] text-gray-800" />
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
 
             <Divider />
             {/* CENTER */}
-            <div ref={messageContainerRef} className="center p-4 flex-1 overflow-scroll flex flex-col gap-5 ">
+            <div ref={messageContainerRef} className="center p-4 flex-1 overflow-scroll flex flex-col gap-5">
                 {messagesDetails?.length > 0 &&
                     messagesDetails?.map((msg, index) => {
                         const isOwn = msg?.senderId?._id === context?.userInfo?._id;
@@ -185,8 +197,10 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
                                         msg.images.map((img, i) => (
                                             <img className="w-[300px]" key={i} src={img} alt="image" />
                                         ))}
-                                    {msg?.text && <p className="my-0 text-[15px]">{msg.text}</p>}
-                                    <span className="!mt-0">{formatDisplayTime(msg?.createdAt)}</span>
+                                    {msg?.text && <p className="my-0 text-[13px] lg:text-[14px]">{msg.text}</p>}
+                                    <span className="!mt-0 !text-[12px] !lg:text-[13px]">
+                                        {formatDisplayTime(msg?.createdAt)}
+                                    </span>
                                 </div>
                             </div>
                         );
@@ -195,21 +209,14 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
             <Divider />
 
             {/* BOTTOM */}
-            <div className="bottom mt-auto p-5 flex items-center justify-between ">
+            <div className="bottom mt-auto px-[6px] py-5 lg:p-5 flex items-center justify-between ">
                 <div className="icons">
-                    <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
-                        <MdOutlineCameraAlt className="text-[20px] text-gray-800" />
-                    </Button>
-                    <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
-                        <HiMicrophone className="text-[20px] text-gray-800" />
-                    </Button>
                     <Button
                         onClick={handlePhotoClick}
                         className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200"
                     >
-                        <MdOutlineInsertPhoto className="text-[20px] text-gray-800" />
+                        <MdOutlineInsertPhoto className="text-[18px] text-gray-800" />
                     </Button>
-                    {/* 👇 Hidden file input */}
                     <input
                         type="file"
                         name="images"
@@ -220,22 +227,22 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
                         className="hidden"
                     />
                 </div>
-                <div className="relative flex-1 h-[60px]">
-                    <input
+                <div className="relative flex-1 h-[60px] max-h-[160px]">
+                    <textarea
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !isSendMessage && text.trim()) {
-                                e.preventDefault();
+                            if (e.key === 'Enter' && !e.shiftKey && !isSendMessage && text.trim()) {
+                                e.preventDefault(); // tránh xuống dòng
                                 handleSendMessage();
                             }
                         }}
-                        type="text"
                         placeholder="Tìm kiếm..."
-                        className="w-full h-full bg-gray-100 p-[20px] pr-10 rounded-[8px] focus:outline-none"
+                        rows={1}
+                        className="w-full resize-none overflow-y-auto max-h-[200px] text-[13px] lg:text-[14px] bg-gray-100 p-[20px] pr-10 rounded-[8px] focus:outline-none overflow-hidden"
                     />
                     <Button className="!absolute top-1/2 right-2 -translate-y-1/2 !w-[35px] !min-w-[35px] h-[35px] !rounded-full bg-gray-100 hover:bg-gray-200">
-                        <LuSend className="text-[20px] text-gray-800" />
+                        <LuSend className="text-[18px] text-gray-800" />
                     </Button>
                 </div>
                 <div className="emoji relative">
@@ -243,7 +250,7 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
                         onClick={() => setOpenEmoji(!openEmoji)}
                         className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200"
                     >
-                        <MdOutlineEmojiEmotions className="text-[20px] text-gray-800" />
+                        <MdOutlineEmojiEmotions className="text-[18px] text-gray-800" />
                     </Button>
                     <div className="picker absolute bottom-[50px] right-[8px] ">
                         <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
@@ -254,9 +261,9 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
                     className=" bg-blue-500 hover:bg-blue-600 text-white normal-case px-[18px] py-2 rounded-md transition duration-200"
                 >
                     {isSendMessage ? (
-                        <CircularProgress className="circ-white" size={20} thickness={5} sx={{ color: 'white' }} />
+                        <CircularProgress className="circ-white" size={18} thickness={5} sx={{ color: 'white' }} />
                     ) : (
-                        'Gửi'
+                        <span className="text-[13px] lg:text-[14px]">Gửi</span>
                     )}
                 </button>
             </div>

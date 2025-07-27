@@ -196,10 +196,20 @@ const CartPage = () => {
             <div className="pb-2 pt-0  container xl:w-[96%] xl:max-w-[96%] 2xl:w-[80%] 2xl:max-w-[80%] flex items-center justify-between">
                 <div className="">
                     <Breadcrumbs aria-label="breadcrumb">
-                        <Link underline="hover" color="inherit" to="/" className="link transition !text-[16px]">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            to="/"
+                            className="link transition !text-[14px] !lg:!text-[16px]"
+                        >
                             Trang chủ
                         </Link>
-                        <Link underline="hover" color="inherit" to="/cart" className="link transition !text-[16px]">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            to="/cart"
+                            className="link transition !text-[14px] !lg:!text-[16px]"
+                        >
                             Giỏ hàng
                         </Link>
                     </Breadcrumbs>
