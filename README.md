@@ -1,12 +1,117 @@
-# React + Vite
+# RubyStore (Client)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+RubyStore is a modern e-commerce frontend application that delivers a seamless and engaging shopping experience.  
+It supports a full range of core features including:
 
-Currently, two official plugins are available:
+-   **OAuth2 Login** – sign-in quickly with Google
+-   **OTP Email Verification** – secure account registration
+-   **Product Browsing** – explore a wide range of products
+-   **Product Reviewing** - review real-time
+-   **Product Details** – images, prices, and descriptions
+-   **Shopping Cart** – manage items before checkout
+-   **Vouchers** – apply discount codes
+-   **Checkout** – complete orders smoothly
+-   **Notifications** – real-time order updates
+-   **Messaging** – built-in chat system
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This repository contains the frontend codebase built with React and other modern technologies.
 
-## Expanding the ESLint configuration
+Check out: [RubyStore (Server)](https://github.com/SoulMinT05/mtshop-backend)
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Example Screenshots
+
+![](./src/screenshots/home.png)
+
+![](./src/screenshots/product-list.png)
+
+![](./src/screenshots/product-details.png)
+
+![](./src/screenshots/cart.png)
+
+![](./src/screenshots/voucher.png)
+
+![](./src/screenshots/checkout.png)
+
+![](./src/screenshots/notification.png)
+
+![](./src/screenshots/message.png)
+
+## Tech Stack
+
+-   **Library**: ReactJS
+-   **UI Library**: Material UI
+-   **State Management**: Redux Toolkit
+-   **Routing**: React Router DOM
+-   **Styling**: TailwindCSS, SCSS, CSS
+-   **Utilities**: Axios, JS-Cookies, Firebase, DayJS
+-   **Image Viewer**: react-inner-image-zoom, react-image-zoom
+-   **Notification**: react-toastify, react-hot-toast
+-   **Emoji**: emoji-picker-react
+
+## Getting Started
+
+### Prerequisites
+
+-   Node.js (v22.16 or later recommended)
+-   npm or yarn package manager
+
+### Installation
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/SoulMinT05/mtshop-frontend
+    ```
+2. Install dependencies:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+3. Configure environment variables:
+
+    - Copy `.env.example` to `.env`:
+        ```bash
+        cp .env.example .env
+        ```
+    - Ensure the following variables are set in `.env`, and adjust them to match your API endpoints and Cloudinary storage configuration:
+
+        ```env
+        VITE_FRONTEND_URL=http://localhost:3000
+        VITE_BACKEND_URL=http://localhost:8000
+        VITE_API_KEY=api-key
+        VITE_AUTH_DOMAIN=auth-domain
+        VITE_PROJECT_ID=project-id
+        VITE_STORAGE_BUCKET=storage-bucket
+        VITE_MESSAGING_SENDER_ID=messaging-sender-id
+        VITE_APP_ID=id
+        VITE_APP_ID_FACEBOOK=id-facebook
+        VITE_APP_SECRET_FACEBOOK=secret-facebook
+        ```
+
+### Development Server
+
+Start the development server with:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The app will be available at `http://localhost:5173` by default.
+
+### Build for Production
+
+To build the project for production:
+
+```bash
+npm run build
+# or
+yarn build
+```
+
+The production build files will be in the `dist` folder.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
