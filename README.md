@@ -1,6 +1,6 @@
 # RubyStore (Client)
 
-RubyStore is a modern e-commerce frontend application that delivers a seamless and engaging shopping experience.  
+RubyStore is a modern e-commerce web application that delivers a seamless and engaging shopping experience.  
 It supports a full range of core features including:
 
 -   **OAuth2 Login** – sign-in quickly with Google
@@ -8,6 +8,7 @@ It supports a full range of core features including:
 -   **Product Browsing** – explore a wide range of products
 -   **Product Reviewing** - review real-time
 -   **Product Details** – images, prices, and descriptions
+-   **Wishlist** – add product to wishlist
 -   **Shopping Cart** – manage items before checkout
 -   **Vouchers** – apply discount codes
 -   **Checkout** – complete orders smoothly
@@ -20,7 +21,11 @@ Check out: [RubyStore (Server)](https://github.com/SoulMinT05/mtshop-backend)
 
 ## Example Screenshots
 
+### Desktop View
+
 ![](./src/screenshots/home.png)
+
+![](./src/screenshots/search.png)
 
 ![](./src/screenshots/product-list.png)
 
@@ -35,6 +40,36 @@ Check out: [RubyStore (Server)](https://github.com/SoulMinT05/mtshop-backend)
 ![](./src/screenshots/notification.png)
 
 ![](./src/screenshots/message.png)
+
+### Mobile View
+
+<p align="center">
+  <img src="./src/screenshots/mobile_home.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_search.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_product-list.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_product-details.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_cart.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_voucher.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_checkout.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_notification.png" />
+</p>
+<p align="center">
+  <img src="./src/screenshots/mobile_notification.png" />
+</p>
 
 ## Tech Stack
 
