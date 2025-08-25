@@ -238,8 +238,6 @@ const Header = () => {
                 context.setIsLogin(false);
                 context.openAlertBox('success', data.message);
                 navigate('/login');
-            } else {
-                context.openAlertBox('error', data.message);
             }
         } catch (err) {
             console.log(err);
@@ -462,7 +460,7 @@ const Header = () => {
                                     )}
                                 </>
                             )}
-                            {context?.userInfo?._id && (
+                            {context?.isLogin && context?.userInfo?._id && (
                                 <>
                                     {context?.windowWidth > 1279 && (
                                         <>
@@ -578,7 +576,14 @@ const Header = () => {
                                                                                 <Typography
                                                                                     variant="body2"
                                                                                     color="text.secondary"
-                                                                                    className="mt-1"
+                                                                                    sx={{
+                                                                                        display: '-webkit-box',
+                                                                                        WebkitLineClamp: 2, // số dòng hiển thị
+                                                                                        WebkitBoxOrient: 'vertical',
+                                                                                        overflow: 'hidden',
+                                                                                        wordBreak: 'break-word', // xử lý từ quá dài
+                                                                                    }}
+                                                                                    className="mt-1 "
                                                                                 >
                                                                                     {notification?.description}
                                                                                 </Typography>

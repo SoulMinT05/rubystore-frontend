@@ -26,7 +26,7 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 
-const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalPages }) => {
+const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalProducts, setTotalPages }) => {
     const context = useContext(MyContext);
     const [isFilterApplied, setIsFilterApplied] = useState(false);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
@@ -42,7 +42,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
         rating: '',
         stockStatus: '',
         page: 1,
-        limit: 12,
+        limit: import.meta.env.VITE_LIMIT_PRODUCTS,
     });
     const [price, setPrice] = useState([10000, 10000000]);
     const location = useLocation(); // Là Object có pathname là /product
@@ -130,8 +130,10 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
         setIsLoading(true);
         try {
             const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
+            console.log('dataFIlter: ', data);
             if (data.success) {
                 setProductsList(data?.products);
+                setTotalProducts(data?.total);
                 setTotalPages(data?.totalPages);
                 window.scrollTo({
                     top: 0,
@@ -305,7 +307,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                     <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Đánh giá
                     </h3>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={5}
@@ -315,7 +317,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                         />
                         <Rating name="size-small" defaultValue={5} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={4}
@@ -325,7 +327,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                         />
                         <Rating name="size-small" defaultValue={4} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={3}
@@ -335,7 +337,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                         />
                         <Rating name="size-small" defaultValue={3} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={2}
@@ -345,7 +347,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                         />
                         <Rating name="size-small" defaultValue={2} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={1}

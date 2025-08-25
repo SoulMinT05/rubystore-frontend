@@ -28,7 +28,11 @@ const ProductListPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams] = useSearchParams();
     const categoryId = searchParams.get('categoryId');
+    const subCategoryId = searchParams.get('subCategoryId');
+    const thirdSubCategoryId = searchParams.get('thirdSubCategoryId');
     const [categoryName, setCategoryName] = useState('');
+    const [subCategoryName, setSubCategoryName] = useState('');
+    const [thirdSubCategoryName, setThirdSubCategoryName] = useState('');
 
     useEffect(() => {
         context?.setIsFilterProductsBtnShow(true);
@@ -47,7 +51,57 @@ const ProductListPage = () => {
         }
     }, [categoryId]);
 
+    useEffect(() => {
+        if (!subCategoryId) {
+            setSubCategoryName('');
+        }
+    }, [subCategoryId]);
+
+    useEffect(() => {
+        if (!thirdSubCategoryId) {
+            setThirdSubCategoryName('');
+        }
+    }, [thirdSubCategoryId]);
+
+    useEffect(() => {
+        const getSubCategoryName = async () => {
+            if (!subCategoryId) return;
+            try {
+                const { data } = await axiosAuth.get(`/api/product/all-products-sub-category-id/${subCategoryId}`);
+                if (data.success) {
+                    setCategoryName(data?.products[0]?.categoryName);
+                    setSubCategoryName(data?.products[0]?.subCategoryName);
+                }
+            } catch (error) {
+                context.openAlertBox('error', error);
+                console.error('Lỗi khi fetch subCategoryName:', error);
+            }
+        };
+        getSubCategoryName();
+    }, [subCategoryId]);
+
+    useEffect(() => {
+        if (!thirdSubCategoryId) return;
+        const getThirdSubCategoryName = async () => {
+            try {
+                const { data } = await axiosAuth.get(
+                    `/api/product/all-products-third-sub-category-id/${thirdSubCategoryId}`
+                );
+                if (data.success) {
+                    setCategoryName(data?.products[0]?.categoryName);
+                    setSubCategoryName(data?.products[0]?.subCategoryName);
+                    setThirdSubCategoryName(data?.products[0]?.thirdSubCategoryName);
+                }
+            } catch (error) {
+                context.openAlertBox('error', error);
+                console.error('Lỗi khi fetch subCategoryName:', error);
+            }
+        };
+        getThirdSubCategoryName();
+    }, [thirdSubCategoryId]);
+
     const [page, setPage] = useState(1);
+    const [totalProducts, setTotalProducts] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
     const [selectedSortValue, setSelectedSortValue] = useState('Thứ tự A đến Z');
@@ -93,14 +147,42 @@ const ProductListPage = () => {
                     >
                         Trang chủ
                     </Link>
-                    <Link
-                        underline="hover"
-                        color="inherit"
-                        to={`/product?categoryId=${categoryId}`}
-                        className="link transition text-[14px] lg:text-[16px] "
-                    >
-                        {categoryName}
-                    </Link>
+                    {categoryName && (
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            to={`/product?categoryId=${categoryId}`}
+                            className={`link transition text-[14px] lg:text-[16px] ${
+                                subCategoryName ? '' : 'pointer-events-none cursor-default'
+                            }`}
+                        >
+                            {categoryName}
+                        </Link>
+                    )}
+                    {subCategoryName && (
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            // to={`/product?subCategoryId=${subCategoryId}`}
+                            to={`/product?categoryId=${categoryId}&subCategoryId=${subCategoryId}`}
+                            className={`link transition text-[14px] lg:text-[16px] ${
+                                thirdSubCategoryName ? '' : 'pointer-events-none cursor-default'
+                            }`}
+                        >
+                            {subCategoryName}
+                        </Link>
+                    )}
+                    {thirdSubCategoryName && (
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            // to={`/product?thirdSubCategoryId=${thirdSubCategoryId}`}
+                            to={`/product?categoryId=${categoryId}&subCategoryId=${subCategoryId}&thirdSubCategoryId=${thirdSubCategoryId}`}
+                            className="link transition text-[14px] lg:text-[16px] pointer-events-none cursor-default"
+                        >
+                            {thirdSubCategoryName}
+                        </Link>
+                    )}
                 </Breadcrumbs>
             </div>
 
@@ -118,6 +200,7 @@ const ProductListPage = () => {
                             setIsLoading={setIsLoading}
                             page={page}
                             setPage={setPage}
+                            setTotalProducts={setTotalProducts}
                             setTotalPages={setTotalPages}
                         />
                     </div>
@@ -152,7 +235,7 @@ const ProductListPage = () => {
                                     <IoGridSharp className="text-[rgba(0,0,0,0.7)]" />
                                 </Button>
                                 <span className="text-[12px] lg:text-[14px] hidden sm:block font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
-                                    Tổng {productsList?.length !== 0 ? productsList?.length : 0} sản phẩm
+                                    Tổng {totalProducts !== 0 ? totalProducts : 0} sản phẩm
                                 </span>
                             </div>
 

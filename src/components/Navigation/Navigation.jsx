@@ -79,7 +79,8 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                                                                     className="list-none w-full relative"
                                                                 >
                                                                     <Link
-                                                                        to={`/product?subCategoryId=${subCategory?._id}`}
+                                                                        // to={`/product?subCategoryId=${subCategory?._id}`}
+                                                                        to={`/product?categoryId=${category?._id}&subCategoryId=${subCategory?._id}`}
                                                                         className="w-full"
                                                                     >
                                                                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
@@ -98,7 +99,8 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                                                                                                 className="list-none w-full"
                                                                                             >
                                                                                                 <Link
-                                                                                                    to={`/product?thirdSubCategoryId=${thirdSubCategory?._id}`}
+                                                                                                    // to={`/product?thirdSubCategoryId=${thirdSubCategory?._id}`}
+                                                                                                    to={`/product?categoryId=${category?._id}&subCategoryId=${subCategory?._id}&thirdSubCategoryId=${thirdSubCategory?._id}`}
                                                                                                     className="w-full"
                                                                                                 >
                                                                                                     <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">

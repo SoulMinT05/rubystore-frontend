@@ -43,7 +43,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
         rating: '',
         stockStatus: '',
         page: 1,
-        limit: 12,
+        limit: import.meta.env.VITE_LIMIT_PRODUCTS,
     });
     const [price, setPrice] = useState([10000, 10000000]);
     const location = useLocation(); // Là Object có pathname là /product

@@ -284,87 +284,89 @@ const CartItems = ({
                     <Checkbox {...label} checked={isSelected} onChange={handleSelect} size="small" />
                 </div>
             </td>
-            <div className="cartItem w-full p-3 flex items-center gap-4 pb-5 border-b border-rgba(0,0,0,0.1)">
-                <div className="img w-[20%] rounded-md overflow-hidden ">
-                    <Link to={`/product/${productId}`} className="group">
-                        <img src={images[0]} className="w-full group-hover:scale-105 transition-all" alt="" />
-                    </Link>
-                </div>
-                <div className="info w-[80%] relative ">
-                    <IoCloseSharp
-                        className="cursor-pointer absolute top-0 right-0 text-[18px] link transition-all"
-                        onClick={() => handleDeleteCartItem(cartId)}
-                    />
-                    <h3 className="text-[13px] sm:text-[14px] lg:text-[16px] w-[80%]">
-                        <Link to={`/product/${productId}`} className="link line-clamp-1 ">
-                            {/* {name?.substr(0, 24) + '...'} */}
-                            {name}
+            <td className="">
+                <div className="cartItem w-full p-3 flex items-center gap-4 pb-5 border-b border-rgba(0,0,0,0.1)">
+                    <div className="img w-[20%] rounded-md overflow-hidden ">
+                        <Link to={`/product/${productId}`} className="group">
+                            <img src={images[0]} className="w-full group-hover:scale-105 transition-all" alt="" />
                         </Link>
-                    </h3>
-                    <div className="flex mt-3 sm:mt-3 md:mt-4 lg:mt-5 items-center">
-                        <div className="relative w-[48%] sm:w-[32%] md:w-[26%]">
-                            <button
-                                id="size-button"
-                                onClick={handleClickSize}
-                                aria-controls={openSize ? 'size-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={openSize ? 'true' : undefined}
-                                className="w-[90px] md:w-[96px] flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-1 px-2 rounded-md cursor-pointer"
-                            >
-                                <span className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[14px]">
-                                    Size: {selectedSize}
-                                </span>
-                                <span className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[14px]">
-                                    <GoTriangleDown />
-                                </span>
-                            </button>
-
-                            <Menu
-                                id="size-menu"
-                                anchorEl={sizeAnchorEl}
-                                open={openSize}
-                                onClose={() => handleCloseSize(null)}
-                                MenuListProps={{
-                                    'aria-labelledby': 'basic-button',
-                                }}
-                            >
-                                {product?.productSize?.map((item, index) => {
-                                    return (
-                                        <MenuItem key={index} onClick={() => handleCloseSize(item)}>
-                                            {item}
-                                        </MenuItem>
-                                    );
-                                })}
-                            </Menu>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span
-                                className="text-[11px] flex items-center justify-center bg-[#f1f1f1]  font-[600] py-2 px-3 rounded-md cursor-pointer"
-                                onClick={() => handleDecreaseQuantity(product._id)}
-                            >
-                                <FaMinus className="text-[11px]" />
-                            </span>
-                            <span className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-[600] py-1 rounded-md cursor-pointer">
-                                {selectedQuantity}
-                            </span>
-                            <span
-                                className="text-[11px] flex items-center justify-center bg-[#f1f1f1]  font-[600] py-2 px-3 rounded-md cursor-pointer"
-                                onClick={() => handleIncreaseQuantity(product._id)}
-                            >
-                                <FaPlus className="text-[11px]" />
-                            </span>
-                        </div>
                     </div>
-                    <div className="flex gap-3 mt-3 sm:mt-3 md:mt-4 lg:mt-5 items-center">
-                        <span className="text-[12px] sm:text-[13px] md:text-[14px] oldPrice line-through leading-3 text-gray-500  font-[500]">
-                            {formatCurrency(oldPrice)}
-                        </span>
-                        <span className="text-[12px] sm:text-[13px] md:text-[14px] price text-primary font-[600]">
-                            {formatCurrency(price)}
-                        </span>
+                    <div className="info w-[80%] relative ">
+                        <IoCloseSharp
+                            className="cursor-pointer absolute top-0 right-0 text-[18px] link transition-all"
+                            onClick={() => handleDeleteCartItem(cartId)}
+                        />
+                        <h3 className="text-[13px] sm:text-[13px] lg:text-[14px] xl:text-[16px] w-[80%]">
+                            <Link to={`/product/${productId}`} className="link line-clamp-1 ">
+                                {/* {name?.substr(0, 24) + '...'} */}
+                                {name}
+                            </Link>
+                        </h3>
+                        <div className="flex mt-3 sm:mt-3 md:mt-4 lg:mt-5 items-center">
+                            <div className="relative w-[48%] sm:w-[32%] md:w-[26%]">
+                                <button
+                                    id="size-button"
+                                    onClick={handleClickSize}
+                                    aria-controls={openSize ? 'size-menu' : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={openSize ? 'true' : undefined}
+                                    className="w-[90px] md:w-[96px] flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-1 px-2 rounded-md cursor-pointer"
+                                >
+                                    <span className="text-[11px] sm:text-[12px] md:text-[12px] lg:text-[13px] xl:text-[14px]">
+                                        Size: {selectedSize}
+                                    </span>
+                                    <span className="text-[11px] sm:text-[12px] md:text-[12px] lg:text-[13px] xl:text-[14px]">
+                                        <GoTriangleDown />
+                                    </span>
+                                </button>
+
+                                <Menu
+                                    id="size-menu"
+                                    anchorEl={sizeAnchorEl}
+                                    open={openSize}
+                                    onClose={() => handleCloseSize(null)}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                    }}
+                                >
+                                    {product?.productSize?.map((item, index) => {
+                                        return (
+                                            <MenuItem key={index} onClick={() => handleCloseSize(item)}>
+                                                {item}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </Menu>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span
+                                    className="text-[11px] flex items-center justify-center bg-[#f1f1f1]  font-[600] py-2 px-3 rounded-md cursor-pointer"
+                                    onClick={() => handleDecreaseQuantity(product._id)}
+                                >
+                                    <FaMinus className="text-[11px]" />
+                                </span>
+                                <span className="text-[11px] sm:text-[12px] md:text-[12px] lg:text-[13px] xl:text-[14px] font-[600] py-1 rounded-md cursor-pointer">
+                                    {selectedQuantity}
+                                </span>
+                                <span
+                                    className="text-[11px] flex items-center justify-center bg-[#f1f1f1]  font-[600] py-2 px-3 rounded-md cursor-pointer"
+                                    onClick={() => handleIncreaseQuantity(product._id)}
+                                >
+                                    <FaPlus className="text-[11px]" />
+                                </span>
+                            </div>
+                        </div>
+                        <div className="flex gap-3 mt-3 sm:mt-3 md:mt-4 lg:mt-5 items-center">
+                            <span className="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[13px] xl:text-[14px] oldPrice line-through leading-3 text-gray-500  font-[500]">
+                                {formatCurrency(oldPrice)}
+                            </span>
+                            <span className="text-[11px] sm:text-[12px] md:text-[13px] lg:text-[13px] xl:text-[14px] price text-primary font-[600]">
+                                {formatCurrency(price)}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </td>
         </tr>
     );
 };
