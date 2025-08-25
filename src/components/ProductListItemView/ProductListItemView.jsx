@@ -10,7 +10,7 @@ import { IoGitCompareOutline } from 'react-icons/io5';
 import { MdZoomOutMap } from 'react-icons/md';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 
-import './ProductListItemView.css';
+import './ProductListItemView.scss';
 import { MyContext } from '../../App';
 
 const formatCurrency = (amount) => {
@@ -51,11 +51,11 @@ const ProductListItemView = ({ product }) => {
                             <MdZoomOutMap className="text-[18px] !text-black group-hover:text-white" />
                         </Button>
                     </Tooltip>
-                    <Tooltip title="So sánh" placement="left-start">
+                    {/* <Tooltip title="So sánh" placement="left-start">
                         <Button className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group">
                             <IoGitCompareOutline className="text-[18px] !text-black group-hover:text-white" />
                         </Button>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip title="Yêu thích" placement="left-start">
                         <Button className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group">
                             <FaRegHeart className="text-[18px] !text-black group-hover:text-white" />

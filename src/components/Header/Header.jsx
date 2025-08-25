@@ -27,9 +27,10 @@ import { Popper, Paper, ClickAwayListener, List, ListItem, IconButton } from '@m
 
 import Navigation from '../Navigation/Navigation';
 import { MyContext } from '../../App';
-import logo from '../../assets/logo.jpg';
+// import logo from '../../assets/logo.jpg';
+import logo from '../../assets/rubystore_1.png';
 
-import './Header.css';
+import './Header.scss';
 
 import axiosToken from '../../apis/axiosToken';
 import axiosClient from '../../apis/axiosClient';
@@ -330,7 +331,8 @@ const Header = () => {
                     )}
                     <div className="col1 w-[40%] md:w-[26%] lg:w-[25%]">
                         <Link to="/">
-                            <img src={logo} alt="" className="h-[38px] xl:h-[44px]" />
+                            {/* <img src={logo} alt="" className="h-[38px] xl:h-[44px]" /> */}
+                            <img src={logo} alt="" className="h-[64px] sm:h-[68px] md:h-[76px] xl:h-[76px]" />
                         </Link>
                     </div>
                     <div

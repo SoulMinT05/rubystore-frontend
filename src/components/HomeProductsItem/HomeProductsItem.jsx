@@ -33,10 +33,6 @@ const HomeProductsItem = ({ product }) => {
 
     const isInWishlist = wishlists?.some((item) => item?.product?.toString() === product?._id);
 
-    // const { wishlistProductIds } = useSelector((state) => state.wishlist);
-    // const isInWishlist = wishlistProductIds.includes(product._id.toString());
-    // console.log('isInWishlist: ', isInWishlist);
-
     return (
         <div className="productItem min-h-[424px] sm:min-h-[430px] lg:min-h-[448px] shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
             <div className="group imgWrapper w-[100%] overflow-hidden rounded-md relative">

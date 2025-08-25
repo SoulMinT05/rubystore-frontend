@@ -13,7 +13,7 @@ import 'react-range-slider-input/dist/style.css';
 import { FaAngleDown } from 'react-icons/fa6';
 import { FaAngleUp } from 'react-icons/fa6';
 
-import '../ProductListSidebar/ProductListSidebar.css';
+import './ProductListSidebar.scss';
 import { Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { MyContext } from '../../App';

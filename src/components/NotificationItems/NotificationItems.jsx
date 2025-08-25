@@ -98,9 +98,12 @@ const NotificationItems = ({ allNotifications }) => {
                                     <Avatar src={notification?.avatarSender} />
                                 )}
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0 ">
                                 <h3 className="text-[14px] sm:text-[15px] font-[500]">{notification?.title}</h3>
-                                <p className="text-[12px] sm:text-[13px] text-gray-600 mt-1">
+                                <p
+                                    className="text-[12px] sm:text-[13px] text-gray-600 mt-1 overflow-hidden 
+                                    text-ellipsis line-clamp-2"
+                                >
                                     {notification?.description}
                                 </p>
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between  mt-2">

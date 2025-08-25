@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 
-import '../ProductDetailsComponent/ProductDetailsComponent.css';
 import QuantityBox from '../QuantityBox/QuantityBox';
 
 import { MdOutlineShoppingCart } from 'react-icons/md';
@@ -136,10 +135,10 @@ const ProductDetailsComponent = ({ product }) => {
                     <FaRegHeart className="text-[18px]" />
                     <span className="text-[13px] sm:text-[14px]">Yêu thích</span>
                 </span>
-                <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
+                {/* <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
                     <IoGitCompareOutline className="text-[18px]" />
                     <span className="text-[13px] sm:text-[14px]">So sánh</span>
-                </span>
+                </span> */}
             </div>
         </>
     );
