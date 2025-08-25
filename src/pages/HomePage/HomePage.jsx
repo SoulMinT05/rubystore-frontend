@@ -25,9 +25,15 @@ import HomeBannerImage from '../../components/HomeBannerImage/HomeBannerImage';
 import axiosAuth from '../../apis/axiosAuth';
 import { MyContext } from '../../App';
 import ProductLoading from '../../components/ProductLoading/ProductLoading';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBlogs } from '../../redux/blogSlice';
 
 const HomePage = () => {
     const context = useContext(MyContext);
+
+    const { blogs } = useSelector((state) => state.blog);
+    const dispatch = useDispatch();
+
     const [value, setValue] = useState(0);
     const [homeSlides, setHomeSlides] = useState([]);
     const [popularProducts, setPopularProducts] = useState([]);
@@ -36,6 +42,21 @@ const HomePage = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    useEffect(() => {
+        const getBlogs = async () => {
+            try {
+                const { data } = await axiosAuth.get('/api/blog/all-blogs');
+                if (data.success) {
+                    dispatch(fetchBlogs(data?.blogs));
+                }
+            } catch (error) {
+                console.error('Lỗi API:', error);
+                return [];
+            }
+        };
+        getBlogs();
+    }, []);
 
     useEffect(() => {
         const getHomeSlides = async () => {
@@ -85,25 +106,6 @@ const HomePage = () => {
 
     useEffect(() => {
         context?.getCategories();
-    }, []);
-
-    const { blogs, setBlogs } = useContext(MyContext);
-
-    useEffect(() => {
-        const getBlogs = async () => {
-            try {
-                const { data } = await axiosAuth.get('/api/blog/all-blogs');
-                if (data.success) {
-                    setBlogs(data?.blogs);
-                } else {
-                    console.error('Lỗi lấy bài viết:', data.message);
-                }
-            } catch (error) {
-                console.error('Lỗi API:', error);
-                return [];
-            }
-        };
-        getBlogs();
     }, []);
 
     const handleFilterByCategoryId = (id) => {

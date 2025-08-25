@@ -30,7 +30,6 @@ const BlogDetailsPage = () => {
     useEffect(() => {
         const getBlogDetails = async () => {
             const { data } = await axiosClient.get(`/api/blog/${id}`);
-            console.log('details: ', data);
             if (data?.success) {
                 setBlogDetails(data?.blog);
             }
@@ -51,7 +50,7 @@ const BlogDetailsPage = () => {
                         underline="hover"
                         color="inherit"
                         to="/"
-                        className="link transition !text-[14px] !lg:!text-[16px]"
+                        className="link transition text-[14px] lg:text-[16px]"
                     >
                         Trang chủ
                     </Link>
@@ -59,7 +58,7 @@ const BlogDetailsPage = () => {
                         underline="hover"
                         color="inherit"
                         to={`/blog/${blogDetails?._id}`}
-                        className="link transition !text-[14px] !lg:!text-[16px]"
+                        className="link transition text-[14px] lg:text-[16px]"
                     >
                         Chi tiết bài viết
                     </Link>

@@ -34,6 +34,7 @@ dayjs.locale('vi'); // dùng nếu bạn muốn "2 phút trước" thay vì "2 m
 
 // SOCKET IO
 import { socket } from './config/socket';
+import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton';
 
 const MyContext = createContext();
 
@@ -61,11 +62,11 @@ function App() {
 
     const [isAuthChecking, setIsAuthChecking] = useState(true);
     const [isLogin, setIsLogin] = useState(false);
+    console.log('isLogin render khi category change: ', isLogin);
     const [emailVerify, setEmailVerify] = useState('');
     const [emailVerifyForgotPassword, setEmailVerifyForgotPassword] = useState('');
     const [userInfo, setUserInfo] = useState(null);
     const [categories, setCategories] = useState([]);
-    const [blogs, setBlogs] = useState([]);
 
     const handleOpenProductDetailsModal = (open, item) => {
         setOpenProductDetailsModal({
@@ -159,14 +160,6 @@ function App() {
             console.log(error);
         }
     };
-    const getBlogs = async () => {
-        try {
-            const { data } = await axiosClient.get('/api/blog/all-blogs');
-            setBlogs(data?.blogs);
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const values = {
         handleOpenProductDetailsModal,
         setOpenProductDetailsModal,
@@ -189,9 +182,6 @@ function App() {
         categories,
         setCategories,
         getCategories,
-        blogs,
-        setBlogs,
-        getBlogs,
         windowWidth,
         openFilterProducts,
         setOpenFilterProducts,
@@ -211,6 +201,8 @@ function App() {
                         <AppRoutes />
                         <Footer />
                         <ToastContainer />
+
+                        <ScrollToTopButton />
 
                         <Dialog
                             fullWidth={true}
