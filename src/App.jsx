@@ -35,6 +35,7 @@ dayjs.locale('vi'); // dùng nếu bạn muốn "2 phút trước" thay vì "2 m
 // SOCKET IO
 import { socket } from './config/socket';
 import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton';
+import LayoutAppContent from './layouts/LayoutAppContent';
 
 const MyContext = createContext();
 
@@ -85,11 +86,30 @@ function App() {
     };
 
     useEffect(() => {
+        socket.emit('joinMessageRoom', userInfo?._id);
+        console.log('Đã join message room');
+    }, [isLogin, userInfo?._id]);
+
+    useEffect(() => {
+        socket.emit('joinRoom', userInfo?._id);
+    }, [isLogin, userInfo?._id]);
+
+    useEffect(() => {
         socket.on('sendMessage', (message) => {
             console.log('message: ', message);
         });
         return () => {
             socket.off('sendMessage');
+        };
+    }, []);
+
+    useEffect(() => {
+        socket.on('notificationNewMessage', (data) => {
+            console.log('ADmin nhan notificationNewMessage: ', data);
+            // dispatch(addNotification(data));
+        });
+        return () => {
+            socket.off('notificationNewMessage');
         };
     }, []);
 
@@ -162,6 +182,7 @@ function App() {
             console.log(error);
         }
     };
+
     const values = {
         handleOpenProductDetailsModal,
         setOpenProductDetailsModal,
@@ -199,9 +220,10 @@ function App() {
             <Provider store={store}>
                 <MyContext.Provider value={values}>
                     <BrowserRouter>
-                        <Header />
+                        {/* <Header />
                         <AppRoutes />
-                        <Footer />
+                        <Footer /> */}
+                        <LayoutAppContent />
                         <ToastContainer />
 
                         <ScrollToTopButton />

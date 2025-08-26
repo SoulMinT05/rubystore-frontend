@@ -37,8 +37,8 @@ const MessagePageDetails = () => {
     }, []);
 
     return (
-        <div className="!mt-[2px] !mb-[28px]">
-            {/* <div className="pb-4 pt-0  container flex items-center justify-between">
+        <div className="!mt-[2px] !mb-[12px]">
+            <div className="pb-2 pt-2  container flex items-center justify-between">
                 <div className="">
                     <Breadcrumbs aria-label="breadcrumb">
                         <Link
@@ -59,20 +59,13 @@ const MessagePageDetails = () => {
                         </Link>
                     </Breadcrumbs>
                 </div>
-            </div> */}
+            </div>
             <div
-                className="container flex  h-[80vh] rounded-xl border"
+                className="container flex  h-[94vh] rounded-xl border"
                 style={{ borderColor: 'rgba(255, 255, 255, 0.125)' }}
             >
-                <MessageListSidebar
-                // isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen}
-                />
-                <ChatComponent
-                    // isChatOpen={isChatOpen}
-                    // setIsChatOpen={setIsChatOpen}
-                    messagesDetails={messagesDetails}
-                    receiverId={id}
-                />
+                <MessageListSidebar />
+                <ChatComponent messagesDetails={messagesDetails} receiverId={id} />
             </div>
         </div>
     );

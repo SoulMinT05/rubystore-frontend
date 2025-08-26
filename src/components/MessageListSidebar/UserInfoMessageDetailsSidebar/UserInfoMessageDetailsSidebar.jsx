@@ -14,12 +14,6 @@ const UserInfoMessageDetailsSidebar = () => {
                 <h2 className="text-[13px] lg:text-[14px] font-[500]">{userInfo?.name}</h2>
             </div>
             <div className="icons cursor-pointer flex items-center">
-                {/* <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
-                    <IoIosMore className="text-[20px] text-gray-800" />
-                </Button>
-                <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
-                    <IoVideocamOutline className="text-[20px] text-gray-800" />
-                </Button> */}
                 <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
                     <CiEdit className="text-[20px] text-gray-800" />
                 </Button>

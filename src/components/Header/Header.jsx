@@ -97,27 +97,6 @@ const Header = () => {
     const [openNotifications, setOpenNotifications] = useState(false);
 
     useEffect(() => {
-        socket.emit('joinRoom', context.userInfo?._id);
-    }, [context.isLogin, context.userInfo?._id]);
-
-    useEffect(() => {
-        socket.emit('joinMessageRoom', context.userInfo?._id);
-    }, [context.isLogin, context.userInfo?._id]);
-
-    // useEffect(() => {
-    //     socket.on('staffOnlineStatus', (data) => {
-    //         console.log('staffOnlineStatus: ', data);
-    //         context.setUserInfo((prev) => ({
-    //             ...prev,
-    //             ...data,
-    //         }));
-    //     });
-    //     return () => {
-    //         socket.off('staffOnlineStatus');
-    //     };
-    // }, []);
-
-    useEffect(() => {
         socket.on('notificationNewMessage', (data) => {
             console.log('Client nhan notificationNewMessage: ', data);
             dispatch(addNotification(data));

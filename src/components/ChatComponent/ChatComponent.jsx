@@ -17,16 +17,12 @@ import { IoChevronBack } from 'react-icons/io5';
 import EmojiPicker from 'emoji-picker-react';
 import axiosClient from '../../apis/axiosClient';
 import { useParams } from 'react-router-dom';
-import { formatDisplayTime } from '../../utils/formatTimeChat';
+import { formatOnlineTime, formatDisplayTime } from '../../utils/formatTimeChat';
 import { useDispatch } from 'react-redux';
 import { sendMessage } from '../../redux/messageSlice';
 import { socket } from '../../config/socket';
 
-const ChatComponent = ({
-    // isChatOpen, setIsChatOpen,
-    messagesDetails,
-    receiverId,
-}) => {
+const ChatComponent = ({ messagesDetails, receiverId }) => {
     const { id } = useParams();
     const context = useContext(MyContext);
     const dispatch = useDispatch();
@@ -167,15 +163,18 @@ const ChatComponent = ({
                             <IoChevronBack className="text-[22px]" />
                         </div>
                     )}
-                    <img className="w-[40px] h-[40px] object-cover rounded-full" src={staffInfo?.avatar} alt="" />
+                    <div className="relative">
+                        <img className="w-[40px] h-[40px] object-cover rounded-full" src={staffInfo?.avatar} alt="" />
+                        <span className="absolute bottom-1 right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
+                    </div>
                     <div className="texts gap-1">
                         <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[600]"> {staffInfo?.name}</span>
                         <p className="text-gray-500 text-[12px] lg:text-[13px] font-[300] mt-0">
                             {staffInfo?.isOnline === true ? (
-                                <span className="text-green-500 font-medium">● Đang hoạt động</span>
+                                <span className="text-green-500 font-medium">Đang hoạt động</span>
                             ) : (
                                 <span className="text-gray-400">
-                                    ● Hoạt động {formatDisplayTime(staffInfo?.lastOnline)}
+                                    Hoạt động {formatOnlineTime(staffInfo?.lastOnline)}
                                 </span>
                             )}
                         </p>
@@ -188,9 +187,6 @@ const ChatComponent = ({
                     <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
                         <IoVideocamOutline className="text-[20px] text-gray-800" />
                     </Button>
-                    {/* <Button className="!w-[40px] !min-w-[40px] h-[40px] !rounded-full bg-gray-100 hover:bg-gray-200">
-                        <BiInfoCircle className="text-[20px] text-gray-800" />
-                    </Button> */}
                 </div>
             </div>
 
@@ -199,32 +195,56 @@ const ChatComponent = ({
             <div ref={messageContainerRef} className="center p-4 flex-1 overflow-scroll flex flex-col gap-5">
                 {messagesDetails?.length > 0 &&
                     messagesDetails?.map((msg, index) => {
+                        const prevMsg = index > 0 ? messagesDetails[index - 1] : null;
                         const isOwn = msg?.senderId?._id === context?.userInfo?._id;
                         const isLast = index === messagesDetails.length - 1;
+
+                        let showTime = true;
+                        if (prevMsg) {
+                            const prevTime = new Date(prevMsg.createdAt).getTime();
+                            const currTime = new Date(msg.createdAt).getTime();
+                            const diffMinutes = Math.abs(currTime - prevTime) / 1000 / 60;
+                            // console.log(
+                            //     'prevTime, currTime, Math.abs(currTime - prevTime) / 1000 / 60: ',
+                            //     prevTime,
+                            //     currTime,
+                            //     Math.abs(currTime - prevTime) / 1000 / 60
+                            // );
+
+                            // Nếu cùng người gửi và cách nhau < 5 phút thì ẩn time
+                            if (diffMinutes < 5) {
+                                showTime = false;
+                            }
+                        }
+
                         return (
-                            <div
-                                key={msg?._id}
-                                ref={isLast ? messagesEndRef : null}
-                                className={`message ${isOwn ? 'own' : ''}`}
-                            >
-                                {!isOwn && (
-                                    <img
-                                        className="w-[30px] h-[30px] object-cover rounded-full"
-                                        src={msg?.senderId?.avatar}
-                                        alt={msg?.senderId?.name}
-                                    />
+                            <React.Fragment key={msg._id}>
+                                {showTime && (
+                                    <div className="flex justify-center my-2">
+                                        <span className="text-gray-600 text-xs px-2 py-1 rounded-full">
+                                            {formatDisplayTime(msg?.createdAt)}
+                                        </span>
+                                    </div>
                                 )}
-                                <div className="texts">
-                                    {msg?.images?.length > 0 &&
-                                        msg.images.map((img, i) => (
-                                            <img className="w-[300px]" key={i} src={img} alt="image" />
-                                        ))}
-                                    {msg?.text && <p className="my-0 text-[13px] lg:text-[14px]">{msg.text}</p>}
-                                    <span className="!mt-0 !text-[12px] !lg:text-[13px]">
-                                        {formatDisplayTime(msg?.createdAt)}
-                                    </span>
+
+                                {/* Tin nhắn */}
+                                <div ref={isLast ? messagesEndRef : null} className={`message ${isOwn ? 'own' : ''}`}>
+                                    {!isOwn && (
+                                        <img
+                                            className="w-[30px] h-[30px] object-cover rounded-full"
+                                            src={msg?.senderId?.avatar}
+                                            alt={msg?.senderId?.name}
+                                        />
+                                    )}
+                                    <div className="texts">
+                                        {msg?.images?.length > 0 &&
+                                            msg.images.map((img, i) => (
+                                                <img className="w-[300px]" key={i} src={img} alt="image" />
+                                            ))}
+                                        {msg?.text && <p className="my-0 text-[13px] lg:text-[14px]">{msg.text}</p>}
+                                    </div>
                                 </div>
-                            </div>
+                            </React.Fragment>
                         );
                     })}
             </div>
