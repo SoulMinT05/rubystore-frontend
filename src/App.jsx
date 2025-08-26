@@ -129,17 +129,19 @@ function App() {
     useEffect(() => {
         if (!isLogin) return; // Không gọi API nếu chưa login
 
+        const getUserDetails = async () => {
+            try {
+                const { data } = await axiosClient.get('/api/user/user-details');
+                setUserInfo(data?.user);
+                localStorage.setItem('userId', data?.user?._id);
+                localStorage.setItem('role', data?.user?.role);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
         getUserDetails();
     }, [isLogin]);
-
-    const getUserDetails = async () => {
-        try {
-            const { data } = await axiosClient.get('/api/user/user-details');
-            setUserInfo(data?.user);
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const openAlertBox = (status, message) => {
         if (status === 'success') {

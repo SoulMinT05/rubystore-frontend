@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SearchBox from '../SearchBox/SearchBox';
 import { Avatar, Box, Button, Divider, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import { Badge } from '@mui/material';
@@ -71,18 +71,14 @@ const getNotificationAvatar = (type, bgColor) => {
                     <FaRegComments size={18} color="white" />
                 </Avatar>
             );
-        //   case 'system':
-        //   return (
-        //     <Avatar sx={{ bgcolor: 'primary.main' }}>
-        //       <IoInformationCircleOutline size={20} color="white" />
-        //     </Avatar>
-        //   );
         default:
             return <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />;
     }
 };
 
 const Header = () => {
+    const location = useLocation();
+
     const context = useContext(MyContext);
     const dispatch = useDispatch();
 
@@ -107,6 +103,19 @@ const Header = () => {
     useEffect(() => {
         socket.emit('joinMessageRoom', context.userInfo?._id);
     }, [context.isLogin, context.userInfo?._id]);
+
+    // useEffect(() => {
+    //     socket.on('staffOnlineStatus', (data) => {
+    //         console.log('staffOnlineStatus: ', data);
+    //         context.setUserInfo((prev) => ({
+    //             ...prev,
+    //             ...data,
+    //         }));
+    //     });
+    //     return () => {
+    //         socket.off('staffOnlineStatus');
+    //     };
+    // }, []);
 
     useEffect(() => {
         socket.on('notificationNewMessage', (data) => {
@@ -237,6 +246,8 @@ const Header = () => {
             if (data.success) {
                 Cookies.remove('accessToken');
                 context.setIsLogin(false);
+                localStorage.removeItem('userId');
+                localStorage.removeItem('role');
                 context.openAlertBox('success', data.message);
                 navigate('/login');
             }
@@ -687,7 +698,9 @@ const Header = () => {
                 </div>
             </div>
 
-            <Navigation isOpenCatPanel={isOpenCatPanel} setIsOpenCatPanel={setIsOpenCatPanel} />
+            {!location?.pathname?.includes('message') && (
+                <Navigation isOpenCatPanel={isOpenCatPanel} setIsOpenCatPanel={setIsOpenCatPanel} />
+            )}
         </header>
     );
 };
