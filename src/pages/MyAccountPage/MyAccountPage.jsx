@@ -16,6 +16,7 @@ import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
 import { IoMdClose } from 'react-icons/io';
 import UpdateAddressComponent from '../../components/UpdateAddressComponent/UpdateAddressComponent';
+import AccountSidebarLayout from '../../layouts/AccountSidebarLayout';
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -65,78 +66,141 @@ const MyAccountPage = () => {
         }
     };
     return (
-        <>
-            <section className="py-3 lg:py-10 w-full">
-                <div className="container flex flex-col lg:flex-row gap-5">
-                    <div className="w-full lg:w-[20%]">
-                        <AccountSidebar />
-                    </div>
-                    <div className="cw-full lg:w-[80%]">
-                        <div className="card bg-white p-5 shadow-md rounded-md">
-                            <h2 className="pb-3 text-[15px] lg:text-[16px]">Trang cá nhân</h2>
-                            <hr />
+        <AccountSidebarLayout>
+            <div className="card bg-white p-5 shadow-md rounded-md">
+                <h2 className="pb-3 text-[15px] lg:text-[16px]">Trang cá nhân</h2>
+                <hr />
 
-                            <form className="mt-5" onSubmit={updateInfo}>
-                                <div className="flex items-center gap-5">
-                                    <div className="w-[100%]">
-                                        <TextField
-                                            value={context?.userInfo?.email || ''}
-                                            label="Email"
-                                            variant="outlined"
-                                            size="small"
-                                            className="w-full"
-                                        />
-                                    </div>
-                                </div>
-                                <p className="italic text-left text-[13px]">Bạn không thể thay đổi email.</p>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-4">
-                                    <div className="col">
-                                        <TextField
-                                            onChange={(e) => setName(e.target.value)}
-                                            value={name || ''}
-                                            label="Họ và tên"
-                                            variant="outlined"
-                                            size="small"
-                                            className="w-full"
-                                        />
-                                    </div>
-                                    <div className="col">
-                                        <TextField
-                                            onChange={(e) => setPhoneNumber(e.target.value)}
-                                            value={phoneNumber || ''}
-                                            label="Số điện thoại"
-                                            variant="outlined"
-                                            size="small"
-                                            className="w-full"
-                                        />
-                                    </div>
-                                </div>
-
-                                <br />
-
-                                <div
-                                    className="flex items-center justify-center p-3 mt-2 sm:mt-3 mb-5 border border-dashed border-[rgba(0,0,0,0.2)] bg-[#f1faff] hover:bg-[#e7f3f9] cursor-pointer"
-                                    onClick={() =>
-                                        context.setIsOpenFullScreenPanel({
-                                            open: true,
-                                            model: 'Cập nhật địa chỉ',
-                                        })
-                                    }
-                                >
-                                    <span className="text-[14px] font-[500]">Địa chỉ</span>
-                                </div>
-
-                                <div className="flex items-center justify-end gap-4">
-                                    <Button type="submit" className="btn-org btn-login w-full flex gap-3">
-                                        {isLoading === true ? <CircularProgress color="inherit" /> : 'Lưu thông tin'}
-                                    </Button>
-                                </div>
-                            </form>
+                <form className="mt-5" onSubmit={updateInfo}>
+                    <div className="flex items-center gap-5">
+                        <div className="w-[100%]">
+                            <TextField
+                                value={context?.userInfo?.email || ''}
+                                label="Email"
+                                variant="outlined"
+                                size="small"
+                                className="w-full"
+                            />
                         </div>
                     </div>
-                </div>
-            </section>
-        </>
+                    <p className="italic text-left text-[13px]">Bạn không thể thay đổi email.</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-4">
+                        <div className="col">
+                            <TextField
+                                onChange={(e) => setName(e.target.value)}
+                                value={name || ''}
+                                label="Họ và tên"
+                                variant="outlined"
+                                size="small"
+                                className="w-full"
+                            />
+                        </div>
+                        <div className="col">
+                            <TextField
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                value={phoneNumber || ''}
+                                label="Số điện thoại"
+                                variant="outlined"
+                                size="small"
+                                className="w-full"
+                            />
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div
+                        className="flex items-center justify-center p-3 mt-2 sm:mt-3 mb-5 border border-dashed border-[rgba(0,0,0,0.2)] bg-[#f1faff] hover:bg-[#e7f3f9] cursor-pointer"
+                        onClick={() =>
+                            context.setIsOpenFullScreenPanel({
+                                open: true,
+                                model: 'Cập nhật địa chỉ',
+                            })
+                        }
+                    >
+                        <span className="text-[14px] font-[500]">Địa chỉ</span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-4">
+                        <Button type="submit" className="btn-org btn-login w-full flex gap-3">
+                            {isLoading === true ? <CircularProgress color="inherit" /> : 'Lưu thông tin'}
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </AccountSidebarLayout>
+        // <>
+        //     <section className="py-3 lg:py-10 w-full">
+        //         <div className="container flex flex-col lg:flex-row gap-5">
+        //             <div className="w-full lg:w-[20%]">
+        //                 <AccountSidebar />
+        //             </div>
+        //             <div className="w-full lg:w-[80%]">
+        //                 <div className="card bg-white p-5 shadow-md rounded-md">
+        //                     <h2 className="pb-3 text-[15px] lg:text-[16px]">Trang cá nhân</h2>
+        //                     <hr />
+
+        //                     <form className="mt-5" onSubmit={updateInfo}>
+        //                         <div className="flex items-center gap-5">
+        //                             <div className="w-[100%]">
+        //                                 <TextField
+        //                                     value={context?.userInfo?.email || ''}
+        //                                     label="Email"
+        //                                     variant="outlined"
+        //                                     size="small"
+        //                                     className="w-full"
+        //                                 />
+        //                             </div>
+        //                         </div>
+        //                         <p className="italic text-left text-[13px]">Bạn không thể thay đổi email.</p>
+        //                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-4">
+        //                             <div className="col">
+        //                                 <TextField
+        //                                     onChange={(e) => setName(e.target.value)}
+        //                                     value={name || ''}
+        //                                     label="Họ và tên"
+        //                                     variant="outlined"
+        //                                     size="small"
+        //                                     className="w-full"
+        //                                 />
+        //                             </div>
+        //                             <div className="col">
+        //                                 <TextField
+        //                                     onChange={(e) => setPhoneNumber(e.target.value)}
+        //                                     value={phoneNumber || ''}
+        //                                     label="Số điện thoại"
+        //                                     variant="outlined"
+        //                                     size="small"
+        //                                     className="w-full"
+        //                                 />
+        //                             </div>
+        //                         </div>
+
+        //                         <br />
+
+        //                         <div
+        //                             className="flex items-center justify-center p-3 mt-2 sm:mt-3 mb-5 border border-dashed border-[rgba(0,0,0,0.2)] bg-[#f1faff] hover:bg-[#e7f3f9] cursor-pointer"
+        //                             onClick={() =>
+        //                                 context.setIsOpenFullScreenPanel({
+        //                                     open: true,
+        //                                     model: 'Cập nhật địa chỉ',
+        //                                 })
+        //                             }
+        //                         >
+        //                             <span className="text-[14px] font-[500]">Địa chỉ</span>
+        //                         </div>
+
+        //                         <div className="flex items-center justify-end gap-4">
+        //                             <Button type="submit" className="btn-org btn-login w-full flex gap-3">
+        //                                 {isLoading === true ? <CircularProgress color="inherit" /> : 'Lưu thông tin'}
+        //                             </Button>
+        //                         </div>
+        //                     </form>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </section>
+        // </>
     );
 };
 
