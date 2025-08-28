@@ -30,9 +30,9 @@ const ProductZoom = ({ images }) => {
                 <div className="slider w-full lg:w-[15%] order-2 lg:order-1">
                     <Swiper
                         ref={zoomSliderSml}
-                        direction={context?.windowWidth > 1023 ? 'vertical' : 'horizontal'}
+                        direction={context?.windowWidth >= 1024 ? 'vertical' : 'horizontal'}
                         slidesPerView={5}
-                        spaceBetween={context?.windowWidth > 1023 ? 10 : 10}
+                        spaceBetween={context?.windowWidth >= 1024 ? 10 : 10}
                         navigation={true}
                         modules={[Navigation]}
                         className={`zoomProductSliderThumbs  lg:h-[420px] overflow-hidden ${

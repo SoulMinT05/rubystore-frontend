@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../apis/axiosClient';
 import { addToCart } from '../../redux/cartSlice';
+import useWishlist from '../../hooks/useWishlist';
+import { IoMdHeart } from 'react-icons/io';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -26,6 +28,11 @@ const ProductDetailsComponent = ({ product }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { reviews } = useSelector((state) => state.review);
+
+    const { wishlists } = useSelector((state) => state.wishlist);
+    const { addToWishlist } = useWishlist();
+
+    const isInWishlist = wishlists?.some((item) => item?.product?.toString() === product?._id);
 
     const handleAddToCart = async () => {
         if (!context.isLogin) {
@@ -131,10 +138,19 @@ const ProductDetailsComponent = ({ product }) => {
             </div>
 
             <div className="flex items-center gap-4 mt-4">
-                <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
-                    <FaRegHeart className="text-[18px]" />
-                    <span className="text-[13px] sm:text-[14px]">Yêu thích</span>
-                </span>
+                <div onClick={() => addToWishlist(product?._id)}>
+                    {isInWishlist ? (
+                        <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
+                            <IoMdHeart className="text-[20px] !text-primary group-hover:text-white" />
+                            <span className="text-[13px] sm:text-[14px]">Đã yêu thích</span>
+                        </span>
+                    ) : (
+                        <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
+                            <FaRegHeart className="text-[18px] !text-black group-hover:text-white" />
+                            <span className="text-[13px] sm:text-[14px]">Yêu thích</span>
+                        </span>
+                    )}
+                </div>
                 {/* <span className="flex items-center gap-2 text-[15px] link cursor-pointer font-[500]">
                     <IoGitCompareOutline className="text-[18px]" />
                     <span className="text-[13px] sm:text-[14px]">So sánh</span>

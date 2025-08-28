@@ -48,13 +48,13 @@ const HomeAdsBannerSlider = ({ items }) => {
                 className="smlBtn"
             >
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_1.jpeg'} link="/" />
+                    <HomeBannerBox img={'src/assets/shopee_4.png'} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_2.jpeg'} link="/" />
+                    <HomeBannerBox img={'src/assets/shopee_5.png'} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_3.jpeg'} link="/" />
+                    <HomeBannerBox img={'src/assets/shopee_6.jpg'} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
                     <HomeBannerBox img={'src/assets/shopee_1.jpeg'} link="/" />

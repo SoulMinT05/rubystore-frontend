@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import './CartPage.scss';
 
 import { BsFillBagCheckFill } from 'react-icons/bs';
-import { Breadcrumbs, Button, Checkbox, CircularProgress } from '@mui/material';
+import { Breadcrumbs, Button, Checkbox, CircularProgress, Radio, RadioGroup } from '@mui/material';
 import CartItems from '../../components/CartItems/CartItems';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../apis/axiosClient';
@@ -16,6 +16,16 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import { formatDate } from '../../utils/formatDate';
+import { formatPrice } from '../../utils/formatPrice';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -32,9 +42,14 @@ const CartPage = () => {
     const [selectedCarts, setSelectedCarts] = useState([]);
     const [isCheckedAll, setIsCheckedAll] = useState(false);
     const [isLoadingCarts, setIsLoadingCarts] = useState(false);
+
+    const [vouchers, setVouchers] = useState([]);
     const [openVoucher, setOpenVoucher] = useState(false);
-    const [codeVoucher, setCodeVoucher] = useState('');
+    const [typeVoucherCode, setTypeVoucherCode] = useState('');
+    const [selectedVoucher, setSelectedVoucher] = useState('');
+    const [appliedVoucher, setAppliedVoucher] = useState(null);
     const [isLoadingApplyVoucher, setIsLoadingApplyVoucher] = useState(false);
+
     const [isLoadingCheckout, setIsLoadingCheckout] = useState(false);
 
     const sectionRef = useRef(null);
@@ -126,6 +141,22 @@ const CartPage = () => {
         }
     };
 
+    useEffect(() => {
+        const getVouchers = async () => {
+            const { data } = await axiosClient.get('/api/voucher/getAllVouchersFromUser');
+            console.log('vouchers: ', data);
+            if (data?.success) {
+                setVouchers(data?.vouchers);
+            }
+        };
+        getVouchers();
+    }, []);
+
+    const handleSelectVoucher = (code) => {
+        console.log('code: ', code);
+        setSelectedVoucher(code);
+    };
+
     const handleClickOpenVoucher = () => {
         setOpenVoucher(true);
     };
@@ -137,12 +168,40 @@ const CartPage = () => {
     const handleApplyVoucher = async (e) => {
         e.preventDefault();
         setIsLoadingApplyVoucher(true);
+        console.log('typeVoucherCode: ', typeVoucherCode);
+        console.log('selectedVoucher: ', selectedVoucher);
+
+        // const finalVoucherCode = selectedVoucher || typeVoucherCode;
+
+        // Nếu có voucher nhập tay thì ưu tiên
+        let finalVoucherCode = '';
+        if (typeVoucherCode) {
+            finalVoucherCode = typeVoucherCode;
+        } else if (selectedVoucher) {
+            finalVoucherCode = selectedVoucher;
+        }
+
+        if (appliedVoucher === finalVoucherCode) {
+            console.log('Voucher này đã được áp dụng trước đó.');
+            setIsLoadingApplyVoucher(false);
+            handleCloseVoucher();
+            return;
+        }
+
         try {
             const { data } = await axiosClient.post('/api/voucher/applyVoucher', {
-                code: codeVoucher,
+                code: finalVoucherCode,
                 totalPrice,
             });
             if (data?.success) {
+                // Nếu nhập tay thì reset radio
+                if (typeVoucherCode) {
+                    setSelectedVoucher('');
+                } else if (selectedVoucher) {
+                    setTypeVoucherCode('');
+                }
+
+                setAppliedVoucher(finalVoucherCode);
                 dispatch(
                     applyVoucher({
                         voucher: data?.voucher,
@@ -319,33 +378,123 @@ const CartPage = () => {
                     </table>
                 </div>
             </div>
+
+            {/* Voucher */}
             <div
                 className="container w-full xl:w-[96%] xl:max-w-[96%] 2xl:w-[80%] 2xl:max-w-[80%] flex 
                 flex-col lg:flex-row mx-auto  gap-5"
             >
                 <div className="leftPart w-full lg:w-[70%]">
-                    <Dialog open={openVoucher} onClose={handleCloseVoucher}>
-                        <DialogTitle>Nhập Mã Voucher</DialogTitle>
-                        <DialogContent sx={{ paddingBottom: 0 }}>
-                            <DialogContentText>
-                                Để áp dụng Voucher khi thanh toán, người dùng cần nhập chính xác Voucher đã được cung
-                                cấp
+                    <Dialog open={openVoucher} onClose={handleCloseVoucher} disableScrollLock>
+                        <DialogTitle>
+                            <span className="">Chọn Voucher</span>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="voucher"
+                                name="voucher"
+                                label="Mã voucher"
+                                type="text"
+                                fullWidth
+                                variant="standard"
+                                formlabelprops={{ required: false }}
+                                value={typeVoucherCode}
+                                onChange={(e) => setTypeVoucherCode(e.target.value)}
+                            />
+                            <DialogContentText
+                                sx={{ marginTop: '16px', fontStyle: 'italic', color: 'text.secondary' }}
+                                className="!text-[14px]"
+                            >
+                                Để áp dụng Voucher khi thanh toán, người dùng cần nhập chính xác Mã Voucher hoặc chọn
+                                một Voucher bên dưới
                             </DialogContentText>
+                        </DialogTitle>
+                        <DialogContent sx={{ paddingBottom: 0 }}>
                             <form onSubmit={handleApplyVoucher}>
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="voucher"
-                                    name="voucher"
-                                    label="Mã voucher"
-                                    type="text"
-                                    fullWidth
-                                    variant="standard"
-                                    formlabelprops={{ required: false }}
-                                    value={codeVoucher}
-                                    onChange={(e) => setCodeVoucher(e.target.value)}
-                                />
-                                <DialogActions>
+                                <div className="max-h-[392px] overflow-y-auto pr-1">
+                                    <List sx={{ width: '100%' }} className="space-y-3">
+                                        {vouchers?.length > 0 &&
+                                            vouchers?.map((voucher) => {
+                                                return (
+                                                    <div key={voucher?._id}>
+                                                        <ListItem
+                                                            onClick={() => handleSelectVoucher(voucher?.code)}
+                                                            alignItems="flex-start"
+                                                            className="rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition cursor-pointer"
+                                                        >
+                                                            {context?.windowWidth > 475 && (
+                                                                <div className="relative w-[118px] h-[118px]">
+                                                                    <Avatar
+                                                                        alt="Voucher"
+                                                                        src="/static/images/avatar/1.jpg"
+                                                                        sx={{ width: 118, height: 118 }}
+                                                                    />
+
+                                                                    {/* Overlay chữ Giảm giá */}
+                                                                    <div
+                                                                        className={`absolute inset-0 flex items-center justify-center ${
+                                                                            voucher?.discountType === 'fixed'
+                                                                                ? 'bg-[#ee4d2d]'
+                                                                                : 'bg-[#0ce0c6]'
+                                                                        } rounded-full`}
+                                                                    >
+                                                                        <span className="text-white text-[14px] font-bold">
+                                                                            {voucher?.discountType === 'fixed'
+                                                                                ? `Giảm ${formatPrice(
+                                                                                      voucher?.discountValue
+                                                                                  )}`
+                                                                                : `Giảm ${voucher?.discountValue}%`}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            <ListItemText
+                                                                className="ml-4 !mt-6"
+                                                                primary={
+                                                                    <span className="font-semibold">
+                                                                        {voucher?.discountType === 'fixed'
+                                                                            ? `Giảm ${formatPrice(
+                                                                                  voucher?.discountValue
+                                                                              )}`
+                                                                            : `Giảm ${voucher?.discountValue}%`}
+                                                                    </span>
+                                                                }
+                                                                secondary={
+                                                                    <React.Fragment>
+                                                                        <Typography
+                                                                            component="span"
+                                                                            variant="body2"
+                                                                            sx={{
+                                                                                color: 'text.primary',
+                                                                                display: 'block',
+                                                                            }}
+                                                                        >
+                                                                            Đơn tối thiểu {voucher?.minOrderValue}
+                                                                        </Typography>
+                                                                        <Typography
+                                                                            variant="body2"
+                                                                            color="text.secondary"
+                                                                        >
+                                                                            HSD: {formatDate(voucher?.expiresAt)}
+                                                                        </Typography>
+                                                                    </React.Fragment>
+                                                                }
+                                                            />
+                                                            <Radio
+                                                                size="small"
+                                                                className="absolute top-8 right-1"
+                                                                value={voucher?.code}
+                                                                checked={voucher?.code === selectedVoucher}
+                                                                onChange={() => handleSelectVoucher(voucher?.code)}
+                                                            />
+                                                        </ListItem>
+                                                    </div>
+                                                );
+                                            })}
+                                    </List>
+                                </div>
+
+                                <DialogActions className="sticky bottom-0">
                                     <Button onClick={handleCloseVoucher}>Quay lại</Button>
                                     <Button type="submit" className="!text-primary">
                                         {isLoadingApplyVoucher === true ? (

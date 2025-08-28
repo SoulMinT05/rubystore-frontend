@@ -52,6 +52,18 @@ h6 {
     color: #3b82f6 !important;
 }
 
+.text-voucher-percent {
+    color: #92d4cc !important;
+}
+
+.text-shoppe {
+    color: #ee4d2d !important;
+}
+
+.bg-shopee {
+    background-color: #ee4d2d !important;
+}
+
 .btn-primary {
     background-color: #ff5252 !important;
     color: #fff !important;

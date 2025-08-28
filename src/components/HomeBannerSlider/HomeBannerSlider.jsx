@@ -14,6 +14,11 @@ import { Button } from '@mui/material';
 import '../HomeBannerSlider/HomeBannerSlider.css';
 import { MyContext } from '../../App';
 
+import bigBanner1 from '../../assets/big_banner_1.png';
+import bigBanner2 from '../../assets/big_banner_2.png';
+import bigBanner3 from '../../assets/big_banner_3.png';
+import bigBanner4 from '../../assets/big_banner_4.jpg';
+
 const HomeBannerSlider = () => {
     const context = useContext(MyContext);
     return (
@@ -34,18 +39,22 @@ const HomeBannerSlider = () => {
         >
             <SwiperSlide>
                 <div className="item w-full rounded-md overflow-hidden relative">
-                    <img
-                        src="https://cf.shopee.vn/file/vn-11134258-7ras8-m5184szf0klz56_xxhdpi"
-                        className="lg:h-[230px] w-full"
-                    />
+                    <img src={bigBanner1} className="lg:h-[230px] w-full" />
                 </div>
             </SwiperSlide>
             <SwiperSlide>
                 <div className="item w-full rounded-md overflow-hidden">
-                    <img
-                        className="lg:h-[230px] w-full"
-                        src="https://cf.shopee.vn/file/sg-11134258-7rffa-m9a09twreqw9d7_xxhdpi"
-                    />
+                    <img className="lg:h-[230px] w-full" src={bigBanner3} />
+                </div>
+            </SwiperSlide>
+            <SwiperSlide>
+                <div className="item w-full rounded-md overflow-hidden">
+                    <img className="lg:h-[230px] w-full" src={bigBanner2} />
+                </div>
+            </SwiperSlide>
+            <SwiperSlide>
+                <div className="item w-full rounded-md overflow-hidden">
+                    <img className="lg:h-[230px] w-full" src={bigBanner4} />
                 </div>
             </SwiperSlide>
         </Swiper>

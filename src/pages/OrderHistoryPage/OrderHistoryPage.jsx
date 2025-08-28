@@ -319,6 +319,7 @@ const OrderHistoryPage = () => {
                                             )}
                                     </tbody>
                                     <Dialog
+                                        disableScrollLock
                                         fullWidth={true}
                                         maxWidth="lg"
                                         open={openOrderDetailsModal.open}

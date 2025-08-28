@@ -351,6 +351,7 @@ const ReviewComponent = ({ product }) => {
             <br />
 
             <Dialog
+                disableScrollLock
                 open={openReview}
                 onClose={handleCloseReview}
                 aria-labelledby="alert-dialog-title"

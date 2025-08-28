@@ -16,8 +16,8 @@ const formatCurrency = (amount) => {
 };
 
 const WishlistItems = ({ wishlists }) => {
-    const navigate = useNavigate();
     const { removeToWishlist } = useWishlist();
+    const navigate = useNavigate();
 
     return (
         wishlists?.length > 0 &&
@@ -43,8 +43,14 @@ const WishlistItems = ({ wishlists }) => {
                             className="cursor-pointer absolute top-[0px] right-[0px] text-[18px] link transition-all"
                         />
                         <span className="text-[12px] sm:text-[12px]">{wishlist?.brand}</span>
+
                         <h3 className="text-[13px] sm:text-[13px] lg:text-[14px] w-[80%]">
-                            <Link className="link line-clamp-1">{wishlist?.name}</Link>
+                            <Link
+                                to={`/product/${wishlist?.product?.toString()}`}
+                                className="link transition-all line-clamp-1"
+                            >
+                                {wishlist?.productName}
+                            </Link>
                         </h3>
 
                         <div className="flex gap-3 mt-3 sm:mt-3 md:mt-4 lg:mt-5 items-center">

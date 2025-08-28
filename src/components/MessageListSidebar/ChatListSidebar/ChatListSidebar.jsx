@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Divider, TextField } from '@mui/material';
 import { IoIosSearch } from 'react-icons/io';
@@ -16,16 +16,29 @@ const ChatListSidebar = () => {
     const dispatch = useDispatch();
     const { messagesSidebar } = useSelector((state) => state.message);
 
+    const [searchStaff, setSearchStaff] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    useEffect(() => {
+        const handleDebounceSearch = setTimeout(() => {
+            setDebouncedSearch(searchStaff);
+        }, 500);
+
+        return () => {
+            clearTimeout(handleDebounceSearch);
+        };
+    }, [searchStaff]);
+
     useEffect(() => {
         const getMessagesForUsers = async () => {
-            const { data } = await axiosClient.get('/api/message/getStaffsInSidebar');
+            const { data } = await axiosClient.get(`/api/message/getStaffsInSidebar?search=${debouncedSearch}`);
             console.log('staffSidebar: ', data);
             if (data?.success) {
                 dispatch(fetchMessagesSidebar(data.staffs));
             }
         };
         getMessagesForUsers();
-    }, [id]);
+    }, [id, debouncedSearch, dispatch]);
 
     useEffect(() => {
         socket.on('staffOnlineStatus', (data) => {
@@ -47,6 +60,8 @@ const ChatListSidebar = () => {
                         </Button>
                         <input
                             type="text"
+                            value={searchStaff}
+                            onChange={(e) => setSearchStaff(e.target.value)}
                             placeholder="Tìm kiếm đoạn chat..."
                             className="w-full h-full bg-gray-100 p-2 pl-10 pr-10 rounded-full focus:outline-none"
                         />
@@ -57,6 +72,8 @@ const ChatListSidebar = () => {
             <div className="chatList flex-1 overflow-scroll mt-4">
                 {messagesSidebar?.length > 0 &&
                     messagesSidebar?.map((message, index) => {
+                        // const isOwn = message?._id === context?.userInfo?._id;
+                        // const isLast = index === messagesSidebar?.length - 1;
                         return (
                             <Link
                                 onClick={() => {
@@ -85,6 +102,23 @@ const ChatListSidebar = () => {
                                         >
                                             {message?.role === 'admin' ? 'Quản lý' : 'Nhân viên'}
                                         </p>
+                                        {/* {isLast && isOwn ? (
+                                            <p
+                                                className={`text-[12px] lg:text-[13px] font-[500] my-[2px] ${
+                                                    message?.role === 'admin' ? 'text-green-500' : 'text-blue-500'
+                                                }`}
+                                            >
+                                                {message?.role === 'admin' ? 'Quản lý' : 'Nhân viên'}
+                                            </p>
+                                        ) : (
+                                            <p
+                                                className={`text-[12px] lg:text-[13px] font-[500] my-[2px] ${
+                                                    message?.role === 'admin' ? 'text-green-500' : 'text-blue-500'
+                                                }`}
+                                            >
+                                                {message?.role === 'admin' ? 'Quản lý' : 'Nhân viên'}
+                                            </p>
+                                        )} */}
                                     </div>
                                 </div>
                                 {index !== messagesSidebar?.length - 1 && <Divider />}

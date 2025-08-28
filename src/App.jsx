@@ -229,6 +229,7 @@ function App() {
                         <ScrollToTopButton />
 
                         <Dialog
+                            disableScrollLock
                             fullWidth={true}
                             maxWidth="lg"
                             open={openProductDetailsModal.open}
@@ -240,27 +241,28 @@ function App() {
                             <DialogContent>
                                 <div className="flex items-center w-full productDetailsModalContainer relative">
                                     <Button
-                                        className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[15px] right-[15px] !bg-[#f1f1f1]"
+                                        className="closeProductDetailsIcon !w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[15px] right-[15px] !bg-[#f1f1f1]"
                                         onClick={handleCloseProductDetailsModal}
                                     >
-                                        <IoCloseSharp className="text-[20px]" />
+                                        <IoCloseSharp className=" text-[20px]" />
                                     </Button>
                                     {openProductDetailsModal?.item?._id && (
-                                        <>
-                                            <div className="col1 w-[40%] px-3">
+                                        <div className="container flex flex-col lg:flex-row gap-4 lg:gap-8">
+                                            <div className="col1 w-full lg:w-[40%] pt-4 lg:pt-0 px-3">
                                                 <ProductZoom images={openProductDetailsModal?.item?.images} />
                                             </div>
 
-                                            <div className="col2 w-[60%] py-8 px-8 pr-16 productContent">
+                                            <div className="col2 productContent pt-0 pb-4 lg:py-8 w-full lg:w-[60%] px-4 lg:px-10">
                                                 <ProductDetailsComponent product={openProductDetailsModal?.item} />
                                             </div>
-                                        </>
+                                        </div>
                                     )}
                                 </div>
                             </DialogContent>
                         </Dialog>
 
                         <Dialog
+                            disableScrollLock
                             fullScreen
                             open={isOpenFullScreenPanel.open}
                             onClose={() =>

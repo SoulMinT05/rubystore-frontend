@@ -12,6 +12,9 @@ import { MdOutlineShoppingCart } from 'react-icons/md';
 
 import './ProductListItemView.scss';
 import { MyContext } from '../../App';
+import useWishlist from '../../hooks/useWishlist';
+import { useSelector } from 'react-redux';
+import { IoMdHeart } from 'react-icons/io';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -22,6 +25,11 @@ const formatCurrency = (amount) => {
 const ProductListItemView = ({ product }) => {
     const context = useContext(MyContext);
     const navigate = useNavigate();
+
+    const { addToWishlist } = useWishlist();
+    const { wishlists } = useSelector((state) => state.wishlist);
+
+    const isInWishlist = wishlists?.some((item) => item?.product?.toString() === product?._id);
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)] flex flex-col lg:flex-row items-center">
             <div className="group imgWrapper w-full lg:w-[30%] overflow-hidden rounded-md relative">
@@ -57,8 +65,15 @@ const ProductListItemView = ({ product }) => {
                         </Button>
                     </Tooltip> */}
                     <Tooltip title="Yêu thích" placement="left-start">
-                        <Button className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group">
-                            <FaRegHeart className="text-[18px] !text-black group-hover:text-white" />
+                        <Button
+                            onClick={() => addToWishlist(product?._id)}
+                            className={`!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group`}
+                        >
+                            {isInWishlist ? (
+                                <IoMdHeart className="text-[20px] !text-primary group-hover:text-white" />
+                            ) : (
+                                <FaRegHeart className="text-[18px] !text-black group-hover:text-white" />
+                            )}
                         </Button>
                     </Tooltip>
                 </div>

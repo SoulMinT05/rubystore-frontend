@@ -170,7 +170,8 @@ const HomePage = () => {
                     </div>
                     <div className="part2 w-full lg:w-[30%] lg:h-[230px] flex items-center gap-2 justify-between flex-row lg:flex-col">
                         <HomeBannerImage image="src/assets/banner_1.jpeg" />
-                        <HomeBannerImage image="src/assets/banner_2.jpeg" />
+                        {/* <HomeBannerImage image="src/assets/banner_2.jpeg" /> */}
+                        <HomeBannerImage image="src/assets/banner_3.png" />
                     </div>
                 </div>
             </section>
@@ -221,6 +222,7 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* BLOGS */}
             {blogs?.length !== 0 && (
                 <section className="blogSection py-5 pb-8 pt-0 bg-white">
                     <div className="container">

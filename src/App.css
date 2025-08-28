@@ -1,0 +1,13 @@
+@media only screen and (min-width: 600px) and (max-width: 600px) {
+    .closeProductDetailsIcon {
+        right: 10px;
+        top: 4px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .closeProductDetailsIcon {
+        right: -1px;
+        top: -1px;
+    }
+}

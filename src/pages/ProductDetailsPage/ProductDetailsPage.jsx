@@ -186,8 +186,10 @@ const ProductDetailsPage = () => {
                         </div>
 
                         {relatedProducts?.length !== 0 && (
-                            <div className="container pt-8">
-                                <h2 className="text-[20px] font-[600] pb-0">Sản phẩm liên quan</h2>
+                            <div className="container pt-8 px-[16px]">
+                                <h2 className="text-[18px] sm:text-[20px] lg:text-[22px] font-[600] pb-0">
+                                    Sản phẩm liên quan
+                                </h2>
                                 <HomeProductsSlider items={6} products={relatedProducts} />
                             </div>
                         )}

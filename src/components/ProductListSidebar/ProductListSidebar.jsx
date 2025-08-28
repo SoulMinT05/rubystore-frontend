@@ -31,7 +31,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
     const [isFilterApplied, setIsFilterApplied] = useState(false);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
     const [isOpenAvailFilter, setIsOpenAvailFilter] = useState(true);
-    const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
+    // const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
 
     const [filterProducts, setFilterProducts] = useState({
         categoryId: [],
@@ -266,7 +266,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                     </Collapse>
                 </div>
 
-                <div className="box mt-3">
+                {/* <div className="box mt-3">
                     <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Kích cỡ
                         <Button
@@ -285,7 +285,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                             <FormControlLabel control={<Checkbox size="small" />} label="XXL (15)" className="w-full" />
                         </div>
                     </Collapse>
-                </div>
+                </div> */}
 
                 {/* Price */}
                 <div className="box mt-4">

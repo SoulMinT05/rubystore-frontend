@@ -165,15 +165,17 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
                     )}
                     <div className="relative">
                         <img className="w-[40px] h-[40px] object-cover rounded-full" src={staffInfo?.avatar} alt="" />
-                        <span className="absolute bottom-1 right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
+                        {staffInfo?.isOnline && (
+                            <span className="absolute bottom-1 right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
+                        )}
                     </div>
                     <div className="texts gap-1">
                         <span className="text-[13px] sm:text-[14px] lg:text-[16px] font-[600]"> {staffInfo?.name}</span>
-                        <p className="text-gray-500 text-[12px] lg:text-[13px] font-[300] mt-0">
+                        <p className="text-[12px] lg:text-[13px] font-[300] mt-0">
                             {staffInfo?.isOnline === true ? (
                                 <span className="text-green-500 font-medium">Đang hoạt động</span>
                             ) : (
-                                <span className="text-gray-400">
+                                <span className="text-gray-500">
                                     Hoạt động {formatOnlineTime(staffInfo?.lastOnline)}
                                 </span>
                             )}
