@@ -1,23 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import './OrderHistoryPage.scss';
-import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
-import { Button, CircularProgress, Divider } from '@mui/material';
-import BadgeOrderStatus from '../../components/BadgeOrderStatus/BadgeOrderStatus';
+import { Button, CircularProgress, Divider, Tabs } from '@mui/material';
 import { IoCloseSharp } from 'react-icons/io5';
 import { IoKeyOutline } from 'react-icons/io5';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import './OrderHistoryPage.scss';
+import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
+import BadgeOrderStatus from '../../components/BadgeOrderStatus/BadgeOrderStatus';
 import axiosClient from '../../apis/axiosClient';
 import { MyContext } from '../../App';
-import { useDispatch, useSelector } from 'react-redux';
 import { cancelOrderStatus, fetchOrders, updateOrderStatus } from '../../redux/orderSlice';
 import { socket } from '../../config/socket';
 import { addNotification } from '../../redux/notificationSlice';
-import { Link } from 'react-router-dom';
 import AccountSidebarLayout from '../../layouts/AccountSidebarLayout';
+import noOrder from '../../assets/no-message.png';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -37,12 +41,18 @@ function formatDate(dateString) {
 const OrderHistoryPage = () => {
     const context = useContext(MyContext);
     const dispatch = useDispatch();
+    const orders = useSelector((state) => state.order.orders);
     const [openOrderDetailsModal, setOpenOrderDetailsModal] = useState({
         open: false,
         order: null,
     });
-    const orders = useSelector((state) => state.order.orders);
     const [cancelOrder, setCancelOrder] = useState(false);
+
+    const [orderStatus, setOrderStatus] = useState('Tất cả');
+
+    const handleChangeOrderStatus = (event, newOrderStatus) => {
+        setOrderStatus(newOrderStatus);
+    };
 
     const handleCloseOrderDetailsModal = () => {
         setOpenOrderDetailsModal((prev) => ({
@@ -74,13 +84,18 @@ const OrderHistoryPage = () => {
 
     useEffect(() => {
         const getOrders = async () => {
-            const { data } = await axiosClient.get('/api/order');
+            let url = '/api/order';
+            if (orderStatus !== 'Tất cả') {
+                url += `?orderStatus=${orderStatus}`;
+            }
+
+            const { data } = await axiosClient.get(url);
             if (data.success) {
                 dispatch(fetchOrders(data?.orders));
             }
         };
         getOrders();
-    }, []);
+    }, [orderStatus]);
 
     const printPDF = async () => {
         const element = document.getElementById('order-details');
@@ -165,24 +180,51 @@ const OrderHistoryPage = () => {
 
                     <hr />
 
+                    <Box sx={{ width: '100%' }}>
+                        <Tabs
+                            value={orderStatus}
+                            onChange={handleChangeOrderStatus}
+                            variant="scrollable"
+                            scrollButtons="auto"
+                            aria-label="wrapped label tabs example"
+                        >
+                            <Tab className="link !px-10 " label="Tất cả" value="Tất cả" />
+                            <Tab className="link !px-10 " label="Đang xử lý" value="pending" />
+                            <Tab className="link !px-10 " label="Đang giao hàng" value="shipping" />
+                            <Tab className="link !px-10 " label="Đã giao hàng" value="delivered" />
+                            <Tab className="link !px-10 " label="Đã hủy" value="cancelled" />
+                        </Tabs>
+                    </Box>
+
+                    <hr />
+
                     <div className="relative overflow-x-auto mt-5">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-700">
-                            <thead className="text-xs text-gray-700 uppercase bg-white">
-                                <tr>
-                                    <th className="px-4 py-3 whitespace-nowrap">Mã đơn hàng</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Sản phẩm</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Size</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Phương thức thanh toán</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Thành tiền</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Trạng thái đơn hàng</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Ngày đặt</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Thao tác</th>
-                                    <th className="px-4 py-3 whitespace-nowrap">Đánh giá sản phẩm</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {orders?.length > 0 &&
-                                    orders?.map((order) =>
+                        {orders?.length === 0 && (
+                            <div className="flex items-center flex-col m-auto">
+                                <div className="">
+                                    <img className="w-[100px] h-[100px] " src={noOrder} alt="" />
+                                </div>
+                                <span className="text-[14px] font-[500] my-[14px] ">Chưa có đơn hàng nào.</span>
+                            </div>
+                        )}
+
+                        {orders?.length > 0 && (
+                            <table className="w-full text-sm text-left rtl:text-right text-gray-700">
+                                <thead className="text-xs text-gray-700 uppercase bg-white">
+                                    <tr>
+                                        <th className="px-4 py-3 whitespace-nowrap">Mã đơn hàng</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Sản phẩm</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Size</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Phương thức thanh toán</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Thành tiền</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Trạng thái đơn hàng</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Ngày đặt</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Thao tác</th>
+                                        <th className="px-4 py-3 whitespace-nowrap">Đánh giá sản phẩm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {orders?.map((order) =>
                                         order.selectedCartItems.map((item, idx) => (
                                             <tr key={`${order._id}-${idx}`} className="bg-white border-b">
                                                 {idx === 0 && (
@@ -307,233 +349,241 @@ const OrderHistoryPage = () => {
                                             </tr>
                                         ))
                                     )}
-                            </tbody>
-                            <Dialog
-                                disableScrollLock
-                                fullWidth={true}
-                                maxWidth="lg"
-                                open={openOrderDetailsModal.open}
-                                onClose={handleCloseOrderDetailsModal}
-                                aria-labelledby="alert-dialog-title"
-                                aria-describedby="alert-dialog-description"
-                                className="orderDetailsModal"
-                            >
-                                <DialogContent>
-                                    <div className="bg-[#fff] p-4 container">
-                                        <div className="w-full orderDetailsModalContainer relative">
-                                            <Button
-                                                className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[6px] right-[15px] !bg-[#f1f1f1]"
-                                                onClick={handleCloseOrderDetailsModal}
-                                            >
-                                                <IoCloseSharp className="text-[20px]" />
-                                            </Button>
+                                </tbody>
+                                <Dialog
+                                    disableScrollLock
+                                    fullWidth={true}
+                                    maxWidth="lg"
+                                    open={openOrderDetailsModal.open}
+                                    onClose={handleCloseOrderDetailsModal}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                    className="orderDetailsModal"
+                                >
+                                    <DialogContent>
+                                        <div className="bg-[#fff] p-4 container">
+                                            <div className="w-full orderDetailsModalContainer relative">
+                                                <Button
+                                                    className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[6px] right-[15px] !bg-[#f1f1f1]"
+                                                    onClick={handleCloseOrderDetailsModal}
+                                                >
+                                                    <IoCloseSharp className="text-[20px]" />
+                                                </Button>
 
-                                            <div
-                                                className="container bg-white p-6 rounded-lg shadow-md"
-                                                id="order-details"
-                                            >
-                                                <h2 className="text-gray-700 text-xl border-b pb-4 mb-4 font-[600]">
-                                                    Chi tiết đơn hàng
-                                                </h2>
-                                                <h3 className="text-gray-700 text-lg font-[600] mt-6 mb-4">
-                                                    Thông tin đơn hàng
-                                                </h3>
-                                                {/* Order Info */}
-                                                <div className="space-y-4">
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Order ID</span>
-                                                        <span className="text-primary">
-                                                            {openOrderDetailsModal?.order?._id}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Phương thức thanh toán</span>
-                                                        <span className="text-gray-700 text-blue">
-                                                            {openOrderDetailsModal?.order?.paymentMethod === 'cod' &&
-                                                                'Thanh toán khi nhận hàng'}
-                                                            {openOrderDetailsModal?.order?.paymentMethod === 'momo' &&
-                                                                'Thanh toán bằng Momo'}
-                                                            {openOrderDetailsModal?.order?.paymentMethod === 'vnoay' &&
-                                                                'Thanh toán bằng VnPay'}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Ngày đặt hàng</span>
-                                                        <span className="text-gray-700">
-                                                            {formatDate(openOrderDetailsModal?.order?.createdAt)}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Trạng thái</span>
-                                                        <span className="text-gray-700">
-                                                            <BadgeOrderStatus
-                                                                status={openOrderDetailsModal?.order?.orderStatus}
-                                                            />
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                {/* Customer Info */}
-                                                <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
-                                                    Thông tin khách hàng
-                                                </h3>
-                                                <div className="space-y-4">
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Họ và tên</span>
-                                                        <span className="text-gray-700">
-                                                            {openOrderDetailsModal?.order?.userId?.name}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Email</span>
-                                                        <span className="text-gray-700">
-                                                            {openOrderDetailsModal?.order?.userId?.email}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Số điện thoại</span>
-                                                        <span className="text-gray-700">
-                                                            {openOrderDetailsModal?.order?.userId?.phoneNumber}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-gray-500">Địa chỉ</span>
-                                                        <span className="text-gray-700">
-                                                            {`Đường ${
-                                                                openOrderDetailsModal?.order?.shippingAddress
-                                                                    ?.streetLine || ''
-                                                            }, Phường ${
-                                                                openOrderDetailsModal?.order?.shippingAddress?.ward ||
-                                                                ''
-                                                            }, Quận ${
-                                                                openOrderDetailsModal?.order?.shippingAddress
-                                                                    ?.district || ''
-                                                            }, Thành phố ${
-                                                                openOrderDetailsModal?.order?.shippingAddress?.city ||
-                                                                ''
-                                                            }`}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                {/* Product Info */}
-                                                <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
-                                                    Thông tin sản phẩm
-                                                </h3>
-                                                <div className="mt-4">
-                                                    {openOrderDetailsModal?.order?.selectedCartItems?.length > 0 &&
-                                                        openOrderDetailsModal?.order?.selectedCartItems?.map(
-                                                            (cartItem) => {
-                                                                return (
-                                                                    <div
-                                                                        key={cartItem?._id}
-                                                                        className="flex items-center bg-gray-50 p-4 rounded-lg"
-                                                                    >
-                                                                        <div className="w-[20%] group cursor-pointer">
-                                                                            <img
-                                                                                alt="Image of an Apple iMac"
-                                                                                className="w-[70px] h-[70px] object-cover rounded-md mr-4 group-hover:scale-105 transition-all"
-                                                                                src={cartItem?.images[0]}
-                                                                            />
-                                                                        </div>
-                                                                        <div className="mx-4 w-[47%]">
-                                                                            <p className="text-gray-700">
-                                                                                {cartItem?.name}
-                                                                            </p>
-                                                                        </div>
-                                                                        <div className="w-[33%] flex items-center justify-end gap-5">
-                                                                            <p className="text-gray-700">
-                                                                                {cartItem?.sizeProduct}
-                                                                            </p>
-                                                                            <p className="text-gray-700">
-                                                                                {cartItem?.quantityProduct}
-                                                                            </p>
-                                                                            <p className="text-gray-700 font-[600]">
-                                                                                {formatCurrency(cartItem?.price)}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                        )}
-
-                                                    {/* Price info */}
-                                                    <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
-                                                        Tổng quan giá
+                                                <div
+                                                    className="container bg-white p-6 rounded-lg shadow-md"
+                                                    id="order-details"
+                                                >
+                                                    <h2 className="text-gray-700 text-xl border-b pb-4 mb-4 font-[600]">
+                                                        Chi tiết đơn hàng
+                                                    </h2>
+                                                    <h3 className="text-gray-700 text-lg font-[600] mt-6 mb-4">
+                                                        Thông tin đơn hàng
                                                     </h3>
+                                                    {/* Order Info */}
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between">
-                                                            <span className="text-gray-500">Tổng số lượng</span>
-                                                            <span className="text-gray-700">
-                                                                {openOrderDetailsModal?.order?.totalQuantity}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex items-center justify-between">
-                                                            <span className="text-gray-500">Tổng tiền đơn</span>
-                                                            <span className="text-gray-700">
-                                                                {formatCurrency(
-                                                                    openOrderDetailsModal?.order?.totalPrice
-                                                                )}
+                                                            <span className="text-gray-500">Order ID</span>
+                                                            <span className="text-primary">
+                                                                {openOrderDetailsModal?.order?._id}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center justify-between">
                                                             <span className="text-gray-500">
-                                                                Tổng tiền phí vận chuyển
+                                                                Phương thức thanh toán
                                                             </span>
-                                                            <span className="text-gray-700">
-                                                                {formatCurrency(
-                                                                    openOrderDetailsModal?.order?.shippingFee
-                                                                )}
+                                                            <span className="text-gray-700 text-blue">
+                                                                {openOrderDetailsModal?.order?.paymentMethod ===
+                                                                    'cod' && 'Thanh toán khi nhận hàng'}
+                                                                {openOrderDetailsModal?.order?.paymentMethod ===
+                                                                    'momo' && 'Thanh toán bằng Momo'}
+                                                                {openOrderDetailsModal?.order?.paymentMethod ===
+                                                                    'vnoay' && 'Thanh toán bằng VnPay'}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center justify-between">
-                                                            <span className="text-gray-500">Voucher</span>
+                                                            <span className="text-gray-500">Ngày đặt hàng</span>
                                                             <span className="text-gray-700">
-                                                                {openOrderDetailsModal?.order?.discountType ===
-                                                                'percent'
-                                                                    ? `${openOrderDetailsModal?.order?.discountValue}%`
-                                                                    : `${formatCurrency(
-                                                                          openOrderDetailsModal?.order?.discountValue
-                                                                      )}`}
+                                                                {formatDate(openOrderDetailsModal?.order?.createdAt)}
                                                             </span>
                                                         </div>
-                                                    </div>
-                                                    <div className="mb-1 mt-6">
                                                         <div className="flex items-center justify-between">
-                                                            <span className="text-gray-700 text-xl pb-4 font-[600]">
-                                                                Tổng thanh toán
-                                                            </span>
-                                                            <span className="font-[600] text-[28px] text-primary">
-                                                                {formatCurrency(
-                                                                    openOrderDetailsModal?.order?.finalPrice
-                                                                )}
+                                                            <span className="text-gray-500">Trạng thái</span>
+                                                            <span className="text-gray-700">
+                                                                <BadgeOrderStatus
+                                                                    status={openOrderDetailsModal?.order?.orderStatus}
+                                                                />
                                                             </span>
                                                         </div>
                                                     </div>
 
-                                                    <Divider />
+                                                    {/* Customer Info */}
+                                                    <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
+                                                        Thông tin khách hàng
+                                                    </h3>
+                                                    <div className="space-y-4">
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-gray-500">Họ và tên</span>
+                                                            <span className="text-gray-700">
+                                                                {openOrderDetailsModal?.order?.userId?.name}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-gray-500">Email</span>
+                                                            <span className="text-gray-700">
+                                                                {openOrderDetailsModal?.order?.userId?.email}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-gray-500">Số điện thoại</span>
+                                                            <span className="text-gray-700">
+                                                                {openOrderDetailsModal?.order?.userId?.phoneNumber}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-gray-500">Địa chỉ</span>
+                                                            <span className="text-gray-700">
+                                                                {`Đường ${
+                                                                    openOrderDetailsModal?.order?.shippingAddress
+                                                                        ?.streetLine || ''
+                                                                }, Phường ${
+                                                                    openOrderDetailsModal?.order?.shippingAddress
+                                                                        ?.ward || ''
+                                                                }, Quận ${
+                                                                    openOrderDetailsModal?.order?.shippingAddress
+                                                                        ?.district || ''
+                                                                }, Thành phố ${
+                                                                    openOrderDetailsModal?.order?.shippingAddress
+                                                                        ?.city || ''
+                                                                }`}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Product Info */}
+                                                    <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
+                                                        Thông tin sản phẩm
+                                                    </h3>
+                                                    <div className="mt-4">
+                                                        {openOrderDetailsModal?.order?.selectedCartItems?.length > 0 &&
+                                                            openOrderDetailsModal?.order?.selectedCartItems?.map(
+                                                                (cartItem) => {
+                                                                    return (
+                                                                        <div
+                                                                            key={cartItem?._id}
+                                                                            className="flex items-center bg-gray-50 p-4 rounded-lg"
+                                                                        >
+                                                                            <div className="w-[20%] group cursor-pointer">
+                                                                                <img
+                                                                                    alt="Image of an Apple iMac"
+                                                                                    className="w-[70px] h-[70px] object-cover rounded-md mr-4 group-hover:scale-105 transition-all"
+                                                                                    src={cartItem?.images[0]}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="mx-4 w-[47%]">
+                                                                                <p className="text-gray-700">
+                                                                                    {cartItem?.name}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div className="w-[33%] flex items-center justify-end gap-5">
+                                                                                <p className="text-gray-700">
+                                                                                    {cartItem?.sizeProduct}
+                                                                                </p>
+                                                                                <p className="text-gray-700">
+                                                                                    {cartItem?.quantityProduct}
+                                                                                </p>
+                                                                                <p className="text-gray-700 font-[600]">
+                                                                                    {formatCurrency(cartItem?.price)}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                }
+                                                            )}
+
+                                                        {/* Price info */}
+                                                        <h3 className="text-gray-700 text-xl pb-4 mb-1 mt-6 font-[600]">
+                                                            Tổng quan giá
+                                                        </h3>
+                                                        <div className="space-y-4">
+                                                            <div className="flex items-center justify-between">
+                                                                <span className="text-gray-500">Tổng số lượng</span>
+                                                                <span className="text-gray-700">
+                                                                    {openOrderDetailsModal?.order?.totalQuantity}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex items-center justify-between">
+                                                                <span className="text-gray-500">Tổng tiền đơn</span>
+                                                                <span className="text-gray-700">
+                                                                    {formatCurrency(
+                                                                        openOrderDetailsModal?.order?.totalPrice
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex items-center justify-between">
+                                                                <span className="text-gray-500">
+                                                                    Tổng tiền phí vận chuyển
+                                                                </span>
+                                                                <span className="text-gray-700">
+                                                                    {formatCurrency(
+                                                                        openOrderDetailsModal?.order?.shippingFee
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex items-center justify-between">
+                                                                <span className="text-gray-500">Voucher</span>
+                                                                <span className="text-gray-700">
+                                                                    {openOrderDetailsModal?.order?.discountType ===
+                                                                    'percent'
+                                                                        ? `${openOrderDetailsModal?.order?.discountValue}%`
+                                                                        : `${formatCurrency(
+                                                                              openOrderDetailsModal?.order
+                                                                                  ?.discountValue
+                                                                          )}`}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="mb-1 mt-6">
+                                                            <div className="flex items-center justify-between">
+                                                                <span className="text-gray-700 text-xl pb-4 font-[600]">
+                                                                    Tổng thanh toán
+                                                                </span>
+                                                                <span className="font-[600] text-[28px] text-primary">
+                                                                    {formatCurrency(
+                                                                        openOrderDetailsModal?.order?.finalPrice
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <Divider />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="p-6 rounded-lg">
-                                                <div className="flex items-center justify-between gap-3 mt-4">
-                                                    <Button className="btn-org btn-login" onClick={printPDF}>
-                                                        In đơn hàng
-                                                    </Button>
-                                                    <Button
-                                                        onClick={() =>
-                                                            handleCancelOrder(openOrderDetailsModal?.order?._id)
-                                                        }
-                                                        className="btn-border btn-login"
-                                                    >
-                                                        {cancelOrder ? <CircularProgress color="inherit" /> : 'Huỷ đơn'}
-                                                    </Button>
+                                                <div className="p-6 rounded-lg">
+                                                    <div className="flex items-center justify-between gap-3 mt-4">
+                                                        <Button className="btn-org btn-login" onClick={printPDF}>
+                                                            In đơn hàng
+                                                        </Button>
+                                                        <Button
+                                                            onClick={() =>
+                                                                handleCancelOrder(openOrderDetailsModal?.order?._id)
+                                                            }
+                                                            className="btn-border btn-login"
+                                                        >
+                                                            {cancelOrder ? (
+                                                                <CircularProgress color="inherit" />
+                                                            ) : (
+                                                                'Huỷ đơn'
+                                                            )}
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
-                        </table>
+                                    </DialogContent>
+                                </Dialog>
+                            </table>
+                        )}
                     </div>
                 </div>
             </div>
