@@ -26,6 +26,26 @@ const OtpBox = ({ length, onChange }) => {
         }
     };
 
+    const handlePaste = (event) => {
+        event.preventDefault();
+        const pasteData = event.clipboardData.getData('text').trim();
+        if (!/^\d+$/.test(pasteData)) return; // chỉ nhận số
+
+        const pasted = pasteData.slice(0, length).split('');
+        const newOtp = [...otp];
+        for (let i = 0; i < pasted.length; i++) {
+            newOtp[i] = pasted[i];
+        }
+        setOtp(newOtp);
+        onChange(newOtp.join(''));
+
+        // focus ô cuối cùng có giá trị
+        const lastIndex = pasted.length - 1;
+        if (lastIndex >= 0 && lastIndex < length) {
+            document.getElementById(`otp-input-${lastIndex}`).focus();
+        }
+    };
+
     return (
         <div style={{ display: 'flex', justifyContent: 'center', gap: '5px' }} className="otpBox">
             {otp.map((data, index) => (
@@ -37,6 +57,7 @@ const OtpBox = ({ length, onChange }) => {
                     value={otp[index]}
                     onChange={(e) => handleChange(e.target, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
+                    onPaste={handlePaste}
                     className="w-[45px] h-[45px] text-center text-[17px]"
                 />
             ))}

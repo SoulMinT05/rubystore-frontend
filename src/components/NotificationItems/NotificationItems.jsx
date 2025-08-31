@@ -12,6 +12,7 @@ import { MyContext } from '../../App';
 import { useDispatch } from 'react-redux';
 import axiosClient from '../../apis/axiosClient';
 import { markNotificationRead } from '../../redux/notificationSlice';
+import defaultAvatar from '../../assets/default_avatar.png';
 
 const tailwindColorMap = {
     'bg-blue-500': '#3b82f6',
@@ -81,53 +82,59 @@ const NotificationItems = ({ allNotifications }) => {
 
     return (
         <div className="pt-6 pb-2">
+            {visibleNotifications?.length === 0 && (
+                <div className="text-center">
+                    <span className="p-4 text-gray-500 text-sm">Chưa có thông báo nào</span>
+                </div>
+            )}
             <ul className="divide-y divide-gray-200 rounded-md bg-white shadow-md">
-                {visibleNotifications?.map((notification) => (
-                    <li
-                        key={notification._id}
-                        onClick={() => handleMarkAsReadAndNavigate(notification._id)}
-                        className={`p-4 cursor-pointer  hover:bg-gray-100 transition ${
-                            !notification.isRead ? 'bg-red-50' : ''
-                        }`}
-                    >
-                        <div className="flex items-start gap-4">
-                            <div className="">
-                                {notification?.type === 'order' ? (
-                                    getNotificationAvatar(notification?.type, notification?.bgColor)
-                                ) : (
-                                    <Avatar src={notification?.avatarSender} />
-                                )}
-                            </div>
-                            <div className="flex-1 min-w-0 ">
-                                <h3 className="text-[14px] sm:text-[15px] font-[500]">{notification?.title}</h3>
-                                <p
-                                    className="text-[12px] sm:text-[13px] text-gray-600 mt-1 overflow-hidden 
+                {visibleNotifications?.length > 0 &&
+                    visibleNotifications?.map((notification) => (
+                        <li
+                            key={notification._id}
+                            onClick={() => handleMarkAsReadAndNavigate(notification._id)}
+                            className={`p-4 cursor-pointer  hover:bg-gray-100 transition ${
+                                !notification.isRead ? 'bg-red-50' : ''
+                            }`}
+                        >
+                            <div className="flex items-start gap-4">
+                                <div className="">
+                                    {notification?.type === 'order' ? (
+                                        getNotificationAvatar(notification?.type, notification?.bgColor)
+                                    ) : (
+                                        <Avatar src={notification?.avatarSender || defaultAvatar} />
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0 ">
+                                    <h3 className="text-[14px] sm:text-[15px] font-[500]">{notification?.title}</h3>
+                                    <p
+                                        className="text-[12px] sm:text-[13px] text-gray-600 mt-1 overflow-hidden 
                                     text-ellipsis line-clamp-2"
-                                >
-                                    {notification?.description}
-                                </p>
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between  mt-2">
-                                    <span className="text-xs text-gray-400">
-                                        {formatDateUTCPlus7(notification?.createdAt)}
-                                    </span>
-                                    <span
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            markNotificationAsRead(notification._id);
-                                        }}
-                                        className={`text-xs mt-2 sm:mt-0 italic ${
-                                            notification?.isRead
-                                                ? 'text-gray-500'
-                                                : 'text-blue-500 hover:underline cursor-pointer'
-                                        }`}
                                     >
-                                        {notification?.isRead ? 'Đã đọc' : 'Đánh dấu là đã đọc'}
-                                    </span>
+                                        {notification?.description}
+                                    </p>
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between  mt-2">
+                                        <span className="text-xs text-gray-400">
+                                            {formatDateUTCPlus7(notification?.createdAt)}
+                                        </span>
+                                        <span
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                markNotificationAsRead(notification._id);
+                                            }}
+                                            className={`text-xs mt-2 sm:mt-0 italic ${
+                                                notification?.isRead
+                                                    ? 'text-gray-500'
+                                                    : 'text-blue-500 hover:underline cursor-pointer'
+                                            }`}
+                                        >
+                                            {notification?.isRead ? 'Đã đọc' : 'Đánh dấu là đã đọc'}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                ))}
+                        </li>
+                    ))}
             </ul>
 
             {/* Nút "Xem thêm" nếu còn thông báo chưa hiển thị */}

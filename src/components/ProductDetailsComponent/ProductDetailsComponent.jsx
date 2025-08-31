@@ -36,7 +36,7 @@ const ProductDetailsComponent = ({ product }) => {
 
     const handleAddToCart = async () => {
         if (!context.isLogin) {
-            context.openAlertBox('warning', 'Vui lòng đăng nhập!');
+            context.openAlertBox('error', 'Vui lòng đăng nhập!');
             navigate('/login');
             return;
         }

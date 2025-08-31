@@ -14,6 +14,7 @@ import './AccountSidebar.css';
 import axiosClient from '../../apis/axiosClient';
 import { MyContext } from '../../App';
 import { LuSend } from 'react-icons/lu';
+import defaultAvatar from '../../assets/default_avatar.png';
 
 const AccountSidebar = () => {
     const context = useContext(MyContext);
@@ -22,6 +23,8 @@ const AccountSidebar = () => {
 
     useEffect(() => {
         const fetchAvatar = async () => {
+            console.log('fetch avatar');
+
             try {
                 const { data } = await axiosClient.get('/api/user/user-details');
                 if (data?.success && data?.user?.avatar) {
@@ -76,7 +79,7 @@ const AccountSidebar = () => {
                     {isUploading === true ? (
                         <CircularProgress color="inherit" />
                     ) : (
-                        <img src={preview} alt="Avatar" className="w-full h-full object-cover" />
+                        <img src={preview || defaultAvatar} alt="Avatar" className="w-full h-full object-cover" />
                     )}
 
                     <div

@@ -12,3 +12,11 @@
 .css-xrmkj5-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #ff5252 !important;
 }
+
+button .MuiCircularProgress-root {
+    width: 20px !important;
+    height: 20px !important;
+}
+.circ-white .MuiCircularProgress-circle {
+    stroke: white !important;
+}

@@ -30,6 +30,8 @@ import { MyContext } from '../../App';
 // import logo from '../../assets/logo.jpg';
 import logo from '../../assets/rubystore_1.png';
 
+import defaultAvatar from '../../assets/default_avatar.png';
+
 import './Header.scss';
 
 import axiosToken from '../../apis/axiosToken';
@@ -349,7 +351,7 @@ const Header = () => {
                                                 onClick={handleClick}
                                             >
                                                 <img
-                                                    src={context?.userInfo?.avatar}
+                                                    src={context?.userInfo?.avatar || defaultAvatar}
                                                     alt=""
                                                     className="!w-[52px] !h-[52px] !min-w-[52px] rounded-full object-cover"
                                                 />
@@ -529,6 +531,29 @@ const Header = () => {
                                                         </Box>
 
                                                         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                                            {notifications?.length === 0 && (
+                                                                <Box
+                                                                    sx={{
+                                                                        display: 'flex',
+                                                                        flexDirection: 'column',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        py: 3,
+                                                                        color: 'text.secondary',
+                                                                    }}
+                                                                >
+                                                                    <Typography variant="body1" fontWeight={500}>
+                                                                        Chưa có thông báo nào
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        color="text.disabled"
+                                                                        className="italic"
+                                                                    >
+                                                                        Bạn sẽ thấy thông báo mới tại đây
+                                                                    </Typography>
+                                                                </Box>
+                                                            )}
                                                             {notifications?.length > 0 &&
                                                                 notifications?.map((notification) => {
                                                                     return (
@@ -554,7 +579,10 @@ const Header = () => {
                                                                                     )
                                                                                 ) : (
                                                                                     <Avatar
-                                                                                        src={notification?.avatarSender}
+                                                                                        src={
+                                                                                            notification?.avatarSender ||
+                                                                                            defaultAvatar
+                                                                                        }
                                                                                     />
                                                                                 )}
                                                                             </ListItemAvatar>

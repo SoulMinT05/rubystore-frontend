@@ -54,6 +54,9 @@ const HomeAdsBannerSlider = ({ items }) => {
                     <HomeBannerBox img={'src/assets/shopee_5.png'} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
+                    <HomeBannerBox img={'src/assets/shopee_7.png'} link="/" />
+                </SwiperSlide>
+                <SwiperSlide>
                     <HomeBannerBox img={'src/assets/shopee_6.jpg'} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>

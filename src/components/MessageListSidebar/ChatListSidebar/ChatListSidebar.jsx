@@ -9,6 +9,7 @@ import { fetchMessagesSidebar, updateOnlineStatusSidebar } from '../../../redux/
 import { Link, useParams } from 'react-router-dom';
 import { MyContext } from '../../../App';
 import { socket } from '../../../config/socket';
+import defaultAvatar from '../../../assets/default_avatar.png';
 
 const ChatListSidebar = () => {
     const context = useContext(MyContext);
@@ -72,8 +73,6 @@ const ChatListSidebar = () => {
             <div className="chatList flex-1 overflow-scroll mt-4">
                 {messagesSidebar?.length > 0 &&
                     messagesSidebar?.map((message, index) => {
-                        // const isOwn = message?._id === context?.userInfo?._id;
-                        // const isLast = index === messagesSidebar?.length - 1;
                         return (
                             <Link
                                 onClick={() => {
@@ -86,7 +85,7 @@ const ChatListSidebar = () => {
                                     <div className="relative">
                                         <img
                                             className="w-[50px] h-[50px] object-cover rounded-full "
-                                            src={message?.avatar}
+                                            src={message?.avatar || defaultAvatar}
                                             alt={message?.name}
                                         />
                                         {message?.isOnline && (

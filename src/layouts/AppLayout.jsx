@@ -4,7 +4,7 @@ import Header from '../components/Header/Header';
 import AppRoutes from '../routes';
 import Footer from '../components/Footer/Footer';
 
-const LayoutAppContent = () => {
+const AppLayout = () => {
     const location = useLocation();
     return (
         <>
@@ -15,4 +15,4 @@ const LayoutAppContent = () => {
     );
 };
 
-export default LayoutAppContent;
+export default AppLayout;

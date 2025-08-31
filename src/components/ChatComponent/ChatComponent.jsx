@@ -21,6 +21,7 @@ import { formatOnlineTime, formatDisplayTime } from '../../utils/formatTimeChat'
 import { useDispatch } from 'react-redux';
 import { sendMessage } from '../../redux/messageSlice';
 import { socket } from '../../config/socket';
+import defaultAvatar from '../../assets/default_avatar.png';
 
 const ChatComponent = ({ messagesDetails, receiverId }) => {
     const { id } = useParams();
@@ -234,7 +235,7 @@ const ChatComponent = ({ messagesDetails, receiverId }) => {
                                     {!isOwn && (
                                         <img
                                             className="w-[30px] h-[30px] object-cover rounded-full"
-                                            src={msg?.senderId?.avatar}
+                                            src={msg?.senderId?.avatar || defaultAvatar}
                                             alt={msg?.senderId?.name}
                                         />
                                     )}

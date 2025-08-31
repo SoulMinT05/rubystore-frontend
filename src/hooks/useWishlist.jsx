@@ -3,10 +3,13 @@ import { MyContext } from '../App';
 import axiosClient from '../apis/axiosClient';
 import { useDispatch } from 'react-redux';
 import { addWishlist, fetchWishlists, removeItemWishlist } from '../redux/wishlistSlice';
+import { useNavigate } from 'react-router-dom';
 
 const useWishlist = () => {
     const context = useContext(MyContext);
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const getWishlists = async () => {
         try {
@@ -24,6 +27,12 @@ const useWishlist = () => {
     const addToWishlist = async (productId) => {
         if (!productId) {
             context?.openAlertBox('error', 'Cần chọn sản phẩm');
+            return;
+        }
+        if (!context?.isLogin) {
+            context?.openAlertBox('error', 'Vui lòng đăng nhập');
+            navigate('/login');
+            return;
         }
         try {
             const { data } = await axiosClient.post('/api/user/addToWishlist', {
@@ -43,6 +52,12 @@ const useWishlist = () => {
     const removeToWishlist = async (productId) => {
         if (!productId) {
             context?.openAlertBox('error', 'Cần chọn sản phẩm');
+            return;
+        }
+        if (!context?.isLogin) {
+            context?.openAlertBox('error', 'Vui lòng đăng nhập');
+            navigate('/login');
+            return;
         }
         try {
             const { data } = await axiosClient.delete(`/api/user/removeFromWishlist/${productId}`);

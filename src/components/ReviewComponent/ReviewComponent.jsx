@@ -1,19 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, TextField, CircularProgress, Rating, Pagination } from '@mui/material';
 
-import './ReviewComponent.scss';
-import axiosClient from '../../apis/axiosClient';
-import { MyContext } from '../../App';
-import { useDispatch, useSelector } from 'react-redux';
-import { addReply, addReview, deleteReply, deleteReview } from '../../redux/reviewSlice';
-
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { socket } from '../../config/socket';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+
+import './ReviewComponent.scss';
+import axiosClient from '../../apis/axiosClient';
+import { MyContext } from '../../App';
+import { socket } from '../../config/socket';
+import { addReply, addReview, deleteReply, deleteReview } from '../../redux/reviewSlice';
+import defaultAvatar from '../../assets/default_avatar.png';
+
 function formatDate(dateString) {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
@@ -241,7 +243,11 @@ const ReviewComponent = ({ product }) => {
                                     <div className="flex items-end sm:items-center justify-between mt-7 mb-2">
                                         <div className="info w-full sm:w-[60%] flex flex-col sm:flex-row items-start sm:items-center gap-3">
                                             <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
-                                                <img src={review?.userId?.avatar} alt="avatar" className="w-full" />
+                                                <img
+                                                    src={review?.userId?.avatar || defaultAvatar}
+                                                    alt="avatar"
+                                                    className="w-full"
+                                                />
                                             </div>
                                             <div className="w-full sm:w-[80%]">
                                                 <h4 className="text-[14px] sm:text-[16px]">{review?.userId?.name}</h4>
@@ -282,7 +288,7 @@ const ReviewComponent = ({ product }) => {
                                                         <div className="info w-[60%] flex items-center gap-3">
                                                             <div className="img w-[80px] h-[80px] overflow-hidden rounded-full">
                                                                 <img
-                                                                    src={reply?.userId?.avatar}
+                                                                    src={reply?.userId?.avatar || defaultAvatar}
                                                                     alt="avatar"
                                                                     className="w-full"
                                                                 />

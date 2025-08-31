@@ -32,16 +32,19 @@ const VerifyPage = () => {
             });
 
             const data = await res.json();
-            console.log('data: ', data);
+            console.log('dataVerify : ', data);
 
             if (data.success) {
                 context.openAlertBox('success', data.message);
+                sessionStorage.removeItem('emailVerify');
                 sessionStorage.removeItem('verifyToken');
                 navigate('/login');
+            } else {
+                context.openAlertBox('error', data.message);
             }
         } catch (err) {
             console.log(err);
-            context.openAlertBox('error', err);
+            context.openAlertBox('error', err?.response?.data?.message);
         } finally {
             setIsLoading(false);
         }
@@ -58,7 +61,10 @@ const VerifyPage = () => {
 
                     <p className="text-center mt-0 mb-4">
                         OTP đã được gửi đến {'  '}
-                        <span className="text-primary font-bold">{context?.emailVerify}</span>
+                        <span className="text-primary font-bold">
+                            {/* {context?.emailVerify} */}
+                            {sessionStorage.getItem('emailVerify')}
+                        </span>
                     </p>
 
                     <form onSubmit={verifyOtp}>
@@ -67,7 +73,12 @@ const VerifyPage = () => {
                         <div className="flex items-center justify-center mt-5 px-5">
                             <Button type="submit" className="w-full btn-org btn-lg flex gap-3">
                                 {isLoading === true ? (
-                                    <CircularProgress color="inherit" />
+                                    <CircularProgress
+                                        className="circ-white"
+                                        size={20}
+                                        thickness={5}
+                                        sx={{ color: 'white' }}
+                                    />
                                 ) : (
                                     <span className="text-[13px] sm:text-[14px]">Gửi OTP</span>
                                 )}

@@ -57,7 +57,7 @@ const RegisterPage = () => {
             });
             if (data.success) {
                 context.openAlertBox('success', data.message);
-                context.setEmailVerify(formFields?.email);
+                sessionStorage.setItem('emailVerify', formFields?.email);
                 sessionStorage.setItem('verifyToken', data.token);
                 navigate('/verify');
             } else {
@@ -65,6 +65,7 @@ const RegisterPage = () => {
             }
         } catch (err) {
             console.log(err);
+            context.openAlertBox('err', err?.response?.data.message);
         } finally {
             setIsLoading(false);
         }
@@ -129,7 +130,12 @@ const RegisterPage = () => {
                         <div className="flex items-center w-full mt-3 mb-3">
                             <Button type="submit" className="btn-org btn-login w-full flex gap-3">
                                 {isLoading === true ? (
-                                    <CircularProgress color="inherit" />
+                                    <CircularProgress
+                                        className="circ-white"
+                                        size={20}
+                                        thickness={5}
+                                        sx={{ color: 'white' }}
+                                    />
                                 ) : (
                                     <span className="text-[13px] sm:text-[14px]">Đăng ký</span>
                                 )}

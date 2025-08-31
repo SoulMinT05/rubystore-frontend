@@ -187,7 +187,12 @@ const LoginPage = () => {
                         <div className="flex items-center w-full mt-3 mb-3">
                             <Button type="submit" className="btn-org btn-login w-full flex gap-3">
                                 {isLoading === true ? (
-                                    <CircularProgress color="inherit" />
+                                    <CircularProgress
+                                        className="circ-white"
+                                        size={20}
+                                        thickness={5}
+                                        sx={{ color: 'white' }}
+                                    />
                                 ) : (
                                     <span className="text-[13px] sm:text-[14px]">Đăng nhập</span>
                                 )}

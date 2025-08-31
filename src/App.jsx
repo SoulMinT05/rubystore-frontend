@@ -1,7 +1,3 @@
-import './App.css';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-
 import { BrowserRouter } from 'react-router-dom';
 import React, { createContext, forwardRef, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -11,19 +7,11 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 
-import ProductZoom from './components/ProductZoom/ProductZoom';
-import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
-
 import { IoCloseSharp } from 'react-icons/io5';
-import axiosClient from './apis/axiosClient';
-import { StoreProvider } from './contexts/StoreProvider';
-import AppRoutes from './routes';
-import axiosAuth from './apis/axiosAuth';
-import { Provider } from 'react-redux';
-import store from './redux/store';
-import UpdateAddressComponent from './components/UpdateAddressComponent/UpdateAddressComponent';
 import { AppBar, IconButton, Slide, Toolbar, Typography } from '@mui/material';
 import { IoMdClose } from 'react-icons/io';
+
+import { Provider } from 'react-redux';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -34,8 +22,19 @@ dayjs.locale('vi'); // dùng nếu bạn muốn "2 phút trước" thay vì "2 m
 
 // SOCKET IO
 import { socket } from './config/socket';
+
+import './App.css';
 import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton';
-import LayoutAppContent from './layouts/LayoutAppContent';
+import AppLayout from './layouts/AppLayout';
+
+import ProductZoom from './components/ProductZoom/ProductZoom';
+import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
+
+import axiosClient from './apis/axiosClient';
+import axiosAuth from './apis/axiosAuth';
+
+import store from './redux/store';
+import UpdateAddressComponent from './components/UpdateAddressComponent/UpdateAddressComponent';
 
 const MyContext = createContext();
 
@@ -86,13 +85,12 @@ function App() {
     };
 
     useEffect(() => {
-        socket.emit('joinMessageRoom', userInfo?._id);
-        console.log('Đã join message room');
-    }, [isLogin, userInfo?._id]);
+        socket.emit('joinMessageRoom', userInfo?._id, userInfo?.role);
+    }, [isLogin, userInfo?._id, userInfo?.role]);
 
     useEffect(() => {
-        socket.emit('joinRoom', userInfo?._id);
-    }, [isLogin, userInfo?._id]);
+        socket.emit('joinRoom', userInfo?._id, userInfo?.role);
+    }, [isLogin, userInfo?._id, userInfo?.role]);
 
     useEffect(() => {
         socket.on('sendMessage', (message) => {
@@ -223,7 +221,7 @@ function App() {
                         {/* <Header />
                         <AppRoutes />
                         <Footer /> */}
-                        <LayoutAppContent />
+                        <AppLayout />
                         <ToastContainer />
 
                         <ScrollToTopButton />
