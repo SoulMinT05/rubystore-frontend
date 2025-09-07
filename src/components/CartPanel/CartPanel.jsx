@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { Button } from '@mui/material';
 
-import './CartPanel.scss';
 import { MyContext } from '../../App';
 
 const formatCurrency = (amount) => {

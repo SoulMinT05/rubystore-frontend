@@ -343,7 +343,6 @@ const CartPage = () => {
                             {isLoadingCarts === false ? (
                                 cart?.products?.length > 0 &&
                                 cart?.products?.map((item) => {
-                                    console.log('itemm: ', item);
                                     return (
                                         <CartItems
                                             key={item?._id}

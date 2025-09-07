@@ -1,0 +1,16 @@
+.textSize {
+    min-width: 56px !important;
+}
+
+.actions {
+    min-width: 40px !important;
+    height: 30px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+@media only screen and (max-width: 475px) {
+    .actions {
+        height: 44px !important;
+    }
+}

@@ -69,7 +69,7 @@ const HomeProductsItem = ({ product }) => {
                     </Tooltip> */}
                     <Tooltip title="Yêu thích" placement="left-start">
                         <Button
-                            onClick={() => addToWishlist(product?.slug)}
+                            onClick={() => addToWishlist(product?._id)}
                             className={`!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group`}
                         >
                             {isInWishlist ? (

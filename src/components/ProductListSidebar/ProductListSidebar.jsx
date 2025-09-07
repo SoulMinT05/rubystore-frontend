@@ -26,9 +26,12 @@ const formatCurrency = (amount) => {
     }).format(amount);
 };
 
+const MIN_PRICE = 10000;
+const MAX_PRICE = 1000000000;
+
 const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalProducts, setTotalPages }) => {
     const context = useContext(MyContext);
-    const [isFilterApplied, setIsFilterApplied] = useState(false);
+    // const [isFilterApplied, setIsFilterApplied] = useState(false);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
     const [isOpenAvailFilter, setIsOpenAvailFilter] = useState(true);
     // const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
@@ -44,7 +47,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
         page: 1,
         limit: import.meta.env.VITE_LIMIT_PRODUCTS,
     });
-    const [price, setPrice] = useState([10000, 10000000]);
+    const [price, setPrice] = useState([MIN_PRICE, MAX_PRICE]);
     const location = useLocation(); // Là Object có pathname là /product
 
     const handleCheckboxChange = (field, value) => {
@@ -126,31 +129,67 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
         filterProducts.page = 1;
     }, [location]);
 
-    const fetchFilterProducts = async () => {
-        setIsLoading(true);
-        try {
-            const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
-            console.log('dataFIlter: ', data);
-            if (data.success) {
-                setProductsList(data?.products);
-                setTotalProducts(data?.total);
-                setTotalPages(data?.totalPages);
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchFilterProducts = async () => {
+            setIsLoading(true);
+            try {
+                const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
+                console.log('dataFIlter: ', data);
+                if (data.success) {
+                    setProductsList(data?.products);
+                    setTotalProducts(data?.total);
+                    setTotalPages(data?.totalPages);
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth',
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         filterProducts.page = page;
-        fetchFilterProducts();
+        const timeout = setTimeout(
+            () => {
+                fetchFilterProducts();
+            },
+            import.meta.env.VITE_TIME_OUT_LOADING
+            // 2000
+        );
+
+        return () => {
+            clearTimeout(timeout);
+        };
     }, [filterProducts, page]);
+
+    // useEffect(() => {
+    //     const fetchFilterProducts = async () => {
+    //         setIsLoading(true);
+    //         try {
+    //             const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
+    //             console.log('dataFIlter: ', data);
+    //             if (data.success) {
+    //                 setProductsList(data?.products);
+    //                 setTotalProducts(data?.total);
+    //                 setTotalPages(data?.totalPages);
+    //                 window.scrollTo({
+    //                     top: 0,
+    //                     behavior: 'smooth',
+    //                 });
+    //             }
+    //         } catch (error) {
+    //             console.log(error);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
+
+    //     filterProducts.page = page;
+    //     fetchFilterProducts();
+    // }, [filterProducts, page]);
 
     useEffect(() => {
         const debouncedTimeout = setTimeout(() => {
@@ -166,20 +205,20 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
         };
     }, [price]);
 
-    const handleApplyFilter = () => {
-        // setPage(1); // Reset lại page về 1
-        // fetchFilterProducts();
-        // setIsFilterApplied(true);
-        context?.setOpenFilterProducts(false);
-    };
+    // const handleApplyFilter = () => {
+    //     // setPage(1); // Reset lại page về 1
+    //     // fetchFilterProducts();
+    //     // setIsFilterApplied(true);
+    //     context?.setOpenFilterProducts(false);
+    // };
 
-    // Nếu người dùng xác nhận, thì gọi API
-    useEffect(() => {
-        if (isFilterApplied) {
-            fetchFilterProducts();
-            setIsFilterApplied(false); // Reset lại
-        }
-    }, [isFilterApplied]);
+    // // Nếu người dùng xác nhận, thì gọi API
+    // useEffect(() => {
+    //     if (isFilterApplied) {
+    //         fetchFilterProducts();
+    //         setIsFilterApplied(false); // Reset lại
+    //     }
+    // }, [isFilterApplied]);
 
     return (
         <aside className="sidebar pt-0 pb-6 lg:py-5 static lg:sticky top-[130px] z-[50]">
@@ -292,7 +331,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                     <h3 className="w-full mb-3 text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Giá
                     </h3>
-                    <RangeSlider value={price} onInput={setPrice} min={10000} max={10000000} step={5} />
+                    <RangeSlider value={price} onInput={setPrice} min={MIN_PRICE} max={MAX_PRICE} step={5} />
                     <div className="flex pt-4 pb-2 priceRange">
                         <span className="text-[12px] lg:text-[12px]">
                             Từ <strong className="text-dark"> {formatCurrency(price[0])}</strong>
@@ -360,7 +399,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                 </div>
             </div>
 
-            {context?.windowWidth <= 992 && (
+            {/* {context?.windowWidth <= 992 && (
                 <Button
                     variant="contained"
                     color="primary"
@@ -369,7 +408,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                 >
                     Xác nhận
                 </Button>
-            )}
+            )} */}
         </aside>
     );
 };

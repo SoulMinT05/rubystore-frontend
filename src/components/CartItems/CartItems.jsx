@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import './CartItems.scss';
 import { Link } from 'react-router-dom';
 import { IoCloseSharp } from 'react-icons/io5';
 import { GoTriangleDown } from 'react-icons/go';
@@ -204,7 +203,7 @@ const CartItems = ({
                     </div>
                 </div>
             </td>
-            <td className="px-3 py-2 w-[120px]">
+            <td className="px-3 py-2 w-[300px]">
                 <div className="relative w-full">
                     <button
                         id="size-button"
@@ -212,7 +211,7 @@ const CartItems = ({
                         aria-controls={openSize ? 'size-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={openSize ? 'true' : undefined}
-                        className="w-[80px] flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-1 px-2 rounded-md cursor-pointer"
+                        className="min-w-[80px] flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-1 px-2 rounded-md cursor-pointer"
                     >
                         Size: {selectedSize} <GoTriangleDown />
                     </button>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
@@ -100,10 +100,12 @@ const ProductListPage = () => {
         getThirdSubCategoryName();
     }, [thirdSubCategoryId]);
 
+    // Page
     const [page, setPage] = useState(1);
     const [totalProducts, setTotalProducts] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
+    // Sort
     const [selectedSortValue, setSelectedSortValue] = useState('Thứ tự A đến Z');
 
     useEffect(() => {
@@ -163,7 +165,6 @@ const ProductListPage = () => {
                         <Link
                             underline="hover"
                             color="inherit"
-                            // to={`/product?subCategoryId=${subCategoryId}`}
                             to={`/product?categoryId=${categoryId}&subCategoryId=${subCategoryId}`}
                             className={`link transition text-[14px] lg:text-[16px] ${
                                 thirdSubCategoryName ? '' : 'pointer-events-none cursor-default'
@@ -176,7 +177,6 @@ const ProductListPage = () => {
                         <Link
                             underline="hover"
                             color="inherit"
-                            // to={`/product?thirdSubCategoryId=${thirdSubCategoryId}`}
                             to={`/product?categoryId=${categoryId}&subCategoryId=${subCategoryId}&thirdSubCategoryId=${thirdSubCategoryId}`}
                             className="link transition text-[14px] lg:text-[16px] pointer-events-none cursor-default"
                         >
@@ -296,16 +296,48 @@ const ProductListPage = () => {
                                 </Menu>
                             </div>
                         </div>
-                        <div
+
+                        {isLoading ? (
+                            <div className="flex items-center justify-center w-full min-h-[400px]">
+                                <CircularProgress color="inherit" />
+                            </div>
+                        ) : (
+                            <>
+                                {productsList?.length > 0 ? (
+                                    <div
+                                        className={`grid ${
+                                            itemView === 'grid'
+                                                ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5'
+                                                : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1'
+                                        } gap-4`}
+                                    >
+                                        {productsList.map((product, index) =>
+                                            itemView === 'grid' ? (
+                                                <HomeProductItem key={index} product={product} />
+                                            ) : (
+                                                <ProductListItemView key={index} product={product} />
+                                            )
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center w-full min-h-[400px]">
+                                        {/* Không có sản phẩm */}
+                                        <CircularProgress color="inherit" />
+                                    </div>
+                                )}
+                            </>
+                        )}
+                        {/* <div
                             className={`grid ${
                                 itemView === 'grid'
                                     ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5'
                                     : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1'
                             } gap-4`}
                         >
+                            
                             {itemView === 'grid' ? (
                                 <>
-                                    {isLoading === true ? (
+                                    {isLoading ? (
                                         <ProductLoading view={itemView} />
                                     ) : (
                                         productsList?.length !== 0 &&
@@ -316,7 +348,7 @@ const ProductListPage = () => {
                                 </>
                             ) : (
                                 <>
-                                    {isLoading === true ? (
+                                    {isLoading ? (
                                         <ProductLoading view={itemView} />
                                     ) : (
                                         productsList?.products?.length !== 0 &&
@@ -326,7 +358,7 @@ const ProductListPage = () => {
                                     )}
                                 </>
                             )}
-                        </div>
+                        </div> */}
 
                         {totalPages > 1 && (
                             <div className="flex items-center justify-center mt-10">

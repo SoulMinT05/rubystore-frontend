@@ -10,7 +10,6 @@ import { IoMdHeartEmpty, IoMdNotificationsOutline } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
 import { IoKeyOutline } from 'react-icons/io5';
 
-import './AccountSidebar.css';
 import axiosClient from '../../apis/axiosClient';
 import { MyContext } from '../../App';
 import { LuSend } from 'react-icons/lu';
@@ -18,10 +17,13 @@ import defaultAvatar from '../../assets/default_avatar.png';
 
 const AccountSidebar = () => {
     const context = useContext(MyContext);
+    const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [preview, setPreview] = useState(null);
 
     useEffect(() => {
+        setIsLoadingAvatar(true);
+
         const fetchAvatar = async () => {
             console.log('fetch avatar');
 
@@ -33,11 +35,15 @@ const AccountSidebar = () => {
                 }
             } catch (error) {
                 console.error('Không thể lấy avatar', error);
+            } finally {
+                setTimeout(() => {
+                    setIsLoadingAvatar(false);
+                }, import.meta.env.VITE_TIME_OUT_LOADING);
             }
         };
 
         fetchAvatar();
-    }, [preview]);
+    }, []);
 
     const handleChangeFile = async (e) => {
         const file = e.target.files[0];
@@ -76,7 +82,7 @@ const AccountSidebar = () => {
         <div className="card bg-white shadow-md rounded-md sticky top-[10px]">
             <div className="w-full p-5 flex items-center justify-center flex-col">
                 <div className="w-[110px] h-[110px] rounded-full overflow-hidden mb-4 relative group flex items-center justify-center bg-gray-200">
-                    {isUploading === true ? (
+                    {isUploading || isLoadingAvatar ? (
                         <CircularProgress color="inherit" />
                     ) : (
                         <img src={preview || defaultAvatar} alt="Avatar" className="w-full h-full object-cover" />

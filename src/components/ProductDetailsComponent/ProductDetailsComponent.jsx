@@ -1,18 +1,19 @@
 import React, { useContext, useState } from 'react';
 
-import QuantityBox from '../QuantityBox/QuantityBox';
-
 import { MdOutlineShoppingCart } from 'react-icons/md';
 import { FaRegHeart } from 'react-icons/fa';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { Button, Rating } from '@mui/material';
-import { MyContext } from '../../App';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { IoMdHeart } from 'react-icons/io';
+
+import QuantityBox from '../QuantityBox/QuantityBox';
+import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
 import { addToCart } from '../../redux/cartSlice';
 import useWishlist from '../../hooks/useWishlist';
-import { IoMdHeart } from 'react-icons/io';
+import styles from './ProductDetailsComponent.module.scss';
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -105,14 +106,16 @@ const ProductDetailsComponent = ({ product }) => {
             </div>
 
             <div className="flex items-center gap-3 mt-4">
-                <span className="text-[13px] sm:text-[14px]">Kích cỡ: </span>
-                <div className="flex items-center gap-2 actions">
+                <span className={`${styles.textSize} text-[13px] sm:text-[14px]`}>Kích cỡ: </span>
+                <div className="flex flex-wrap items-center gap-2">
                     {product?.productSize?.length !== 0 &&
                         product?.productSize.map((item, index) => {
                             return (
                                 <Button
                                     key={index}
-                                    className={`${productActionIndex === index ? '!bg-primary !text-white' : ''}`}
+                                    className={`${styles.actions} ${
+                                        productActionIndex === index ? '!bg-primary !text-white' : '!text-[#333]'
+                                    }`}
                                     onClick={() => setProductActionIndex(index)}
                                 >
                                     {item}
