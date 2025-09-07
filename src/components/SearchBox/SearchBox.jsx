@@ -165,9 +165,9 @@ const SearchBox = () => {
                         searchProducts?.length > 0 &&
                         searchProducts?.map((product, index) => {
                             return (
-                                <List key={product?._id} sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                <List key={product?.slug} sx={{ width: '100%', bgcolor: 'background.paper' }}>
                                     <ListItem
-                                        onClick={() => handleNavigateProduct(`/product/${product?._id}`)}
+                                        onClick={() => handleNavigateProduct(`/product/${product?.slug}`)}
                                         className="flex items-center cursor-pointer"
                                     >
                                         <ListItemAvatar>

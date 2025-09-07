@@ -3,39 +3,72 @@ import { Link, useParams } from 'react-router-dom';
 
 import axiosClient from '../../apis/axiosClient';
 import DOMPurify from 'dompurify';
-import { Breadcrumbs } from '@mui/material';
+import { Breadcrumbs, CircularProgress } from '@mui/material';
 
 import { MyContext } from '../../App';
 
 import './BlogDetailsPage.scss';
 
 const BlogDetailsPage = () => {
-    const { id } = useParams();
+    const { slug } = useParams();
     const context = useContext(MyContext);
 
     const [excludedBlogs, setExcludedBlogs] = useState([]);
     const [blogDetails, setBlogDetails] = useState({});
 
+    const [isLoadingExcludedBlogs, setIsLoadingExcludedBlogs] = useState(false);
+    const [isLoadingBlogDetails, setIsLoadingBlogDetails] = useState(false);
+
     useEffect(() => {
+        setIsLoadingExcludedBlogs(true);
+
         const getExcludedBlogs = async () => {
-            const { data } = await axiosClient.get(`/api/blog/all-blogs?excludeId=${id}`);
-            console.log('excludeBlogs: ', data);
-            if (data?.success) {
-                setExcludedBlogs(data?.blogs);
+            try {
+                const { data } = await axiosClient.get(`/api/blog/all-blogs?excludeSlug=${slug}`);
+                console.log('excludeBlogs: ', data);
+                if (data?.success) {
+                    setExcludedBlogs(data?.blogs);
+                }
+            } catch (error) {
+                console.log('error: ', error);
+            } finally {
+                setIsLoadingExcludedBlogs(false);
             }
         };
-        getExcludedBlogs();
+
+        const timeout = setTimeout(() => {
+            getExcludedBlogs();
+        }, import.meta.env.VITE_TIME_OUT_LOADING);
+
+        return () => {
+            clearTimeout(timeout);
+        };
     }, []);
 
     useEffect(() => {
+        setIsLoadingBlogDetails(true);
+
         const getBlogDetails = async () => {
-            const { data } = await axiosClient.get(`/api/blog/${id}`);
-            if (data?.success) {
-                setBlogDetails(data?.blog);
+            try {
+                const { data } = await axiosClient.get(`/api/blog/getDetailsBlogBySlug/${slug}`);
+                if (data?.success) {
+                    setBlogDetails(data?.blog);
+                }
+            } catch (error) {
+                console.log('error: ', error);
+            } finally {
+                setIsLoadingBlogDetails(false);
             }
         };
-        getBlogDetails();
-    }, [id]);
+
+        const timeout = setTimeout(() => {
+            getBlogDetails();
+        }, import.meta.env.VITE_TIME_OUT_LOADING);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [slug]);
 
     const sanitizedDescription = DOMPurify.sanitize(blogDetails?.description, {
         ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'span', 'img'],
@@ -57,38 +90,43 @@ const BlogDetailsPage = () => {
                     <Link
                         underline="hover"
                         color="inherit"
-                        to={`/blog/${blogDetails?._id}`}
+                        to={`/blog/${blogDetails?.slug}`}
                         className="link transition text-[14px] lg:text-[16px]"
                     >
                         Chi tiết bài viết
                     </Link>
                 </Breadcrumbs>
             </div>
-            <div className="container flex flex-col lg:flex-row gap-5">
-                {blogDetails && (
-                    <div className="leftCol w-full lg:w-[70%]">
-                        {Array.isArray(blogDetails?.images) && blogDetails?.images[0] && (
-                            <img
-                                src={blogDetails?.images[0]}
-                                alt=""
-                                className="w-full image_banner h-[400px] lg:h-[780px] xl:h-[900px] object-cover rounded-md mb-4"
-                            />
-                        )}
-                        <h1 className="text-[18px] lg:text-[20px] mb-3">{blogDetails?.name}</h1>
-                        <div
-                            className="w-full description-content"
-                            style={{ maxWidth: '100%', wordWrap: 'break-word' }}
-                            dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
-                        />
-                    </div>
-                )}
 
-                {/* ✅ Chỉ 1 rightCol */}
-                {excludedBlogs?.length > 0 && (
+            {isLoadingBlogDetails || isLoadingExcludedBlogs ? (
+                <div className="flex items-center justify-center w-full min-h-[400px]">
+                    <CircularProgress color="inherit" />
+                </div>
+            ) : (
+                <div className="container flex flex-col lg:flex-row gap-5">
+                    {blogDetails && (
+                        <div className="leftCol w-full lg:w-[70%]">
+                            {Array.isArray(blogDetails?.images) && blogDetails?.images[0] && (
+                                <img
+                                    src={blogDetails?.images[0]}
+                                    alt=""
+                                    className="w-full image_banner h-[400px] lg:h-[780px] xl:h-[900px] object-cover rounded-md mb-4"
+                                />
+                            )}
+                            <h1 className="text-[18px] lg:text-[20px] mb-3">{blogDetails?.name}</h1>
+                            <div
+                                className="w-full description-content"
+                                style={{ maxWidth: '100%', wordWrap: 'break-word' }}
+                                dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+                            />
+                        </div>
+                    )}
+
+                    {/* ✅ Chỉ 1 rightCol */}
                     <div className="rightCol w-full lg:w-[40%] flex flex-col gap-3">
                         {context?.windowWidth < 1024 && <h1 className="text-[18px]">Bài viết liên quan</h1>}
                         {excludedBlogs.map((blog) => (
-                            <Link to={`/blog/${blog?._id}`} key={blog?._id}>
+                            <Link to={`/blog/${blog?.slug}`} key={blog?.slug}>
                                 <div className="flex items-center gap-3">
                                     <div className="img w-[30%] overflow-hidden rounded-md group">
                                         <img
@@ -104,8 +142,8 @@ const BlogDetailsPage = () => {
                             </Link>
                         ))}
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </section>
     );
 };

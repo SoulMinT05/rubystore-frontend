@@ -34,7 +34,7 @@ const AppRoutes = () => (
             <Route path="/verify-password" element={<VerifyPasswordPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/product/:id" element={<ProductDetailsPage />} />
+            <Route path="/product/:slug" element={<ProductDetailsPage />} />
             <Route path="/product" element={<ProductListPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
 
@@ -103,7 +103,7 @@ const AppRoutes = () => (
                 }
             />
             <Route
-                path="/blog/:id"
+                path="/blog/:slug"
                 element={
                     <PrivateRoute>
                         <BlogDetailsPage />

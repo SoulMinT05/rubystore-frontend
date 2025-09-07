@@ -183,7 +183,7 @@ const CheckoutPage = () => {
                                             <td className="px-6 py-3">
                                                 <div className="flex items-center gap-4 w-[200px] lg:w-[300px] 2xl:w-[470px]">
                                                     <div className="img w-[65px] h-[65px] rounded-md overflow-hidden group">
-                                                        <Link to={`/product/${item?.product?._id}`}>
+                                                        <Link to={`/product/${item?.product?.slug}`}>
                                                             <img
                                                                 src={item?.images[0]}
                                                                 className="w-full group-hover:scale-105 transition-all"
@@ -193,7 +193,7 @@ const CheckoutPage = () => {
                                                     </div>
                                                     <div className="info w-[75%]">
                                                         <h3 className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[14px] line-clamp-1 font-[600] leading-4 hover:text-primary transition-all">
-                                                            <Link to={`/product/${item?.product?._id}`}>
+                                                            <Link to={`/product/${item?.product?.slug}`}>
                                                                 {item?.name}
                                                             </Link>
                                                         </h3>
@@ -238,7 +238,7 @@ const CheckoutPage = () => {
                                         <tr key={item?._id} className="odd:bg-white  even:bg-gray-50 border-b">
                                             <div className="cartItem w-full p-3 flex items-center gap-4 pb-5 border-b border-rgba(0,0,0,0.1)">
                                                 <div className="img w-[20%] rounded-md overflow-hidden ">
-                                                    <Link to={`/product/${item?.product?._id}`}>
+                                                    <Link to={`/product/${item?.product?.slug}`}>
                                                         <img
                                                             src={item?.images[0]}
                                                             className="w-full group-hover:scale-105 transition-all"
@@ -249,7 +249,7 @@ const CheckoutPage = () => {
                                                 <div className="info w-[80%] relative ">
                                                     <h3 className="text-[12px] sm:text-[13px] lg:text-[16px] w-[80%]">
                                                         <Link
-                                                            to={`/product/${item?.product?._id}`}
+                                                            to={`/product/${item?.product?.slug}`}
                                                             className="link line-clamp-1 "
                                                         >
                                                             {/* {name?.substr(0, 24) + '...'} */}
@@ -320,6 +320,7 @@ const CheckoutPage = () => {
                             Phương thức thanh toán
                         </h1>
                         <Select
+                            MenuProps={{ disableScrollLock: true }}
                             labelId="demo-simple-select-label"
                             id="paymentMethods"
                             size="small"

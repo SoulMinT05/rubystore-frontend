@@ -38,7 +38,7 @@ const HomePage = () => {
     const [homeSlides, setHomeSlides] = useState([]);
     const [popularProducts, setPopularProducts] = useState([]);
     const [products, setProducts] = useState([]);
-    const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [latestProducts, setLatestProducts] = useState([]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -83,7 +83,7 @@ const HomePage = () => {
         const getFeaturedProducts = async () => {
             const { data } = await axiosAuth.get('/api/product/feature');
             if (data.success) {
-                setFeaturedProducts(data?.products);
+                setLatestProducts(data?.products);
             }
         };
 
@@ -199,11 +199,11 @@ const HomePage = () => {
             {/* Latest Products */}
             <section className="py-5 pt-0 bg-white">
                 <div className="container">
-                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600] -pb-2">
+                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600]">
                         Sản phẩm mới nhất
                     </h2>
-                    {products?.length === 0 && <ProductLoading />}
-                    {products?.length !== 0 && <HomeProductsSlider items={6} products={products} />}
+                    {latestProducts?.length === 0 && <ProductLoading />}
+                    {latestProducts?.length !== 0 && <HomeProductsSlider items={6} products={latestProducts} />}
 
                     <HomeAdsBannerSlider items={3} />
                 </div>
@@ -212,11 +212,11 @@ const HomePage = () => {
             {/* Featured Products */}
             <section className="py-5 pt-0 bg-white">
                 <div className="container">
-                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600]">
+                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600] -pb-2">
                         Sản phẩm đặc trưng
                     </h2>
-                    {featuredProducts?.length === 0 && <ProductLoading />}
-                    {featuredProducts?.length !== 0 && <HomeProductsSlider items={6} products={featuredProducts} />}
+                    {products?.length === 0 && <ProductLoading />}
+                    {products?.length !== 0 && <HomeProductsSlider items={6} products={products} />}
 
                     <HomeAdsBannerSlider items={3} />
                 </div>

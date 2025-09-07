@@ -50,7 +50,7 @@ const CartItems = ({
 
     useEffect(() => {
         const currentItem = cart.products.find((item) => {
-            const itemProductId = item?.product?._id || item?.product;
+            const itemProductId = item?.product?.slug || item?.product;
             return itemProductId === productId && item.sizeProduct === selectedSize;
         });
         if (currentItem && typeof currentItem.quantityProduct === 'number') {
@@ -193,13 +193,13 @@ const CartItems = ({
             <td className="px-0 py-2">
                 <div className="flex items-center gap-4 w-[370px]">
                     <div className="img w-[65px] h-[65px] rounded-md overflow-hidden group">
-                        <Link to={`/product/${productId}`}>
+                        <Link to={`/product/${product?.slug}`}>
                             <img src={images[0]} className="w-full group-hover:scale-105 transition-all" alt="" />
                         </Link>
                     </div>
                     <div className="info w-[75%]">
                         <h3 className="text-[12px] font-[600] leading-4 line-clamp-2 hover:text-primary transition-all">
-                            <Link to={`/product/${productId}`}>{name}</Link>
+                            <Link to={`/product/${product?.slug}`}>{name}</Link>
                         </h3>
                     </div>
                 </div>
@@ -287,7 +287,7 @@ const CartItems = ({
             <td className="">
                 <div className="cartItem w-full p-3 flex items-center gap-4 pb-5 border-b border-rgba(0,0,0,0.1)">
                     <div className="img w-[20%] rounded-md overflow-hidden ">
-                        <Link to={`/product/${productId}`} className="group">
+                        <Link to={`/product/${product?.slug}`} className="group">
                             <img src={images[0]} className="w-full group-hover:scale-105 transition-all" alt="" />
                         </Link>
                     </div>
@@ -297,7 +297,7 @@ const CartItems = ({
                             onClick={() => handleDeleteCartItem(cartId)}
                         />
                         <h3 className="text-[13px] sm:text-[13px] lg:text-[14px] xl:text-[16px] w-[80%]">
-                            <Link to={`/product/${productId}`} className="link line-clamp-1 ">
+                            <Link to={`/product/${product?.slug}`} className="link line-clamp-1 ">
                                 {/* {name?.substr(0, 24) + '...'} */}
                                 {name}
                             </Link>

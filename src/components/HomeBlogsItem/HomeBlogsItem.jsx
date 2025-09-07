@@ -25,7 +25,7 @@ const HomeBlogsItem = ({ blog }) => {
     return (
         <div className="blogItem group">
             <div
-                onClick={() => navigate(`/blog/${blog?._id}`)}
+                onClick={() => navigate(`/blog/${blog?.slug}`)}
                 className="imgWrapper w-full overflow-hidden rounded-md cursor-pointer relative"
             >
                 <img
@@ -43,7 +43,7 @@ const HomeBlogsItem = ({ blog }) => {
             </div>
             <div className="info py-4">
                 <h2 className="text-[12px] lg:text-[14px] font-[600] text-black mb-1 lg:mb-3 line-clamp-1">
-                    <Link to={`/blog/${blog?._id}`} className="link">
+                    <Link to={`/blog/${blog?.slug}`} className="link">
                         {blog?.name}
                     </Link>
                 </h2>
@@ -52,7 +52,7 @@ const HomeBlogsItem = ({ blog }) => {
                     dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
                 />
                 <Link
-                    to={`/blog/${blog?._id}`}
+                    to={`/blog/${blog?.slug}`}
                     className="link font-[500] text-[12px] lg:text-[13px] flex items-center gap-1"
                 >
                     Xem thêm <IoIosArrowForward />

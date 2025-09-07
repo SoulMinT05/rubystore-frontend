@@ -33,7 +33,7 @@ const ProductListItemView = ({ product }) => {
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)] flex flex-col lg:flex-row items-center">
             <div className="group imgWrapper w-full lg:w-[30%] overflow-hidden rounded-md relative">
-                <Link to={`/product/${product?._id}`}>
+                <Link to={`/product/${product?.slug}`}>
                     <div className="img item_view_image h-[380px] sm:w-full sm:h-[320px] md:h-[300px] xl:h-[360px] overflow-hidden lg:py-4 lg:pl-2">
                         <img src={product?.images[0]} alt="" className="w-full h-full object-cover lg:rounded-md " />
                         <img
@@ -114,7 +114,7 @@ const ProductListItemView = ({ product }) => {
                     <Button
                         className="btn-border flex w-full btn-sm gap-1 !px-1 overflow-hidden text-ellipsis whitespace-nowrap"
                         size="small"
-                        onClick={() => navigate(`/product/${product?._id}`)}
+                        onClick={() => navigate(`/product/${product?.slug}`)}
                     >
                         <MdOutlineShoppingCart className="text-[18px]" />
                         <span className="text-[13px] !normal-case">Thêm vào giỏ hàng</span>

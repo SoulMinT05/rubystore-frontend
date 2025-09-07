@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 
 import { Link } from 'react-router-dom';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
+import { Button } from '@mui/material';
 
 import './CartPanel.scss';
-import { Button } from '@mui/material';
 import { MyContext } from '../../App';
 
 const formatCurrency = (amount) => {
@@ -28,8 +28,11 @@ const CartPanel = ({ cart }) => {
                                 className="cartItem w-full flex items-center gap-4  border-[rgba(0,0,0,0.1)] pb-4"
                             >
                                 <div className="cartItem w-full flex items-center gap-4  border-[rgba(0,0,0,0.1)] pb-4">
-                                    <div className="img w-[25%] overflow-hidden h-[80px] rounded-md">
-                                        <Link to={`/product/${item?.product?._id}`} className="block group">
+                                    <div
+                                        onClick={() => context.toggleCartPanel(false)}
+                                        className="img w-[25%] overflow-hidden h-[80px] rounded-md"
+                                    >
+                                        <Link to={`/product/${item?.product?.slug}`} className="block group">
                                             <img
                                                 src={item?.images[0]}
                                                 alt=""
@@ -38,8 +41,14 @@ const CartPanel = ({ cart }) => {
                                         </Link>
                                     </div>
                                     <div className="info w-[75%] pr-4 relative">
-                                        <h4 className="text-[13px] lg:text-[14px] font-[500]">
-                                            <Link className="link transition-all" to={`/product/${item?.product?._id}`}>
+                                        <h4
+                                            onClick={() => context.toggleCartPanel(false)}
+                                            className="text-[13px] lg:text-[14px] font-[500]"
+                                        >
+                                            <Link
+                                                className="link transition-all"
+                                                to={`/product/${item?.product?.slug}`}
+                                            >
                                                 {item?.name}
                                             </Link>
                                         </h4>

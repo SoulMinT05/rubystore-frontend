@@ -36,7 +36,7 @@ const HomeProductsItem = ({ product }) => {
     return (
         <div className="productItem min-h-[424px] sm:min-h-[430px] lg:min-h-[448px] shadow-lg rounded-md overflow-hidden border-1 border-[rgba(0,0,0,0.1)]">
             <div className="group imgWrapper w-[100%] overflow-hidden rounded-md relative">
-                <Link to={`/product/${product?._id}`}>
+                <Link to={`/product/${product?.slug}`}>
                     <div className="img h-[220px] overflow-hidden">
                         <img src={product?.images[0]} alt="" className="w-full" />
                         <img
@@ -69,7 +69,7 @@ const HomeProductsItem = ({ product }) => {
                     </Tooltip> */}
                     <Tooltip title="Yêu thích" placement="left-start">
                         <Button
-                            onClick={() => addToWishlist(product?._id)}
+                            onClick={() => addToWishlist(product?.slug)}
                             className={`!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group`}
                         >
                             {isInWishlist ? (
@@ -86,7 +86,7 @@ const HomeProductsItem = ({ product }) => {
                     <span className="link transition-all">{product?.brand}</span>
                 </h6>
                 <h3 className="text-[12px] lg:text-[13px] min-h-[36px] line-clamp-2 lg:min-h-[52px] lg:line-clamp-3  title mt-1 font-[500] mb-1 text-[#000]">
-                    <Link to={`/product/${product?._id}`} className="link transition-all">
+                    <Link to={`/product/${product?.slug}`} className="link transition-all">
                         {product?.name}
                     </Link>
                 </h3>
@@ -114,7 +114,7 @@ const HomeProductsItem = ({ product }) => {
                     <Button
                         className="btn-border flex w-full btn-sm gap-1 !px-1 overflow-hidden text-ellipsis whitespace-nowrap"
                         size="small"
-                        onClick={() => navigate(`/product/${product?._id}`)}
+                        onClick={() => navigate(`/product/${product?.slug}`)}
                     >
                         <MdOutlineShoppingCart className="text-[18px]" />
                         <span className="text-[13px] !normal-case">Thêm vào giỏ hàng</span>
