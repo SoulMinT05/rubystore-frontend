@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import React, { createContext, forwardRef, useEffect, useState } from 'react';
+import { createContext, forwardRef, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,7 +25,6 @@ import { socket } from './config/socket';
 
 import './App.css';
 import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton';
-import AppLayout from './layouts/AppLayout';
 
 import ProductZoom from './components/ProductZoom/ProductZoom';
 import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
@@ -35,6 +34,7 @@ import axiosAuth from './apis/axiosAuth';
 
 import store from './redux/store';
 import UpdateAddressComponent from './components/UpdateAddressComponent/UpdateAddressComponent';
+import AppRoutes from './routes';
 
 const MyContext = createContext();
 
@@ -62,7 +62,6 @@ function App() {
 
     const [isAuthChecking, setIsAuthChecking] = useState(true);
     const [isLogin, setIsLogin] = useState(false);
-    console.log('isLogin render khi category change: ', isLogin);
     const [emailVerify, setEmailVerify] = useState('');
     const [emailVerifyForgotPassword, setEmailVerifyForgotPassword] = useState('');
     const [userInfo, setUserInfo] = useState(null);
@@ -218,10 +217,7 @@ function App() {
             <Provider store={store}>
                 <MyContext.Provider value={values}>
                     <BrowserRouter>
-                        {/* <Header />
                         <AppRoutes />
-                        <Footer /> */}
-                        <AppLayout />
                         <ToastContainer />
 
                         <ScrollToTopButton />

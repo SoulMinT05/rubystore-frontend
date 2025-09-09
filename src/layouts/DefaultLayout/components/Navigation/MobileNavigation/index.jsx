@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import './MobileNavigation.scss';
 import { Button } from '@mui/material';
 import { IoHomeOutline, IoSearch } from 'react-icons/io5';
 import { LuHeart } from 'react-icons/lu';
@@ -8,7 +7,9 @@ import { BsBagCheck } from 'react-icons/bs';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { MdOutlineFilterAlt } from 'react-icons/md';
-import { MyContext } from '../../../App';
+
+import { MyContext } from '../../../../../App';
+import './MobileNavigation.scss';
 
 const MobileNavigation = () => {
     const context = useContext(MyContext);

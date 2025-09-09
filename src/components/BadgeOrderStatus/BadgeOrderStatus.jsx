@@ -1,7 +1,3 @@
-import React from 'react';
-
-import './BadgeOrderStatus.css';
-
 const getStatusText = (status) => {
     switch (status) {
         case 'pending':

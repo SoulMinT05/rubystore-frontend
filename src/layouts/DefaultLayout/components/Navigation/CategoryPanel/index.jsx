@@ -6,7 +6,7 @@ import Drawer from '@mui/material/Drawer';
 import { IoCloseSharp } from 'react-icons/io5';
 
 import './CategoryPanel.scss';
-import CategoryCollapse from '../CategoryCollapse/CategoryCollapse';
+import CategoryCollapse from './CategoryCollapse';
 
 const CategoryPanel = ({ categories, isOpenCatPanel, setIsOpenCatPanel }) => {
     const toggleDrawer = (newOpen) => () => {

@@ -20,7 +20,7 @@ import { MyContext } from '../../App';
 import { cancelOrderStatus, fetchOrders, updateOrderStatus } from '../../redux/orderSlice';
 import { socket } from '../../config/socket';
 import { addNotification } from '../../redux/notificationSlice';
-import AccountSidebarLayout from '../../layouts/AccountSidebarLayout';
+import AccountSidebarLayout from '../../components/AccountSidebar/AccountSidebarLayout';
 import noOrder from '../../assets/no-message.png';
 
 const formatCurrency = (amount) => {

@@ -11,12 +11,12 @@ import {
 } from '@mui/material';
 import React, { useContext, useEffect, useState, forwardRef } from 'react';
 import './MyAccountPage.css';
-import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
 import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
 import { IoMdClose } from 'react-icons/io';
 import UpdateAddressComponent from '../../components/UpdateAddressComponent/UpdateAddressComponent';
-import AccountSidebarLayout from '../../layouts/AccountSidebarLayout';
+import AccountSidebarLayout from '../../components/AccountSidebar/AccountSidebarLayout';
+
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });

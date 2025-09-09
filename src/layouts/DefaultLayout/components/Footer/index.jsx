@@ -14,23 +14,22 @@ import { FaPinterestP } from 'react-icons/fa';
 import { FaInstagram } from 'react-icons/fa';
 import { IoCloseSharp } from 'react-icons/io5';
 
-import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Drawer from '@mui/material/Drawer';
-
-import CartPanel from '../CartPanel/CartPanel';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './Footer.scss';
-import { MyContext } from '../../App';
-import bank1 from '../../assets/bank1.png';
-import bank2 from '../../assets/bank2.png';
-import bank3 from '../../assets/bank3.png';
-import bank4 from '../../assets/bank4.png';
-import bank5 from '../../assets/bank5.png';
-import { useDispatch, useSelector } from 'react-redux';
-import axiosClient from '../../apis/axiosClient';
-import { getCart } from '../../redux/cartSlice';
+import { MyContext } from '../../../../App';
+import bank1 from '../../../../assets/bank1.png';
+import bank2 from '../../../../assets/bank2.png';
+import bank3 from '../../../../assets/bank3.png';
+import bank4 from '../../../../assets/bank4.png';
+import bank5 from '../../../../assets/bank5.png';
+
+import axiosClient from '../../../../apis/axiosClient';
+import { getCart } from '../../../../redux/cartSlice';
+import CartPanel from '../../../../components/CartPanel/CartPanel';
 
 const Footer = () => {
     const context = useContext(MyContext);

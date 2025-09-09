@@ -1,4 +1,4 @@
-import AccountSidebar from '../components/AccountSidebar/AccountSidebar';
+import AccountSidebar from './AccountSidebar';
 
 const AccountSidebarLayout = ({ children }) => {
     return (

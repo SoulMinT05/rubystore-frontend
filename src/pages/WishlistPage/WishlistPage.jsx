@@ -9,7 +9,7 @@ import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useWishlist from '../../hooks/useWishlist';
-import AccountSidebarLayout from '../../layouts/AccountSidebarLayout';
+import AccountSidebarLayout from '../../components/AccountSidebar/AccountSidebarLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoCloseSharp } from 'react-icons/io5';
 import axiosClient from '../../apis/axiosClient';

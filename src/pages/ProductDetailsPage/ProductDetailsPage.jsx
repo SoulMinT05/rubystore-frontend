@@ -127,7 +127,7 @@ const ProductDetailsPage = () => {
                             underline="hover"
                             color="inherit"
                             to="/"
-                            className="link transition !text-[14px] !lg:text-[15px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             Trang chủ
                         </Link>
@@ -135,7 +135,7 @@ const ProductDetailsPage = () => {
                             underline="hover"
                             color="inherit"
                             to={`/product?categoryId=${product?.category?._id}`}
-                            className="link transition !text-[14px] !lg:text-[15px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             {product?.categoryName}
                         </Link>
@@ -143,14 +143,14 @@ const ProductDetailsPage = () => {
                             underline="hover"
                             color="inherit"
                             to={`/product?subCategoryId=${product?.subCategoryId}`}
-                            className="link transition !text-[14px] !lg:text-[15px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             {product?.subCategoryName}
                         </Link>
                         <Link
                             underline="hover"
                             color="inherit"
-                            className="link transition !text-[14px] !lg:text-[15px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             {product?.name?.length > 50 ? `${product?.name?.substring(0, 50)}...` : product?.name}
                         </Link>

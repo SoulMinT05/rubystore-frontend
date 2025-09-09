@@ -7,8 +7,6 @@ import Button from '@mui/material/Button';
 import { FaRegSquarePlus } from 'react-icons/fa6';
 import { FiMinusSquare } from 'react-icons/fi';
 
-import '../CategoryCollapse/CategoryCollapse.css';
-
 const CategoryCollapse = ({ categories, toggleDrawer }) => {
     const [submenuIndex, setSubmenuIndex] = useState(null);
     const [innerSubmenuIndex, setInnerSubmenuIndex] = useState(null);

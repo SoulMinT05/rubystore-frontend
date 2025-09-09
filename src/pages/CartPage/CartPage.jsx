@@ -259,7 +259,7 @@ const CartPage = () => {
                             underline="hover"
                             color="inherit"
                             to="/"
-                            className="link transition !text-[14px] !lg:!text-[16px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             Trang chủ
                         </Link>
@@ -267,7 +267,7 @@ const CartPage = () => {
                             underline="hover"
                             color="inherit"
                             to="/cart"
-                            className="link transition !text-[14px] !lg:!text-[16px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             Giỏ hàng
                         </Link>
@@ -469,7 +469,8 @@ const CartPage = () => {
                                                                                 display: 'block',
                                                                             }}
                                                                         >
-                                                                            Đơn tối thiểu {voucher?.minOrderValue}
+                                                                            Đơn tối thiểu{' '}
+                                                                            {formatPrice(voucher?.minOrderValue)}
                                                                         </Typography>
                                                                         <Typography
                                                                             variant="body2"

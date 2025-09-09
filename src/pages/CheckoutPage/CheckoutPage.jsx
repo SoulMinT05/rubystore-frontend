@@ -84,14 +84,14 @@ const CheckoutPage = () => {
                             underline="hover"
                             color="inherit"
                             to="/"
-                            className="link transition !text-[14px] !lg:!text-[16px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             Trang chủ
                         </Link>
                         <Link
                             underline="hover"
                             color="inherit"
-                            className="link transition !text-[14px] !lg:!text-[16px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             Thanh toán
                         </Link>

@@ -147,7 +147,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                 setTotalPages(data?.totalPages);
                 window.scrollTo({
                     top: 0,
-                    behavior: 'smooth',
+                    // behavior: 'smooth',
                 });
             }
         } catch (error) {

@@ -15,7 +15,7 @@ import {
 } from '../../redux/notificationSlice';
 import { MyContext } from '../../App';
 import NotificationItems from '../../components/NotificationItems/NotificationItems';
-import AccountSidebarLayout from '../../layouts/AccountSidebarLayout';
+import AccountSidebarLayout from '../../components/AccountSidebar/AccountSidebarLayout';
 
 const NotificationPage = () => {
     const context = useContext(MyContext);

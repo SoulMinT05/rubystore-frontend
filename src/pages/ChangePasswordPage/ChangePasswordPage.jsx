@@ -2,10 +2,9 @@ import { Button, TextField, CircularProgress } from '@mui/material';
 import React, { useContext, useState } from 'react';
 
 import './ChangePasswordPage.scss';
-import AccountSidebar from '../../components/AccountSidebar/AccountSidebar';
 import { MyContext } from '../../App';
 import axiosClient from '../../apis/axiosClient';
-import AccountSidebarLayout from '../../layouts/AccountSidebarLayout';
+import AccountSidebarLayout from '../../components/AccountSidebar/AccountSidebarLayout';
 
 const ChangePasswordPage = () => {
     const context = useContext(MyContext);

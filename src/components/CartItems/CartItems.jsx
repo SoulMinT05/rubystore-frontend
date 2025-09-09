@@ -49,7 +49,8 @@ const CartItems = ({
 
     useEffect(() => {
         const currentItem = cart.products.find((item) => {
-            const itemProductId = item?.product?.slug || item?.product;
+            // const itemProductId = item?.product?.slug || item?.product;
+            const itemProductId = item?.product?._id || item?.product;
             return itemProductId === productId && item.sizeProduct === selectedSize;
         });
         if (currentItem && typeof currentItem.quantityProduct === 'number') {

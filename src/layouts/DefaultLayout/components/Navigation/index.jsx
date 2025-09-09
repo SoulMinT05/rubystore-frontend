@@ -4,12 +4,12 @@ import { RiMenu2Fill } from 'react-icons/ri';
 import { LiaAngleDownSolid } from 'react-icons/lia';
 import { GoRocket } from 'react-icons/go';
 import { Link } from 'react-router-dom';
-import CategoryPanel from '../CategoryPanel/CategoryPanel';
 
+import axiosAuth from '../../../../apis/axiosAuth';
+import { MyContext } from '../../../../App';
 import './Navigation.scss';
-import axiosAuth from '../../apis/axiosAuth';
-import { MyContext } from '../../App';
-import MobileNavigation from './MobileNavigation/MobileNavigation';
+import CategoryPanel from './CategoryPanel';
+import MobileNavigation from './MobileNavigation';
 
 const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
     const context = useContext(MyContext);

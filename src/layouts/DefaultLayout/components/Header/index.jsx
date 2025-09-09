@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import SearchBox from '../SearchBox/SearchBox';
 import { Avatar, Box, Button, Divider, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import { Badge } from '@mui/material';
 import { Tooltip } from '@mui/material';
@@ -9,7 +8,6 @@ import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { MdOutlineShoppingCart } from 'react-icons/md';
-import { IoGitCompareOutline, IoMenuOutline } from 'react-icons/io5';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { FaRegHeart } from 'react-icons/fa6';
@@ -20,33 +18,32 @@ import { IoMdHeartEmpty } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
 import { IoKeyOutline } from 'react-icons/io5';
 import { LuSend } from 'react-icons/lu';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Cookies from 'js-cookie';
 
 import { Popper, Paper, ClickAwayListener, List, ListItem, IconButton } from '@mui/material';
 
-import Navigation from '../Navigation/Navigation';
-import { MyContext } from '../../App';
-// import logo from '../../assets/logo.jpg';
-import logo from '../../assets/rubystore_1.png';
-
-import defaultAvatar from '../../assets/default_avatar.png';
-
 import './Header.scss';
+import SearchBox from '../../../../components/SearchBox/SearchBox';
+import Navigation from '../Navigation';
+import { MyContext } from '../../../../App';
 
-import axiosToken from '../../apis/axiosToken';
-import axiosClient from '../../apis/axiosClient';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCart } from '../../redux/cartSlice';
+import logo from '../../../../assets/rubystore_1.png';
+import defaultAvatar from '../../../../assets/default_avatar.png';
+
+import axiosToken from '../../../../apis/axiosToken';
+import axiosClient from '../../../../apis/axiosClient';
+import { getCart } from '../../../../redux/cartSlice';
 import {
     addNotification,
     fetchNotifications,
     getUnreadCountNotifications,
     markAllNotificationsAsRead,
     markNotificationRead,
-} from '../../redux/notificationSlice';
-import { socket } from '../../config/socket';
-import { fetchWishlists } from '../../redux/wishlistSlice';
+} from '../../../../redux/notificationSlice';
+import { socket } from '../../../../config/socket';
+import { fetchWishlists } from '../../../../redux/wishlistSlice';
 
 const tailwindColorMap = {
     'bg-blue-500': '#3b82f6',

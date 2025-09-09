@@ -13,7 +13,7 @@ const MessagePage = () => {
                             underline="hover"
                             color="inherit"
                             to="/"
-                            className="link transition !text-[14px] !lg:text-[16px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             Trang chủ
                         </Link>
@@ -21,7 +21,7 @@ const MessagePage = () => {
                             underline="hover"
                             color="inherit"
                             to="/message"
-                            className="link transition !text-[14px] !lg:text-[16px]"
+                            className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             Tin nhắn
                         </Link>

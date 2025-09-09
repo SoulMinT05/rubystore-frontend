@@ -71,7 +71,6 @@ const cartSlice = createSlice({
 
             if (duplicateItem) {
                 // ✅ Gộp quantity vào duplicateItem
-
                 duplicateItem.quantityProduct += foundItem.quantityProduct;
 
                 // ❌ Xoá foundItem khỏi danh sách
@@ -83,6 +82,7 @@ const cartSlice = createSlice({
                 foundItem.sizeProduct = newSize;
             }
         },
+
         updateCartItemQuantity: (state, action) => {
             const payloadProductId = extractProductId(action.payload.product);
             const foundItem = state.cart.products.find((item) => {
