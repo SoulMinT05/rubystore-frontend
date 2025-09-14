@@ -7,12 +7,12 @@ import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-
-import '../LoginPage/LoginPage.css';
-import { MyContext } from '../../App';
-import axiosAuth from '../../apis/axiosAuth';
 import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
-import { firebaseApp } from '../../services/firebase';
+
+import './LoginPage.css';
+import { MyContext } from '@/App';
+import axiosAuth from '@/apis/axiosAuth';
+import { firebaseApp } from '@/config/firebase';
 
 const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();

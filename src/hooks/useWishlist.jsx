@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { MyContext } from '../App';
-import axiosClient from '../apis/axiosClient';
 import { useDispatch } from 'react-redux';
-import { addWishlist, fetchWishlists, removeItemWishlist } from '../redux/wishlistSlice';
 import { useNavigate } from 'react-router-dom';
+
+import { MyContext } from '@/App';
+import axiosClient from '@/apis/axiosClient';
+import { addWishlist, fetchWishlists, removeItemWishlist } from '@/redux/wishlistSlice';
 
 const useWishlist = () => {
     const context = useContext(MyContext);

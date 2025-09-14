@@ -21,20 +21,20 @@ dayjs.extend(relativeTime);
 dayjs.locale('vi'); // dùng nếu bạn muốn "2 phút trước" thay vì "2 minutes ago"
 
 // SOCKET IO
-import { socket } from './config/socket';
+import { socket } from '@/config/socket';
 
-import './App.css';
-import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton';
+import '@/App.css';
+import ScrollToTopButton from '@/components/ScrollToTopButton/ScrollToTopButton';
 
-import ProductZoom from './components/ProductZoom/ProductZoom';
-import ProductDetailsComponent from './components/ProductDetailsComponent/ProductDetailsComponent';
+import ProductZoom from '@/components/ProductZoom/ProductZoom';
+import ProductDetailsComponent from '@/components/ProductDetailsComponent/ProductDetailsComponent';
 
-import axiosClient from './apis/axiosClient';
-import axiosAuth from './apis/axiosAuth';
+import axiosClient from '@/apis/axiosClient';
+import axiosAuth from '@/apis/axiosAuth';
 
-import store from './redux/store';
-import UpdateAddressComponent from './components/UpdateAddressComponent/UpdateAddressComponent';
-import AppRoutes from './routes';
+import store from '@/redux/store';
+import UpdateAddressComponent from '@/components/UpdateAddressComponent/UpdateAddressComponent';
+import AppRoutes from '@/routes';
 
 const MyContext = createContext();
 

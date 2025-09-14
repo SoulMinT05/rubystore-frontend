@@ -1,31 +1,31 @@
 import { Route, Routes } from 'react-router-dom';
 // Layouts
-import DefaultLayout from '../layouts/DefaultLayout';
+import DefaultLayout from '@/layouts/DefaultLayout';
 // Route
 import PrivateRoute from './PrivateRoute';
 // Pages
-import HomePage from '../pages/HomePage/HomePage';
-import LoginPage from '../pages/LoginPage/LoginPage';
-import RegisterPage from '../pages/RegisterPage/RegisterPage';
-import CartPage from '../pages/CartPage/CartPage';
-import VerifyPage from '../pages/VerifyPage/VerifyPage';
-import ForgotPasswordPage from '../pages/ForgotPasswordPage/ForgotPasswordPage';
-import ResetPasswordPage from '../pages/ResetPasswordPage/ResetPasswordPage';
-import VerifyPasswordPage from '../pages/VerifyPasswordPage/VerifyPasswordPage';
-import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
-import MyAccountPage from '../pages/MyAccountPage/MyAccountPage';
-import OrderHistoryPage from '../pages/OrderHistoryPage/OrderHistoryPage';
-import WishlistPage from '../pages/WishlistPage/WishlistPage';
-import ProductListPage from '../pages/ProductListPage/ProductListPage';
-import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage';
-import ChangePasswordPage from '../pages/ChangePasswordPage/ChangePasswordPage';
-import SearchResultsPage from '../pages/SearchResultsPage/SearchResultsPage';
-import MessagePage from '../pages/MessagePage/MessagePage';
-import MessagePageDetails from '../pages/MessagePageDetails/MessagePageDetails';
-import BlogDetailsPage from '../pages/BlogDetailsPage/BlogDetailsPage';
-import NotificationPage from '../pages/NotificationPage/NotificationPage';
+import HomePage from '@/pages/HomePage/HomePage';
+import LoginPage from '@/pages/LoginPage/LoginPage';
+import RegisterPage from '@/pages/RegisterPage/RegisterPage';
+import CartPage from '@/pages/CartPage/CartPage';
+import VerifyPage from '@/pages/VerifyPage/VerifyPage';
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage/ForgotPasswordPage';
+import ResetPasswordPage from '@/pages/ResetPasswordPage/ResetPasswordPage';
+import VerifyPasswordPage from '@/pages/VerifyPasswordPage/VerifyPasswordPage';
+import CheckoutPage from '@/pages/CheckoutPage/CheckoutPage';
+import MyAccountPage from '@/pages/MyAccountPage/MyAccountPage';
+import OrderHistoryPage from '@/pages/OrderHistoryPage/OrderHistoryPage';
+import WishlistPage from '@/pages/WishlistPage/WishlistPage';
+import ProductListPage from '@/pages/ProductListPage/ProductListPage';
+import ProductDetailsPage from '@/pages/ProductDetailsPage/ProductDetailsPage';
+import ChangePasswordPage from '@/pages/ChangePasswordPage/ChangePasswordPage';
+import SearchResultsPage from '@/pages/SearchResultsPage/SearchResultsPage';
+import MessagePage from '@/pages/MessagePage/MessagePage';
+import MessagePageDetails from '@/pages/MessagePageDetails/MessagePageDetails';
+import BlogDetailsPage from '@/pages/BlogDetailsPage/BlogDetailsPage';
+import NotificationPage from '@/pages/NotificationPage/NotificationPage';
 // Components
-import ScrollToTopComponent from '../components/ScrollToTopComponent/ScrollToTopComponent';
+import ScrollToTopComponent from '@/components/ScrollToTopComponent/ScrollToTopComponent';
 
 const AppRoutes = () => (
     <>
