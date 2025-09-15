@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, Box, Button, Divider, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Avatar, Box, Button, Divider, ListItemAvatar, Typography } from '@mui/material';
 import { Badge } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Popper, Paper, List, ListItem } from '@mui/material';
 
 import { MdOutlineShoppingCart } from 'react-icons/md';
 import { HiOutlineMenu } from 'react-icons/hi';
@@ -19,31 +20,29 @@ import { IoIosLogOut } from 'react-icons/io';
 import { IoKeyOutline } from 'react-icons/io5';
 import { LuSend } from 'react-icons/lu';
 import { useDispatch, useSelector } from 'react-redux';
-
 import Cookies from 'js-cookie';
 
-import { Popper, Paper, ClickAwayListener, List, ListItem, IconButton } from '@mui/material';
-
 import './Header.scss';
-import SearchBox from '../../../../components/SearchBox/SearchBox';
 import Navigation from '../Navigation';
-import { MyContext } from '../../../../App';
+import { MyContext } from '@/App';
 
-import logo from '../../../../assets/rubystore_1.png';
-import defaultAvatar from '../../../../assets/default_avatar.png';
+import SearchBox from '@/components/SearchBox';
+import logo from '@/assets/rubystore_1.png';
+import defaultAvatar from '@/assets/default_avatar.png';
 
-import axiosToken from '../../../../apis/axiosToken';
-import axiosClient from '../../../../apis/axiosClient';
-import { getCart } from '../../../../redux/cartSlice';
+import { socket } from '@/config/socket';
+import axiosToken from '@/apis/axiosToken';
+import axiosClient from '@/apis/axiosClient';
+import { getCart } from '@/redux/cartSlice';
 import {
     addNotification,
     fetchNotifications,
     getUnreadCountNotifications,
     markAllNotificationsAsRead,
     markNotificationRead,
-} from '../../../../redux/notificationSlice';
-import { socket } from '../../../../config/socket';
-import { fetchWishlists } from '../../../../redux/wishlistSlice';
+} from '@/redux/notificationSlice';
+import { fetchWishlists } from '@/redux/wishlistSlice';
+import { formatDateUTCPlus7 } from '@/utils/formatters';
 
 const tailwindColorMap = {
     'bg-blue-500': '#3b82f6',
@@ -710,17 +709,3 @@ const Header = () => {
 };
 
 export default Header;
-
-function formatDateUTCPlus7(dateString) {
-    const date = new Date(dateString);
-    date.setHours(date.getHours());
-
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-
-    return `${hours}:${minutes}:${seconds} ${day}/${month}/${year} `;
-}

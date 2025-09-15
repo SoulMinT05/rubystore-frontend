@@ -2,42 +2,31 @@ import { BrowserRouter } from 'react-router-dom';
 import { createContext, forwardRef, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-
 import { IoCloseSharp } from 'react-icons/io5';
 import { AppBar, IconButton, Slide, Toolbar, Typography } from '@mui/material';
 import { IoMdClose } from 'react-icons/io';
-
 import { Provider } from 'react-redux';
-
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi'; // nếu muốn tiếng Việt
-
 dayjs.extend(relativeTime);
 dayjs.locale('vi'); // dùng nếu bạn muốn "2 phút trước" thay vì "2 minutes ago"
 
-// SOCKET IO
 import { socket } from '@/config/socket';
-
 import '@/App.css';
-import ScrollToTopButton from '@/components/ScrollToTopButton/ScrollToTopButton';
-
-import ProductZoom from '@/components/ProductZoom/ProductZoom';
-import ProductDetailsComponent from '@/components/ProductDetailsComponent/ProductDetailsComponent';
-
+import store from '@/redux/store';
+import AppRoutes from '@/routes';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
+import ProductZoom from '@/components/ProductZoom';
+import ProductDetailsComponent from '@/components/ProductDetailsComponent';
+import UpdateAddressComponent from '@/components/UpdateAddressComponent';
 import axiosClient from '@/apis/axiosClient';
 import axiosAuth from '@/apis/axiosAuth';
 
-import store from '@/redux/store';
-import UpdateAddressComponent from '@/components/UpdateAddressComponent/UpdateAddressComponent';
-import AppRoutes from '@/routes';
-
 const MyContext = createContext();
-
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });

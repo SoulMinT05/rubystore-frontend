@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-
 import { Link } from 'react-router-dom';
-
 import Button from '@mui/material/Button';
-
 import { FaRegSquarePlus } from 'react-icons/fa6';
 import { FiMinusSquare } from 'react-icons/fi';
 

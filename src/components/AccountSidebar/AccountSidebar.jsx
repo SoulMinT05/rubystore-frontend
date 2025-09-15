@@ -9,11 +9,11 @@ import { IoBagCheckOutline } from 'react-icons/io5';
 import { IoMdHeartEmpty, IoMdNotificationsOutline } from 'react-icons/io';
 import { IoIosLogOut } from 'react-icons/io';
 import { IoKeyOutline } from 'react-icons/io5';
-
-import axiosClient from '../../apis/axiosClient';
-import { MyContext } from '../../App';
 import { LuSend } from 'react-icons/lu';
-import defaultAvatar from '../../assets/default_avatar.png';
+
+import { MyContext } from '@/App';
+import axiosClient from '@/apis/axiosClient';
+import defaultAvatar from '@/assets/default_avatar.png';
 
 const AccountSidebar = () => {
     const context = useContext(MyContext);

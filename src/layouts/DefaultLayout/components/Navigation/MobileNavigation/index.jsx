@@ -1,15 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { Button } from '@mui/material';
 import { IoHomeOutline, IoSearch } from 'react-icons/io5';
-import { LuHeart } from 'react-icons/lu';
 import { FiUser } from 'react-icons/fi';
-import { BsBagCheck } from 'react-icons/bs';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { MdOutlineFilterAlt } from 'react-icons/md';
 
-import { MyContext } from '../../../../../App';
 import './MobileNavigation.scss';
+import { MyContext } from '@/App';
 
 const MobileNavigation = () => {
     const context = useContext(MyContext);
