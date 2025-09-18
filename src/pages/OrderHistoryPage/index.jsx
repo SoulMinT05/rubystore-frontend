@@ -21,6 +21,7 @@ import noOrder from '@/assets/no-message.png';
 import BadgeOrderStatus from '@/components/BadgeOrderStatus';
 import AccountSidebarLayout from '@/components/AccountSidebar/AccountSidebarLayout';
 import { formatCurrency, formatDate } from '@/utils/formatters';
+import { TIME_OUT_LOADING } from '@/constants/ui';
 
 const OrderHistoryPage = () => {
     const context = useContext(MyContext);
@@ -73,7 +74,7 @@ const OrderHistoryPage = () => {
                 }
             };
             getOrders();
-        }, import.meta.env.VITE_TIME_OUT_LOADING);
+        }, TIME_OUT_LOADING);
 
         return () => {
             clearTimeout(handleTimeout);

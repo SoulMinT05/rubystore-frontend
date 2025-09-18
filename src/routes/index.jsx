@@ -43,7 +43,6 @@ const AppRoutes = () => (
                 {/* Already login */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/product/:slug" element={<ProductDetailsPage />} />
-                <Route path="/product" element={<ProductListPage />} />
                 <Route path="/search" element={<SearchResultsPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route
@@ -94,6 +93,7 @@ const AppRoutes = () => (
                         </PrivateRoute>
                     }
                 />
+                <Route path="/:slug" element={<ProductListPage />} />
                 <Route
                     path="/blog/:slug"
                     element={

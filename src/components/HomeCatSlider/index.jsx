@@ -47,7 +47,7 @@ const HomeCatSlider = ({ categories }) => {
                         categories?.map((category, index) => {
                             return (
                                 <SwiperSlide key={index}>
-                                    <Link to={`/product?categoryId=${category?._id}`}>
+                                    <Link to={`/${category?.slug}`}>
                                         <div className="item py-4 lg:py-7 px-3 bg-white rounded-sm text-center flex items-center justify-center flex-col">
                                             <img
                                                 className=" w-[40px] lg:w-[60px] transition-all"

@@ -15,10 +15,23 @@ import './SearchResultsProductListSidebar.scss';
 import { MyContext } from '@/App';
 import axiosAuth from '@/apis/axiosAuth';
 import { formatCurrency } from '@/utils/formatters';
+import {
+    LIMIT_PRODUCTS,
+    MIN_PRICE_PRODUCTS_SIDEBAR,
+    MAX_PRICE_PRODUCTS_SIDEBAR,
+    TIME_OUT_LOADING,
+} from '@/constants/ui';
 
-const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalPages }) => {
+const SearchResultsProductListSidebar = ({
+    setProductsList,
+    setIsLoading,
+    page,
+    setPage,
+    setTotalProducts,
+    setTotalPages,
+}) => {
     const context = useContext(MyContext);
-    const [isFilterApplied, setIsFilterApplied] = useState(false);
+    // const [isFilterApplied, setIsFilterApplied] = useState(false);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
     const [isOpenAvailFilter, setIsOpenAvailFilter] = useState(true);
     // const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
@@ -28,14 +41,15 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
         categoryId: [],
         subCategoryId: [],
         thirdSubCategoryId: [],
+        slug: '',
         minPrice: '',
         maxPrice: '',
         rating: '',
         stockStatus: '',
         page: 1,
-        limit: import.meta.env.VITE_LIMIT_PRODUCTS,
+        limit: LIMIT_PRODUCTS,
     });
-    const [price, setPrice] = useState([10000, 10000000]);
+    const [price, setPrice] = useState([MIN_PRICE_PRODUCTS_SIDEBAR, MAX_PRICE_PRODUCTS_SIDEBAR]);
     const location = useLocation(); // Là Object có pathname là /product
 
     const handleCheckboxChange = (field, value) => {
@@ -58,6 +72,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                 page: 1,
             }));
         }
+
         setPage(1);
     };
 
@@ -88,68 +103,37 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
             }));
             setPage(1);
         }
-
-        // if (url.includes('categoryId')) {
-        //     const queryCategoryId = queryParameters.get('categoryId');
-        //     setFilterProducts((prev) => ({
-        //         ...prev,
-        //         categoryId: [queryCategoryId],
-        //         subCategoryId: [],
-        //         thirdSubCategoryId: [],
-        //         rating: [],
-        //         page: 1,
-        //     }));
-        //     setPage(1);
-        // }
-        // if (url.includes('subCategoryId')) {
-        //     const querySubCategoryId = queryParameters.get('subCategoryId');
-        //     setFilterProducts((prev) => ({
-        //         ...prev,
-        //         categoryId: [],
-        //         subCategoryId: [querySubCategoryId],
-        //         thirdSubCategoryId: [],
-        //         rating: [],
-        //         page: 1,
-        //     }));
-        //     setPage(1);
-        // }
-        // if (url.includes('thirdSubCategoryId')) {
-        //     const queryThirdSubCategoryId = queryParameters.get('thirdSubCategoryId');
-        //     setFilterProducts((prev) => ({
-        //         ...prev,
-        //         categoryId: [],
-        //         subCategoryId: [],
-        //         thirdSubCategoryId: [queryThirdSubCategoryId],
-        //         rating: [],
-        //         page: 1,
-        //     }));
-        //     setPage(1);
-        // }
         filterProducts.page = 1;
     }, [location]);
 
-    const fetchFilterProducts = async () => {
-        setIsLoading(true);
-        try {
-            const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
-            if (data.success) {
-                setProductsList(data?.products);
-                setTotalPages(data?.totalPages);
-                window.scrollTo({
-                    top: 0,
-                    // behavior: 'smooth',
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
+        setIsLoading(true);
+        const fetchFilterProducts = async () => {
+            try {
+                const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
+                if (data.success) {
+                    setProductsList(data?.products);
+                    setTotalProducts(data?.total);
+                    setTotalPages(data?.totalPages);
+                    window.scrollTo({
+                        top: 0,
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         filterProducts.page = page;
-        fetchFilterProducts();
+        const timeout = setTimeout(() => {
+            fetchFilterProducts();
+        }, TIME_OUT_LOADING);
+
+        return () => {
+            clearTimeout(timeout);
+        };
     }, [filterProducts, page]);
 
     useEffect(() => {
@@ -166,20 +150,20 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
         };
     }, [price]);
 
-    const handleApplyFilter = () => {
-        // setPage(1); // Reset lại page về 1
-        // fetchFilterProducts();
-        // setIsFilterApplied(true);
-        context?.setOpenFilterProducts(false);
-    };
+    // const handleApplyFilter = () => {
+    //     // setPage(1); // Reset lại page về 1
+    //     // fetchFilterProducts();
+    //     // setIsFilterApplied(true);
+    //     context?.setOpenFilterProducts(false);
+    // };
 
     // Nếu người dùng xác nhận, thì gọi API
-    useEffect(() => {
-        if (isFilterApplied) {
-            fetchFilterProducts();
-            setIsFilterApplied(false); // Reset lại
-        }
-    }, [isFilterApplied]);
+    // useEffect(() => {
+    //     if (isFilterApplied) {
+    //         fetchFilterProducts();
+    //         setIsFilterApplied(false); // Reset lại
+    //     }
+    // }, [isFilterApplied]);
 
     return (
         <aside className="sidebar pt-0 pb-6 lg:py-5 static lg:sticky top-[130px] z-[50]">
@@ -204,8 +188,8 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                                             value={category?._id}
                                             control={<Checkbox size="small" />}
                                             checked={filterProducts?.categoryId?.includes(category?._id)}
-                                            label={category?.name}
                                             onChange={() => handleCheckboxChange('categoryId', category?._id)}
+                                            label={category?.name}
                                             className="w-full"
                                         />
                                     );
@@ -292,7 +276,13 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                     <h3 className="w-full mb-3 text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Giá
                     </h3>
-                    <RangeSlider value={price} onInput={setPrice} min={10000} max={10000000} step={5} />
+                    <RangeSlider
+                        value={price}
+                        onInput={setPrice}
+                        min={MIN_PRICE_PRODUCTS_SIDEBAR}
+                        max={MAX_PRICE_PRODUCTS_SIDEBAR}
+                        step={5}
+                    />
                     <div className="flex pt-4 pb-2 priceRange">
                         <span className="text-[12px] lg:text-[12px]">
                             Từ <strong className="text-dark"> {formatCurrency(price[0])}</strong>
@@ -307,7 +297,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                     <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Đánh giá
                     </h3>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={5}
@@ -317,7 +307,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                         />
                         <Rating name="size-small" defaultValue={5} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={4}
@@ -327,7 +317,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                         />
                         <Rating name="size-small" defaultValue={4} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={3}
@@ -337,7 +327,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                         />
                         <Rating name="size-small" defaultValue={3} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={2}
@@ -347,7 +337,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                         />
                         <Rating name="size-small" defaultValue={2} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={1}
@@ -360,7 +350,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                 </div>
             </div>
 
-            {context?.windowWidth <= 992 && (
+            {/* {context?.windowWidth <= 992 && (
                 <Button
                     variant="contained"
                     color="primary"
@@ -369,7 +359,7 @@ const SearchResultsProductListSidebar = ({ setProductsList, setIsLoading, page, 
                 >
                     Xác nhận
                 </Button>
-            )}
+            )} */}
         </aside>
     );
 };

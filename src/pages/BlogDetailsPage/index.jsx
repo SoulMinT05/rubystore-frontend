@@ -6,6 +6,7 @@ import { Breadcrumbs, CircularProgress } from '@mui/material';
 import './BlogDetailsPage.scss';
 import { MyContext } from '@/App';
 import axiosClient from '@/apis/axiosClient';
+import { TIME_OUT_LOADING } from '@/constants/ui';
 
 const BlogDetailsPage = () => {
     const { slug } = useParams();
@@ -36,7 +37,7 @@ const BlogDetailsPage = () => {
 
         const timeout = setTimeout(() => {
             getExcludedBlogs();
-        }, import.meta.env.VITE_TIME_OUT_LOADING);
+        }, TIME_OUT_LOADING);
 
         return () => {
             clearTimeout(timeout);
@@ -61,7 +62,7 @@ const BlogDetailsPage = () => {
 
         const timeout = setTimeout(() => {
             getBlogDetails();
-        }, import.meta.env.VITE_TIME_OUT_LOADING);
+        }, TIME_OUT_LOADING);
 
         return () => {
             clearTimeout(timeout);

@@ -64,7 +64,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                                     return (
                                         <li key={index} className="list-none relative">
                                             <Link
-                                                to={`/product?categoryId=${category?._id}`}
+                                                to={`/${category?.slug}`}
                                                 className="link transition text-black text-[12px] lg:text-[13px] xl:text-[14px] font-[500]"
                                             >
                                                 {category?.name}
@@ -79,8 +79,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                                                                     className="list-none w-full relative"
                                                                 >
                                                                     <Link
-                                                                        // to={`/product?subCategoryId=${subCategory?._id}`}
-                                                                        to={`/product?categoryId=${category?._id}&subCategoryId=${subCategory?._id}`}
+                                                                        to={`/${subCategory?.slug}`}
                                                                         className="w-full"
                                                                     >
                                                                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
@@ -99,8 +98,7 @@ const Navigation = ({ isOpenCatPanel, setIsOpenCatPanel }) => {
                                                                                                 className="list-none w-full"
                                                                                             >
                                                                                                 <Link
-                                                                                                    // to={`/product?thirdSubCategoryId=${thirdSubCategory?._id}`}
-                                                                                                    to={`/product?categoryId=${category?._id}&subCategoryId=${subCategory?._id}&thirdSubCategoryId=${thirdSubCategory?._id}`}
+                                                                                                    to={`/${thirdSubCategory?.slug}`}
                                                                                                     className="w-full"
                                                                                                 >
                                                                                                     <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">

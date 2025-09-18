@@ -127,7 +127,7 @@ const HomePage = () => {
                 <div className="container">
                     <div className="flex items-center justify-between flex-col lg:flex-row">
                         <div className="leftSec w-full lg:w-[40%]">
-                            <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600]">
+                            <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] text-black font-[600]">
                                 Sản phẩm phổ biến
                             </h2>
                             <p className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[14px] font-[400] mt-0 mb-0">
@@ -197,7 +197,7 @@ const HomePage = () => {
             {/* Latest Products */}
             <section className="py-5 pt-0 bg-white">
                 <div className="container">
-                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600]">
+                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] text-black font-[600]">
                         Sản phẩm mới nhất
                     </h2>
                     {latestProducts?.length === 0 && <ProductLoading />}
@@ -210,7 +210,7 @@ const HomePage = () => {
             {/* Featured Products */}
             <section className="py-5 pt-0 bg-white">
                 <div className="container">
-                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600] -pb-2">
+                    <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] text-black font-[600] -pb-2">
                         Sản phẩm đặc trưng
                     </h2>
                     {products?.length === 0 && <ProductLoading />}
@@ -224,7 +224,7 @@ const HomePage = () => {
             {blogs?.length !== 0 && (
                 <section className="blogSection py-5 pb-8 pt-0 bg-white">
                     <div className="container">
-                        <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-[600] mb-4">
+                        <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] text-black font-[600] mb-4">
                             Bài viết mới nhất
                         </h2>
                         <Swiper

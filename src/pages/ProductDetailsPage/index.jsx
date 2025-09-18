@@ -13,6 +13,7 @@ import { fetchReviews } from '@/redux/reviewSlice';
 import HomeProductsSlider from '@/components/HomeProductsSlider';
 import ProductDetailsComponent from '@/components/ProductDetailsComponent';
 import ReviewComponent from '@/components/ReviewComponent';
+import { TIME_OUT_LOADING } from '@/constants/ui';
 
 const ProductDetailsPage = () => {
     const context = useContext(MyContext);
@@ -26,6 +27,9 @@ const ProductDetailsPage = () => {
 
     const tab = searchParams.get('tab');
 
+    const [categorySlug, setCategorySlug] = useState('');
+    const [subCategorySlug, setSubCategorySlug] = useState('');
+    const [thirdSubCategorySlug, setThirdSubCategorySlug] = useState('');
     const [product, setProduct] = useState();
     const [averageRating, setAverageRating] = useState('');
     const [relatedProducts, setRelatedProducts] = useState([]);
@@ -33,6 +37,7 @@ const ProductDetailsPage = () => {
         ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'span', 'img'],
         ALLOWED_ATTR: ['src', 'alt', 'title', 'width', 'height', 'style'],
     });
+    const [isLoadMore, setIsLoadMore] = useState(false);
     const [isLoadingProductDetails, setIsLoadingProductDetails] = useState(false);
 
     // Scroll when tab is review
@@ -67,7 +72,7 @@ const ProductDetailsPage = () => {
             // }
         };
         getDetailsReview();
-    }, []);
+    }, [slug, context, dispatch]);
 
     useEffect(() => {
         if (product) {
@@ -85,6 +90,9 @@ const ProductDetailsPage = () => {
                 console.log('productDetails: ', data);
                 if (data?.success) {
                     setProduct(data?.product);
+                    setCategorySlug(data?.product?.categorySlug);
+                    setSubCategorySlug(data?.product?.subCategorySlug);
+                    setThirdSubCategorySlug(data?.product?.thirdSubCategorySlug);
 
                     const relatedProducts = await axiosAuth.get(
                         `/api/product/all-products-sub-category-id/${data?.product?.subCategoryId}`
@@ -106,12 +114,14 @@ const ProductDetailsPage = () => {
 
         const timeout = setTimeout(() => {
             fetchProductDetails();
-        }, import.meta.env.VITE_TIME_OUT_LOADING);
+        }, TIME_OUT_LOADING);
 
         return () => {
             clearTimeout(timeout);
         };
     }, [slug]);
+
+    console.log({ categorySlug, subCategorySlug, thirdSubCategorySlug });
 
     return (
         <>
@@ -129,7 +139,7 @@ const ProductDetailsPage = () => {
                         <Link
                             underline="hover"
                             color="inherit"
-                            to={`/product?categoryId=${product?.category?._id}`}
+                            to={`/${categorySlug}`}
                             className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             {product?.categoryName}
@@ -137,7 +147,7 @@ const ProductDetailsPage = () => {
                         <Link
                             underline="hover"
                             color="inherit"
-                            to={`/product?subCategoryId=${product?.subCategoryId}`}
+                            to={`/${subCategorySlug}`}
                             className="link transition !text-[14px] lg:!text-[16px]"
                         >
                             {product?.subCategoryName}
@@ -145,7 +155,7 @@ const ProductDetailsPage = () => {
                         <Link
                             underline="hover"
                             color="inherit"
-                            className="link transition !text-[14px] lg:!text-[16px]"
+                            className="link transition !text-[14px] lg:!text-[16px] pointer-events-none cursor-default"
                         >
                             {product?.name?.length > 50 ? `${product?.name?.substring(0, 50)}...` : product?.name}
                         </Link>
@@ -170,7 +180,7 @@ const ProductDetailsPage = () => {
                             </div>
                         </div>
 
-                        <div className="container pt-7 lg:pt-10 px-4 lg:px-0">
+                        <div className="container pt-7 lg:pt-10 px-4 ">
                             <div className="flex items-center gap-8 mb-3 lg:mb-5">
                                 <span
                                     className={`link text-[16px] lg:text-[17px] cursor-pointer font-[500] ${
@@ -191,14 +201,24 @@ const ProductDetailsPage = () => {
                             </div>
 
                             {activeTab === 0 && (
-                                <div
-                                    className="w-full description-content"
-                                    style={{
-                                        maxWidth: '100%',
-                                        wordWrap: 'break-word',
-                                    }}
-                                    dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
-                                />
+                                <div className="">
+                                    <div
+                                        className={`w-full description-content ${isLoadMore ? '' : 'line-clamp-3'}`}
+                                        style={{
+                                            maxWidth: '100%',
+                                            wordWrap: 'break-word',
+                                        }}
+                                        dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+                                    />
+                                    <div className="text-center my-4">
+                                        <button
+                                            onClick={() => setIsLoadMore(!isLoadMore)}
+                                            className="text-blue-600 hover:underline text-sm"
+                                        >
+                                            {isLoadMore ? 'Thu gọn' : 'Xem thêm'}
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                             {activeTab === 1 && (
                                 <div id="review-section" className="shadow-md w-[100%] py-5 px-8 rounded-md">
@@ -209,9 +229,7 @@ const ProductDetailsPage = () => {
 
                         {relatedProducts?.length !== 0 && (
                             <div className="container pt-8 px-[16px]">
-                                <h2 className="text-[18px] sm:text-[20px] lg:text-[22px] font-[600] pb-0">
-                                    Sản phẩm liên quan
-                                </h2>
+                                <h2 className="text-[16px] lg:text-[17px] text-black pb-0">Sản phẩm liên quan</h2>
                                 <HomeProductsSlider items={6} products={relatedProducts} />
                             </div>
                         )}

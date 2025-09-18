@@ -32,6 +32,29 @@ export function formatDisplayTime(date) {
     }
 }
 
+export function timeAgo(dateString) {
+    const now = new Date();
+    const date = new Date(dateString);
+    const seconds = Math.floor((now - date) / 1000);
+
+    const intervals = [
+        { label: 'năm', seconds: 31536000 },
+        { label: 'tháng', seconds: 2592000 },
+        { label: 'ngày', seconds: 86400 },
+        { label: 'giờ', seconds: 3600 },
+        { label: 'phút', seconds: 60 },
+        { label: 'giây', seconds: 1 },
+    ];
+
+    for (let i = 0; i < intervals.length; i++) {
+        const interval = Math.floor(seconds / intervals[i].seconds);
+        if (interval >= 1) {
+            return `${interval} ${intervals[i].label} trước`;
+        }
+    }
+    return 'Vừa xong';
+}
+
 // Date
 export function formatDate(date) {
     if (!(date instanceof Date)) {

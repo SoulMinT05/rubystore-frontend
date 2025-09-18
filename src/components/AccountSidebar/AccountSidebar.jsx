@@ -14,6 +14,7 @@ import { LuSend } from 'react-icons/lu';
 import { MyContext } from '@/App';
 import axiosClient from '@/apis/axiosClient';
 import defaultAvatar from '@/assets/default_avatar.png';
+import { TIME_OUT_LOADING } from '@/constants/ui';
 
 const AccountSidebar = () => {
     const context = useContext(MyContext);
@@ -38,7 +39,7 @@ const AccountSidebar = () => {
             } finally {
                 setTimeout(() => {
                     setIsLoadingAvatar(false);
-                }, import.meta.env.VITE_TIME_OUT_LOADING);
+                }, TIME_OUT_LOADING);
             }
         };
 

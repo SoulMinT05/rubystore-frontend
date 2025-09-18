@@ -48,6 +48,14 @@ h6 {
     margin: auto;
 }
 
+.text-black {
+    color: #242424 !important;
+}
+
+.text-gray {
+    color: #808089 !important;
+}
+
 .text-blue {
     color: #3b82f6 !important;
 }

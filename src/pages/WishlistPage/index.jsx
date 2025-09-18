@@ -11,6 +11,7 @@ import axiosClient from '@/apis/axiosClient';
 import { fetchWishlists } from '@/redux/wishlistSlice';
 import AccountSidebarLayout from '@/components/AccountSidebar/AccountSidebarLayout';
 import { formatCurrency } from '@/utils/formatters';
+import { TIME_OUT_LOADING } from '@/constants/ui';
 
 const WishlistPage = () => {
     const context = useContext(MyContext);
@@ -43,7 +44,7 @@ const WishlistPage = () => {
                 }
             };
             getWishlists();
-        }, import.meta.env.VITE_TIME_OUT_LOADING);
+        }, TIME_OUT_LOADING);
 
         return () => {
             clearTimeout(handleTimeout);

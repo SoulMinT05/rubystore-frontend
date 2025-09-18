@@ -16,7 +16,7 @@ dayjs.extend(relativeTime);
 dayjs.locale('vi'); // dùng nếu bạn muốn "2 phút trước" thay vì "2 minutes ago"
 
 import { socket } from '@/config/socket';
-import '@/App.css';
+import '@/App.scss';
 import store from '@/redux/store';
 import AppRoutes from '@/routes';
 import ScrollToTopButton from '@/components/ScrollToTopButton';

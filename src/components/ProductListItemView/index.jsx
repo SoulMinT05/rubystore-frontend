@@ -12,17 +12,24 @@ import { MdOutlineShoppingCart } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { IoMdHeart } from 'react-icons/io';
 
+import DOMPurify from 'dompurify';
+
 import './ProductListItemView.scss';
 import { MyContext } from '@/App';
 import useWishlist from '@/hooks/useWishlist';
 import { formatCurrency } from '@/utils/formatters';
 
 const ProductListItemView = ({ product }) => {
+    console.log({ product });
     const context = useContext(MyContext);
     const navigate = useNavigate();
 
     const { addToWishlist } = useWishlist();
     const { wishlists } = useSelector((state) => state.wishlist);
+
+    const sanitizedDescription = DOMPurify.sanitize(product.description, {
+        ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'span'],
+    });
 
     const isInWishlist = wishlists?.some((item) => item?.product?.toString() === product?._id);
     return (
@@ -49,7 +56,7 @@ const ProductListItemView = ({ product }) => {
                     <Tooltip title="Xem chi tiết" placement="left-start">
                         <Button
                             className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white text-black hover:!bg-primary hover:text-white group"
-                            onClick={() => context.setOpenProductDetailsModal(true)}
+                            onClick={() => context.handleOpenProductDetailsModal(true, product)}
                         >
                             <MdZoomOutMap className="text-[18px] !text-black group-hover:text-white" />
                         </Button>
@@ -84,7 +91,10 @@ const ProductListItemView = ({ product }) => {
                         {product?.name}
                     </Link>
                 </h3>
-                <p className="text-[12px] lg:text-[13px] mb-3 line-clamp-2">{product?.description}</p>
+                <div
+                    className="mb-3 line-clamp-1 text-[12px] lg:text-[13px]"
+                    dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+                />
                 <Rating name="size-small" value={Number(product?.rating) || 0} readOnly size="small" />
 
                 <div

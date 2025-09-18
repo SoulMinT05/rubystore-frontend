@@ -15,29 +15,27 @@ import './ProductListSidebar.scss';
 import { MyContext } from '@/App';
 import axiosAuth from '@/apis/axiosAuth';
 import { formatCurrency } from '@/utils/formatters';
+import {
+    LIMIT_PRODUCTS,
+    MAX_PRICE_PRODUCTS_SIDEBAR,
+    MIN_PRICE_PRODUCTS_SIDEBAR,
+    TIME_OUT_LOADING,
+} from '@/constants/ui';
 
-const MIN_PRICE = 10000;
-const MAX_PRICE = 1000000000;
-
-const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setTotalProducts, setTotalPages }) => {
+const ProductListSidebar = ({
+    filterProducts,
+    setFilterProducts,
+    setProductsList,
+    setIsLoading,
+    page,
+    setPage,
+    setTotalProducts,
+    setTotalPages,
+}) => {
     const context = useContext(MyContext);
-    // const [isFilterApplied, setIsFilterApplied] = useState(false);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
     const [isOpenAvailFilter, setIsOpenAvailFilter] = useState(true);
-    // const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
-
-    const [filterProducts, setFilterProducts] = useState({
-        categoryId: [],
-        subCategoryId: [],
-        thirdSubCategoryId: [],
-        minPrice: '',
-        maxPrice: '',
-        rating: '',
-        stockStatus: '',
-        page: 1,
-        limit: import.meta.env.VITE_LIMIT_PRODUCTS,
-    });
-    const [price, setPrice] = useState([MIN_PRICE, MAX_PRICE]);
+    const [price, setPrice] = useState([MIN_PRICE_PRODUCTS_SIDEBAR, MAX_PRICE_PRODUCTS_SIDEBAR]);
     const location = useLocation(); // Là Object có pathname là /product
 
     const handleCheckboxChange = (field, value) => {
@@ -51,11 +49,10 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
             [field]: updatedValues,
             page: 1,
         }));
-        if (field === 'categoryId') {
+        if (field === 'slug') {
             setFilterProducts((prev) => ({
                 ...prev,
-                subCategoryId: [],
-                thirdSubCategoryId: [],
+                slug: prev.slug === value ? '' : value, // toggle
                 stockStatus: '',
                 page: 1,
             }));
@@ -78,39 +75,13 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
     }, []);
 
     useEffect(() => {
-        const url = window.location.href; // http://localhost:30003/product?categoryId=681751c5db78565c8d98e823
-        const queryParameters = new URLSearchParams(location.search); // ?categoryId=681751c5db78565c8d98e823
-        if (url.includes('categoryId')) {
-            const queryCategoryId = queryParameters.get('categoryId');
+        const path = location.pathname;
+        const slug = path.split('/').pop();
+
+        if (slug) {
             setFilterProducts((prev) => ({
                 ...prev,
-                categoryId: [queryCategoryId],
-                subCategoryId: [],
-                thirdSubCategoryId: [],
-                rating: [],
-                page: 1,
-            }));
-            setPage(1);
-        }
-        if (url.includes('subCategoryId')) {
-            const querySubCategoryId = queryParameters.get('subCategoryId');
-            setFilterProducts((prev) => ({
-                ...prev,
-                categoryId: [],
-                subCategoryId: [querySubCategoryId],
-                thirdSubCategoryId: [],
-                rating: [],
-                page: 1,
-            }));
-            setPage(1);
-        }
-        if (url.includes('thirdSubCategoryId')) {
-            const queryThirdSubCategoryId = queryParameters.get('thirdSubCategoryId');
-            setFilterProducts((prev) => ({
-                ...prev,
-                categoryId: [],
-                subCategoryId: [],
-                thirdSubCategoryId: [queryThirdSubCategoryId],
+                slug,
                 rating: [],
                 page: 1,
             }));
@@ -120,8 +91,9 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
     }, [location]);
 
     useEffect(() => {
+        console.log('render filter product sidebar');
+        setIsLoading(true);
         const fetchFilterProducts = async () => {
-            setIsLoading(true);
             try {
                 const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
                 console.log('dataFIlter: ', data);
@@ -131,7 +103,6 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                     setTotalPages(data?.totalPages);
                     window.scrollTo({
                         top: 0,
-                        // behavior: 'smooth',
                     });
                 }
             } catch (error) {
@@ -142,44 +113,14 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
         };
 
         filterProducts.page = page;
-        const timeout = setTimeout(
-            () => {
-                fetchFilterProducts();
-            },
-            import.meta.env.VITE_TIME_OUT_LOADING
-            // 2000
-        );
+        const timeout = setTimeout(() => {
+            fetchFilterProducts();
+        }, TIME_OUT_LOADING);
 
         return () => {
             clearTimeout(timeout);
         };
     }, [filterProducts, page]);
-
-    // useEffect(() => {
-    //     const fetchFilterProducts = async () => {
-    //         setIsLoading(true);
-    //         try {
-    //             const { data } = await axiosAuth.post('/api/product/filter-product', filterProducts);
-    //             console.log('dataFIlter: ', data);
-    //             if (data.success) {
-    //                 setProductsList(data?.products);
-    //                 setTotalProducts(data?.total);
-    //                 setTotalPages(data?.totalPages);
-    //                 window.scrollTo({
-    //                     top: 0,
-    //                     behavior: 'smooth',
-    //                 });
-    //             }
-    //         } catch (error) {
-    //             console.log(error);
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     };
-
-    //     filterProducts.page = page;
-    //     fetchFilterProducts();
-    // }, [filterProducts, page]);
 
     useEffect(() => {
         const debouncedTimeout = setTimeout(() => {
@@ -232,9 +173,9 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                                             key={index}
                                             value={category?._id}
                                             control={<Checkbox size="small" />}
-                                            checked={filterProducts?.categoryId?.includes(category?._id)}
                                             label={category?.name}
-                                            onChange={() => handleCheckboxChange('categoryId', category?._id)}
+                                            checked={filterProducts.slug === category?.slug}
+                                            onChange={() => handleCheckboxChange('slug', category?.slug)}
                                             className="w-full"
                                         />
                                     );
@@ -243,6 +184,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                     </Collapse>
                 </div>
 
+                {/* Count in stock */}
                 <div className="box">
                     <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Trạng thái
@@ -253,6 +195,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                             {isOpenAvailFilter === true ? <FaAngleUp /> : <FaAngleDown />}
                         </Button>
                     </h3>
+
                     <Collapse isOpened={isOpenAvailFilter}>
                         <div className="scroll px-4 relative -left-[13px]">
                             <FormControlLabel
@@ -321,7 +264,13 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                     <h3 className="w-full mb-3 text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Giá
                     </h3>
-                    <RangeSlider value={price} onInput={setPrice} min={MIN_PRICE} max={MAX_PRICE} step={5} />
+                    <RangeSlider
+                        value={price}
+                        onInput={setPrice}
+                        min={MIN_PRICE_PRODUCTS_SIDEBAR}
+                        max={MAX_PRICE_PRODUCTS_SIDEBAR}
+                        step={5}
+                    />
                     <div className="flex pt-4 pb-2 priceRange">
                         <span className="text-[12px] lg:text-[12px]">
                             Từ <strong className="text-dark"> {formatCurrency(price[0])}</strong>
@@ -332,6 +281,7 @@ const ProductListSidebar = ({ setProductsList, setIsLoading, page, setPage, setT
                     </div>
                 </div>
 
+                {/* Rating */}
                 <div className="box mt-4">
                     <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Đánh giá

@@ -31,11 +31,7 @@ const CategoryCollapse = ({ categories, toggleDrawer }) => {
                         categories?.map((category, index) => {
                             return (
                                 <li key={index} className="list-none flex items-center relative flex-col">
-                                    <Link
-                                        to={`/product?categoryId=${category?._id}`}
-                                        onClick={toggleDrawer(false)}
-                                        className="w-full "
-                                    >
+                                    <Link to={`/${category?.slug}`} onClick={toggleDrawer(false)} className="w-full ">
                                         <Button className="w-full !text-[13px] !lg:text-[14px] !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
                                             {category?.name}
                                         </Button>
@@ -59,7 +55,7 @@ const CategoryCollapse = ({ categories, toggleDrawer }) => {
                                                     return (
                                                         <li key={index_} className="list-none relative">
                                                             <Link
-                                                                to={`/product?subCategoryId=${subCategory?._id}`}
+                                                                to={`/${subCategory?.slug}`}
                                                                 onClick={toggleDrawer(false)}
                                                                 className="w-full"
                                                             >
@@ -91,7 +87,7 @@ const CategoryCollapse = ({ categories, toggleDrawer }) => {
                                                                                         className="list-none relative mb-1"
                                                                                     >
                                                                                         <Link
-                                                                                            to={`/product?thirdSubCategoryId=${thirdSubCategory?._id}`}
+                                                                                            to={`/${thirdSubCategory?.slug}`}
                                                                                             className="link w-full !text-[12px] !lg:text-[13px] !text-left !justify-start !px-3 transition"
                                                                                         >
                                                                                             {thirdSubCategory?.name}

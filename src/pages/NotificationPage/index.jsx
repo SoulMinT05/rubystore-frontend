@@ -11,6 +11,7 @@ import {
 import { MyContext } from '@/App';
 import NotificationItems from '@/components/NotificationItems';
 import AccountSidebarLayout from '@/components/AccountSidebar/AccountSidebarLayout';
+import { TIME_OUT_LOADING } from '@/constants/ui';
 
 const NotificationPage = () => {
     const context = useContext(MyContext);
@@ -39,7 +40,7 @@ const NotificationPage = () => {
                 }
             };
             getNotifications();
-        }, import.meta.env.VITE_TIME_OUT_LOADING);
+        }, TIME_OUT_LOADING);
 
         return () => {
             clearTimeout(handleTimeout);
@@ -69,7 +70,7 @@ const NotificationPage = () => {
                 <div className="py-1 px-5 flex flex-col sm:flex-row items-start sm:items-center justify-between">
                     <span className="mt-0 text-[12px] sm:text-[13px] md:text-[14px]">
                         <span className="font-bold text-primary">
-                            {unreadCountNotifications?.length || 0} <span> </span>
+                            {unreadCountNotifications || 0} <span> </span>
                         </span>
                         <span className="">thông báo chưa đọc</span>
                     </span>

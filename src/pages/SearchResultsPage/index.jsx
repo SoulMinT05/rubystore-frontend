@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
@@ -18,6 +18,7 @@ import ProductLoading from '@/components/ProductLoading';
 import HomeProductItem from '@/components/HomeProductsItem';
 import ProductListItemView from '@/components/ProductListItemView';
 import SearchResultsProductListSidebar from '@/components/SearchResultsProductListSidebar';
+import { TIME_OUT_LOADING } from '@/constants/ui';
 
 const SearchResultsPage = () => {
     const context = useContext(MyContext);
@@ -25,30 +26,44 @@ const SearchResultsPage = () => {
     const [itemView, setItemView] = useState('grid');
     const [anchorEl, setAnchorEl] = useState(null);
     const [productsList, setProductsList] = useState([]);
+    const [isLoadingProductsSearch, setIsProductsSearch] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Page
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalProducts, setTotalProducts] = useState(1);
 
+    // Sort
     const [selectedSortValue, setSelectedSortValue] = useState('Thứ tự A đến Z');
 
+    // Query
     const [searchParams] = useSearchParams();
-
     const keyword = searchParams.get('keyword');
 
     useEffect(() => {
-        const fetchSearchResults = async () => {
-            if (!keyword) return;
-            try {
-                const { data } = await axiosAuth.get(`/api/product/search-results?keyword=${keyword}`);
-                if (data.success) {
-                    setProductsList(data.products);
+        setIsProductsSearch(true);
+        const handleTimeout = setTimeout(() => {
+            const fetchSearchResults = async () => {
+                if (!keyword) return;
+                try {
+                    const { data } = await axiosAuth.get(`/api/product/search-results?keyword=${keyword}`);
+                    if (data.success) {
+                        setProductsList(data.products);
+                    }
+                } catch (err) {
+                    console.error('Search error:', err);
+                } finally {
+                    setIsProductsSearch(false);
                 }
-            } catch (err) {
-                console.error('Search error:', err);
-            }
-        };
+            };
 
-        fetchSearchResults();
+            fetchSearchResults();
+        }, TIME_OUT_LOADING);
+
+        return () => {
+            clearTimeout(handleTimeout);
+        };
     }, [keyword]);
 
     useEffect(() => {
@@ -92,8 +107,12 @@ const SearchResultsPage = () => {
                     >
                         Trang chủ
                     </Link>
-                    <Link underline="hover" color="inherit" className="link transition !text-[14px] lg:!text-[16px]">
-                        Kết quả tìm kiếm
+                    <Link
+                        underline="hover"
+                        color="inherit"
+                        className="link transition !text-[14px] lg:!text-[16px] pointer-events-none cursor-default"
+                    >
+                        Kết quả tìm kiếm "{keyword}"
                     </Link>
                 </Breadcrumbs>
             </div>
@@ -113,8 +132,17 @@ const SearchResultsPage = () => {
                             page={page}
                             setPage={setPage}
                             setTotalPages={setTotalPages}
+                            setTotalProducts={setTotalProducts}
                         />
                     </div>
+                    {context?.windowWidth <= 992 && (
+                        <div
+                            onClick={() => context.setOpenFilterProducts(false)}
+                            className={`filter_overlay top-0 left-0 fixed h-full w-full bg-[rgba(0,0,0,0.5)] z-[101] ${
+                                context?.openFilterProducts ? '' : 'hidden'
+                            } `}
+                        ></div>
+                    )}
                     <div className="rightContent w-full lg:w-[80%] py-3">
                         <div
                             className="bg-[#f1f1f1] p-2 w-full mb-4 rounded-md flex items-center justify-between
@@ -136,7 +164,7 @@ const SearchResultsPage = () => {
                                     <IoGridSharp className="text-[rgba(0,0,0,0.7)]" />
                                 </Button>
                                 <span className="text-[12px] lg:text-[14px] hidden sm:block font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
-                                    Tổng {productsList?.length !== 0 ? productsList?.length : 0} sản phẩm
+                                    Tổng {totalProducts !== 0 ? totalProducts : 0} sản phẩm
                                 </span>
                             </div>
 
@@ -197,7 +225,38 @@ const SearchResultsPage = () => {
                                 </Menu>
                             </div>
                         </div>
-                        <div
+
+                        {isLoadingProductsSearch || isLoading ? (
+                            <div className="flex items-center justify-center w-full min-h-[400px]">
+                                <CircularProgress color="inherit" />
+                            </div>
+                        ) : (
+                            <>
+                                {productsList?.length > 0 ? (
+                                    <div
+                                        className={`grid ${
+                                            itemView === 'grid'
+                                                ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5'
+                                                : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1'
+                                        } gap-4`}
+                                    >
+                                        {productsList.map((product, index) =>
+                                            itemView === 'grid' ? (
+                                                <HomeProductItem key={index} product={product} />
+                                            ) : (
+                                                <ProductListItemView key={index} product={product} />
+                                            )
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center w-full min-h-[400px]">
+                                        Không có sản phẩm
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {/* <div
                             className={`grid ${
                                 itemView === 'grid'
                                     ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5'
@@ -227,7 +286,7 @@ const SearchResultsPage = () => {
                                     )}
                                 </>
                             )}
-                        </div>
+                        </div> */}
 
                         {totalPages > 1 && (
                             <div className="flex items-center justify-center mt-10">
