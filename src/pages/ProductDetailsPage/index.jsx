@@ -13,7 +13,7 @@ import { fetchReviews } from '@/redux/reviewSlice';
 import HomeProductsSlider from '@/components/HomeProductsSlider';
 import ProductDetailsComponent from '@/components/ProductDetailsComponent';
 import ReviewComponent from '@/components/ReviewComponent';
-import { TIME_OUT_LOADING } from '@/constants/ui';
+import { TIME_OUT_LOADING, LIMIT_PER_PAGE } from '@/constants/ui';
 
 const ProductDetailsPage = () => {
     const context = useContext(MyContext);
@@ -40,6 +40,14 @@ const ProductDetailsPage = () => {
     const [isLoadMore, setIsLoadMore] = useState(false);
     const [isLoadingProductDetails, setIsLoadingProductDetails] = useState(false);
 
+    const itemsPerPage = LIMIT_PER_PAGE;
+    const [currentPage, setCurrentPage] = useState(1); // State lưu trang hiện tại
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalReviews, setTotalReviews] = useState(1);
+    const handleChangePage = (event, value) => {
+        setCurrentPage(value);
+    };
+
     // Scroll when tab is review
     useEffect(() => {
         if (tab === 'review') {
@@ -53,33 +61,31 @@ const ProductDetailsPage = () => {
     }, [tab]);
 
     useEffect(() => {
-        // setIsLoadingReviews(true);
-
-        const getDetailsReview = async () => {
+        const getReviewsFromDetailsProduct = async () => {
+            let url = `/api/user/reviews/getReviewsBySlugProduct/${slug}?page=${currentPage}&perPage=${itemsPerPage}`;
             try {
-                const { data } = await axiosAuth.get(`/api/user/reviews/getReviewsBySlugProduct/${slug}`);
-                console.log('detailsRevie: ', data);
+                const { data } = await axiosAuth.get(url);
+                console.log('reviewsFromDetailsProduct: ', data);
                 if (data.success) {
-                    dispatch(fetchReviews(data?.product?.review));
+                    dispatch(fetchReviews(data?.reviews));
+                    setTotalPages(data?.totalPages);
+                    setTotalReviews(data?.totalReviews);
                     setAverageRating(data?.product?.averageRating);
                 }
             } catch (error) {
                 console.log(error);
                 context.openAlertBox('error', error.response.data.message);
             }
-            //  finally {
-            //     setIsLoadingReviews(false);
-            // }
         };
-        getDetailsReview();
-    }, [slug, context, dispatch]);
+        getReviewsFromDetailsProduct();
+    }, [slug, currentPage, itemsPerPage, context, dispatch]);
 
     useEffect(() => {
         if (product) {
             const updatedProduct = { ...product, review: reviews, averageRating };
             setProduct(updatedProduct);
         }
-    }, [reviews]);
+    }, [reviews, averageRating]);
 
     useEffect(() => {
         setIsLoadingProductDetails(true);
@@ -87,7 +93,6 @@ const ProductDetailsPage = () => {
         const fetchProductDetails = async () => {
             try {
                 const { data } = await axiosAuth.get(`/api/product/getDetailsProductFromUserBySlug/${slug}`);
-                console.log('productDetails: ', data);
                 if (data?.success) {
                     setProduct(data?.product);
                     setCategorySlug(data?.product?.categorySlug);
@@ -121,8 +126,6 @@ const ProductDetailsPage = () => {
         };
     }, [slug]);
 
-    console.log({ categorySlug, subCategorySlug, thirdSubCategorySlug });
-
     return (
         <>
             <div className="py-5">
@@ -155,6 +158,7 @@ const ProductDetailsPage = () => {
                         <Link
                             underline="hover"
                             color="inherit"
+                            to={`/${thirdSubCategorySlug}`}
                             className="link transition !text-[14px] lg:!text-[16px] pointer-events-none cursor-default"
                         >
                             {product?.name?.length > 50 ? `${product?.name?.substring(0, 50)}...` : product?.name}
@@ -196,7 +200,7 @@ const ProductDetailsPage = () => {
                                     }`}
                                     onClick={() => setActiveTab(1)}
                                 >
-                                    Đánh giá ({reviews?.length || 0})
+                                    Đánh giá ({totalReviews || 0})
                                 </span>
                             </div>
 
@@ -222,7 +226,14 @@ const ProductDetailsPage = () => {
                             )}
                             {activeTab === 1 && (
                                 <div id="review-section" className="shadow-md w-[100%] py-5 px-8 rounded-md">
-                                    {product?._id && <ReviewComponent product={product} />}
+                                    {product?._id && (
+                                        <ReviewComponent
+                                            productId={product?._id}
+                                            totalPages={totalPages}
+                                            currentPage={currentPage}
+                                            handleChangePage={handleChangePage}
+                                        />
+                                    )}
                                 </div>
                             )}
                         </div>

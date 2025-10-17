@@ -29,7 +29,7 @@ const ratingDescriptions = {
     1: 'Rất tệ',
 };
 
-const ReviewComponent = ({ product }) => {
+const ReviewComponent = ({ productId, totalPages, currentPage, handleChangePage }) => {
     const context = useContext(MyContext);
     const { reviews } = useSelector((state) => state.review);
     const dispatch = useDispatch();
@@ -40,16 +40,17 @@ const ReviewComponent = ({ product }) => {
 
     const [review, setReview] = useState({
         userId: '',
-        productId: product?._id,
+        productId,
         sizeProduct: sizeFromUrl,
         images: [],
         comment: '',
         rating: '5',
     });
 
-    const [isLoadingAddReview, setIsLoadingAddReview] = useState(false);
     const [openReview, setOpenReview] = useState(false);
     const [reviewId, setReviewId] = useState(null);
+
+    const [isLoadingAddReview, setIsLoadingAddReview] = useState(false);
     const [isLoadingDeleteReview, setIsLoadingDeleteReview] = useState(false);
 
     const handleClickOpenReview = (id) => {
@@ -60,18 +61,6 @@ const ReviewComponent = ({ product }) => {
     const handleCloseReview = () => {
         setOpenReview(false);
     };
-
-    const itemsPerPage = 10;
-    // State lưu trang hiện tại
-    const [currentPage, setCurrentPage] = useState(1);
-    // Tính tổng số trang
-    const totalPages = Math.ceil(reviews?.length / itemsPerPage);
-    // Xử lý khi đổi trang
-    const handleChangePage = (event, value) => {
-        setCurrentPage(value);
-    };
-    // Cắt dữ liệu theo trang
-    const currentReviews = reviews?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     useEffect(() => {
         window.scrollTo({
@@ -209,10 +198,11 @@ const ReviewComponent = ({ product }) => {
                 <span className="italic text-[12px] lg:text-[13px] text-gray-700 ">trong những đơn ở mục </span>
                 <span className="text-[14px] lg:text-[16px] text-primary">Lịch sử đơn hàng </span>
             </div>
+
             <div className="reviewScroll w-full max-h-[1000vh] over-x-hidden mt-2 sm:pr-5">
                 <div className="review py-1 sm:py-5 border-b border-[rgba(0,0,0,0.1)] w-full ">
-                    {currentReviews?.length > 0 ? (
-                        currentReviews?.map((review) => {
+                    {reviews?.length > 0 ? (
+                        reviews?.map((review) => {
                             return (
                                 <div key={review._id} className="mt-7 mb-2">
                                     <div className="grid grid-cols-12 gap-4 items-start">
@@ -348,7 +338,7 @@ const ReviewComponent = ({ product }) => {
                     )}
                 </div>
 
-                {currentReviews?.length > 0 && (
+                {reviews?.length > 0 && (
                     <div className="flex items-center justify-center mt-8">
                         <Pagination count={totalPages} page={currentPage} onChange={handleChangePage} />
                     </div>

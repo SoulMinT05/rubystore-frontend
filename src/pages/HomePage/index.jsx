@@ -25,6 +25,7 @@ import ProductLoading from '@/components/ProductLoading';
 import { MyContext } from '@/App';
 import axiosAuth from '@/apis/axiosAuth';
 import { fetchBlogs } from '@/redux/blogSlice';
+import HomeLatestProducts from '@/components/HomeLatestProducts';
 
 const HomePage = () => {
     const context = useContext(MyContext);
@@ -36,7 +37,7 @@ const HomePage = () => {
     const [homeSlides, setHomeSlides] = useState([]);
     const [popularProducts, setPopularProducts] = useState([]);
     const [products, setProducts] = useState([]);
-    const [latestProducts, setLatestProducts] = useState([]);
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -69,23 +70,14 @@ const HomePage = () => {
 
     useEffect(() => {
         const getProducts = async () => {
-            const { data } = await axiosAuth.get('/api/product/all-products-user');
+            const { data } = await axiosAuth.get(`/api/product/all-products-user`);
+            console.log('productsHomePage: ', data);
             if (data.success) {
                 setProducts(data?.products);
             }
         };
 
         getProducts();
-    }, []);
-    useEffect(() => {
-        const getFeaturedProducts = async () => {
-            const { data } = await axiosAuth.get('/api/product/feature');
-            if (data.success) {
-                setLatestProducts(data?.products);
-            }
-        };
-
-        getFeaturedProducts();
     }, []);
 
     useEffect(() => {
@@ -123,6 +115,7 @@ const HomePage = () => {
 
             {context?.categories?.length !== 0 && <HomeCatSlider categories={context?.categories} />}
 
+            {/* Popular products */}
             <section className="bg-white py-8">
                 <div className="container">
                     <div className="flex items-center justify-between flex-col lg:flex-row">
@@ -156,11 +149,15 @@ const HomePage = () => {
                         </div>
                     </div>
 
-                    {popularProducts?.length === 0 && <ProductLoading />}
-                    {popularProducts?.length !== 0 && <HomeProductsSlider items={6} products={popularProducts} />}
+                    {popularProducts?.length === 0 ? (
+                        <ProductLoading />
+                    ) : (
+                        <HomeProductsSlider products={popularProducts} />
+                    )}
                 </div>
             </section>
 
+            {/* Banner Image */}
             <section className="py-6 pt-0 bg-white">
                 <div className="container flex flex-col lg:flex-row gap-2">
                     <div className="part1 w-full lg:w-[70%] lg:h-[230px]">
@@ -174,6 +171,7 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* Image Free Ship */}
             <section className="py-4 lg:pt-6 bg-white">
                 <div className="container">
                     <div className="freeShipping w-full py-4 p-4 border-2 border-[#ff5252] flex flex-col lg:flex-row items-center justify-center lg:justify-between rounded-md lg:mb-7">
@@ -200,9 +198,7 @@ const HomePage = () => {
                     <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] text-black font-[600]">
                         Sản phẩm mới nhất
                     </h2>
-                    {latestProducts?.length === 0 && <ProductLoading />}
-                    {latestProducts?.length !== 0 && <HomeProductsSlider items={6} products={latestProducts} />}
-
+                    <HomeLatestProducts />
                     <HomeAdsBannerSlider items={3} />
                 </div>
             </section>
@@ -213,8 +209,7 @@ const HomePage = () => {
                     <h2 className="text-[14px] sm:text-[14px] md:text-[16px] lg:text-[20px] text-black font-[600] -pb-2">
                         Sản phẩm đặc trưng
                     </h2>
-                    {products?.length === 0 && <ProductLoading />}
-                    {products?.length !== 0 && <HomeProductsSlider items={6} products={products} />}
+                    {products?.length === 0 ? <ProductLoading /> : <HomeProductsSlider products={products} />}
 
                     <HomeAdsBannerSlider items={3} />
                 </div>

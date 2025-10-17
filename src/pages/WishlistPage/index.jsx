@@ -89,7 +89,7 @@ const WishlistPage = () => {
 
                                 <div className="info w-[80%] relative">
                                     <IoCloseSharp
-                                        onClick={() => removeToWishlist(wishlist?.product?.slug)}
+                                        onClick={() => removeToWishlist(wishlist?.product?._id)}
                                         className="cursor-pointer absolute top-[0px] right-[0px] text-[18px] link transition-all"
                                     />
                                     <span className="text-[12px] sm:text-[12px]">{wishlist?.brand}</span>

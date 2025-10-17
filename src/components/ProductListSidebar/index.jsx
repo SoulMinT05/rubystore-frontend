@@ -35,6 +35,7 @@ const ProductListSidebar = ({
     const context = useContext(MyContext);
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = useState(true);
     const [isOpenAvailFilter, setIsOpenAvailFilter] = useState(true);
+    const [isOpenSizeFilter, setIsOpenSizeFilter] = useState(true);
     const [price, setPrice] = useState([MIN_PRICE_PRODUCTS_SIDEBAR, MAX_PRICE_PRODUCTS_SIDEBAR]);
     const location = useLocation(); // Là Object có pathname là /product
 
@@ -238,7 +239,8 @@ const ProductListSidebar = ({
                     </Collapse>
                 </div>
 
-                {/* <div className="box mt-3">
+                {/* Size */}
+                <div className="box mt-4">
                     <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Kích cỡ
                         <Button
@@ -250,27 +252,36 @@ const ProductListSidebar = ({
                     </h3>
                     <Collapse isOpened={isOpenSizeFilter}>
                         <div className="scroll px-4 relative -left-[13px]">
-                            <FormControlLabel control={<Checkbox size="small" />} label="Nhỏ (16)" className="w-full" />
-                            <FormControlLabel control={<Checkbox size="small" />} label="Vừa (20)" className="w-full" />
-                            <FormControlLabel control={<Checkbox size="small" />} label="Lớn (15)" className="w-full" />
-                            <FormControlLabel control={<Checkbox size="small" />} label="XL (15)" className="w-full" />
-                            <FormControlLabel control={<Checkbox size="small" />} label="XXL (15)" className="w-full" />
+                            {['S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((size) => {
+                                return (
+                                    <FormControlLabel
+                                        key={size}
+                                        control={<Checkbox size="small" />}
+                                        label={size}
+                                        className="w-full"
+                                        checked={filterProducts?.productSize?.includes(size)}
+                                        onChange={() => handleCheckboxChange('productSize', size)}
+                                    />
+                                );
+                            })}
                         </div>
                     </Collapse>
-                </div> */}
+                </div>
 
                 {/* Price */}
                 <div className="box mt-4">
                     <h3 className="w-full mb-3 text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Giá
                     </h3>
-                    <RangeSlider
-                        value={price}
-                        onInput={setPrice}
-                        min={MIN_PRICE_PRODUCTS_SIDEBAR}
-                        max={MAX_PRICE_PRODUCTS_SIDEBAR}
-                        step={5}
-                    />
+                    <div className="ml-0 xl:ml-[1px]">
+                        <RangeSlider
+                            value={price}
+                            onInput={setPrice}
+                            min={MIN_PRICE_PRODUCTS_SIDEBAR}
+                            max={MAX_PRICE_PRODUCTS_SIDEBAR}
+                            step={5}
+                        />
+                    </div>
                     <div className="flex pt-4 pb-2 priceRange">
                         <span className="text-[12px] lg:text-[12px]">
                             Từ <strong className="text-dark"> {formatCurrency(price[0])}</strong>
@@ -286,7 +297,7 @@ const ProductListSidebar = ({
                     <h3 className="w-full mt-3 mb-[2px] text-[14px] lg:text-[15px] font-[600] flex items-center pr-0 lg:pr-5">
                         Đánh giá
                     </h3>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[3px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={5}
@@ -296,7 +307,7 @@ const ProductListSidebar = ({
                         />
                         <Rating name="size-small" defaultValue={5} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[3px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={4}
@@ -306,7 +317,7 @@ const ProductListSidebar = ({
                         />
                         <Rating name="size-small" defaultValue={4} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[3px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={3}
@@ -316,7 +327,7 @@ const ProductListSidebar = ({
                         />
                         <Rating name="size-small" defaultValue={3} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[3px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={2}
@@ -326,7 +337,7 @@ const ProductListSidebar = ({
                         />
                         <Rating name="size-small" defaultValue={2} readOnly size="small" />
                     </div>
-                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[2px] 2xl:ml-[4px]">
+                    <div className="flex items-center -ml-[4px] lg:ml-[4px] xl:ml-[3px] 2xl:ml-[4px]">
                         <FormControlLabel
                             className="pl-2 lg:pl-0"
                             value={1}

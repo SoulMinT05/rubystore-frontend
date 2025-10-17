@@ -53,6 +53,7 @@ const ProductListPage = () => {
         maxPrice: '',
         rating: '',
         stockStatus: '',
+        productSize: [],
         page: 1,
         limit: LIMIT_PRODUCTS,
         sortBy: 'name', // default sort

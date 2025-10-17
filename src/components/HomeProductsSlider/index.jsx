@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, FreeMode } from 'swiper/modules';
@@ -12,14 +12,15 @@ import './HomeProductsSlider.scss';
 import { MyContext } from '@/App';
 import HomeProductsItem from '../HomeProductsItem';
 
-const HomeProductsSlider = ({ items, products }) => {
+const HomeProductsSlider = ({ products }) => {
     const context = useContext(MyContext);
+    const [slidesPerView, setSlidesPerView] = useState(1);
     return (
         <div className="productsSlider pb-3">
             <Swiper
-                slidesPerView={items}
+                slidesPerView={slidesPerView}
+                slidesPerGroup={slidesPerView}
                 spaceBetween={10}
-                // slidesPerGroup={4}
                 navigation={context?.windowWidth > 992 ? true : false}
                 modules={[Navigation, FreeMode]}
                 freeMode={true}
@@ -52,6 +53,16 @@ const HomeProductsSlider = ({ items, products }) => {
                         slidesPerView: 6,
                         spaceBetween: 10,
                     },
+                }}
+                onSwiper={(swiper) => {
+                    console.log('onSwiper: ', swiper.params.slidesPerView);
+                    // lấy slidesPerView ban đầu
+                    setSlidesPerView(swiper.params.slidesPerView);
+                }}
+                onBreakpoint={(swiper) => {
+                    // cập nhật khi thay đổi breakpoint
+                    console.log('onBreakpoint: ', swiper.params.slidesPerView);
+                    setSlidesPerView(swiper.params.slidesPerView);
                 }}
                 className="mySwiper"
             >
