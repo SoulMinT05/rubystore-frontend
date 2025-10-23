@@ -11,6 +11,16 @@ import './HomeAdsBannerSlider.scss';
 import { MyContext } from '@/App';
 import HomeBannerBox from '../HomeBannerBox';
 
+import adsBanner1 from '@/assets/shopee_1.jpeg';
+import adsBanner2 from '@/assets/shopee_2.jpeg';
+import adsBanner3 from '@/assets/shopee_3.jpeg';
+
+import adsBanner4 from '@/assets/shopee_4.png';
+import adsBanner5 from '@/assets/shopee_5.png';
+import adsBanner7 from '@/assets/shopee_7.png';
+
+import adsBanner6 from '@/assets/shopee_6.jpg';
+
 const HomeAdsBannerSlider = ({ items }) => {
     const context = useContext(MyContext);
     return (
@@ -46,25 +56,25 @@ const HomeAdsBannerSlider = ({ items }) => {
                 className="smlBtn"
             >
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_4.png'} link="/" />
+                    <HomeBannerBox img={adsBanner4} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_5.png'} link="/" />
+                    <HomeBannerBox img={adsBanner5} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_7.png'} link="/" />
+                    <HomeBannerBox img={adsBanner7} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_6.jpg'} link="/" />
+                    <HomeBannerBox img={adsBanner6} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_1.jpeg'} link="/" />
+                    <HomeBannerBox img={adsBanner1} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_2.jpeg'} link="/" />
+                    <HomeBannerBox img={adsBanner2} link="/" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <HomeBannerBox img={'src/assets/shopee_3.jpeg'} link="/" />
+                    <HomeBannerBox img={adsBanner3} link="/" />
                 </SwiperSlide>
             </Swiper>
         </div>

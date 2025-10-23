@@ -27,6 +27,9 @@ import axiosAuth from '@/apis/axiosAuth';
 import { fetchBlogs } from '@/redux/blogSlice';
 import HomeLatestProducts from '@/components/HomeLatestProducts';
 
+import smallImg1 from '@/assets/banner_1.jpeg';
+import smallImg3 from '@/assets/banner_3.png';
+
 const HomePage = () => {
     const context = useContext(MyContext);
 
@@ -164,9 +167,9 @@ const HomePage = () => {
                         <HomeBannerSlider />
                     </div>
                     <div className="part2 w-full lg:w-[30%] lg:h-[230px] flex items-center gap-2 justify-between flex-row lg:flex-col">
-                        <HomeBannerImage image="src/assets/banner_1.jpeg" />
+                        <HomeBannerImage image={smallImg1} />
                         {/* <HomeBannerImage image="src/assets/banner_2.jpeg" /> */}
-                        <HomeBannerImage image="src/assets/banner_3.png" />
+                        <HomeBannerImage image={smallImg3} />
                     </div>
                 </div>
             </section>
