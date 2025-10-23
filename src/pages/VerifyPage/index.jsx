@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { MyContext } from '@/App';
 import OtpBox from '@/components/OtpBox';
+import { getBackendUrl } from '@/config/envConfig';
 
 const VerifyPage = () => {
     const [otp, setOtp] = useState('');
@@ -19,7 +20,7 @@ const VerifyPage = () => {
         setIsLoading(true);
         try {
             const token = sessionStorage.getItem('verifyToken');
-            const res = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/verify-email', {
+            const res = await fetch(getBackendUrl() + '/api/user/verify-email', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

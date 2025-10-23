@@ -1,10 +1,12 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { getBackendUrl } from '@/config/envConfig';
 
 // Dùng cho api cần Bearer token và để duy trì phiên user như user-details, ...
 
 const axiosClient = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
+    // baseURL: import.meta.env.VITE_BACKEND_URL,
+    baseURL: getBackendUrl(),
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
@@ -24,7 +26,7 @@ axiosClient.interceptors.request.use(
     },
     (err) => {
         return Promise.reject(err);
-    },
+    }
 );
 
 axiosClient.interceptors.response.use(
@@ -58,7 +60,7 @@ axiosClient.interceptors.response.use(
         }
         // Nếu không phải lỗi 401 hoặc đã thử refresh token
         return Promise.reject(err);
-    },
+    }
 );
 
 export default axiosClient;

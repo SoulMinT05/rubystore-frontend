@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { getBackendUrl } from '@/config/envConfig';
 
 // Dùng cho api không cần Bearer token như đăng ký,...
 
 const axiosAuth = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
+    baseURL: getBackendUrl(),
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
@@ -17,7 +18,7 @@ axiosAuth.interceptors.request.use(
     },
     (error) => {
         return Promise.reject(error);
-    },
+    }
 );
 
 export default axiosAuth;

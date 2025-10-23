@@ -111,7 +111,6 @@ Check out: [RubyStore (Server)](https://github.com/SoulMinT05/rubystore-backend)
     - Ensure the following variables are set in `.env`, and adjust them to match your API endpoints and Cloudinary storage configuration:
 
         ```env
-        VITE_FRONTEND_URL=http://localhost:3000
         VITE_BACKEND_URL=http://localhost:8000
         VITE_API_KEY=api-key
         VITE_AUTH_DOMAIN=auth-domain

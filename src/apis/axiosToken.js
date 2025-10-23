@@ -1,10 +1,12 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { getBackendUrl } from '@/config/envConfig';
 
 // Dùng cho api logout
 
 const axiosToken = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
+    // baseURL: import.meta.env.VITE_BACKEND_URL,
+    baseURL: getBackendUrl(),
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
@@ -24,7 +26,7 @@ axiosToken.interceptors.request.use(
     },
     (err) => {
         return Promise.reject(err);
-    },
+    }
 );
 
 export default axiosToken;

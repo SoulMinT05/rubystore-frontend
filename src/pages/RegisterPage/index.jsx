@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import './RegisterPage.scss';
 import { MyContext } from '@/App';
+import { getBackendUrl } from '@/config/envConfig';
 
 const RegisterPage = () => {
     const [isShowPassword, setIsShowPassword] = useState(false);
@@ -38,7 +39,7 @@ const RegisterPage = () => {
                 return;
             }
 
-            const res = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/register', {
+            const res = await fetch(getBackendUrl() + '/api/user/register', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
